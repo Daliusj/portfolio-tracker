@@ -10,7 +10,7 @@ const repository = assetRepository(db)
 describe('create', () => {
   it('should create a new comment', async () => {
     const asset = fakeAsset({})
-    const createdAsset = await repository.create(fakeAsset(asset))
+    const createdAsset = await repository.create(asset)
     expect(createdAsset).toEqual({
       id: expect.any(Number),
       createdAt: expect.any(Date),

@@ -62,7 +62,6 @@ export const fakePortfolioItem = <T extends Partial<Insertable<PortfolioItem>>>(
     purchasePrice: random.floating({ min: 1, max: 1000, fixed: 2 }),
     purchaseDate: random.date(),
     ...overrides,
-    createdAt: new Date(),
   }) satisfies Insertable<PortfolioItem>
 
 /**
@@ -75,5 +74,4 @@ export const fakePortfolio = <T extends Partial<Insertable<Portfolio>>>(
   ({
     userId: randomId(),
     ...overrides,
-    createdAt: new Date(),
   }) satisfies Insertable<Portfolio>
