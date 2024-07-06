@@ -15,7 +15,7 @@ export interface Asset {
   createdAt: Generated<Timestamp>
   id: Generated<number>
   name: string
-  string: string
+  symbol: string
   type: InvestmentType
 }
 
