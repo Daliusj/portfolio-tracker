@@ -7,7 +7,6 @@ import type {
 import type { Insertable } from 'kysely'
 import { random } from '@tests/utils/random'
 import type { AuthUser } from '../user'
-import { INVESTMENT_TYPES } from '../asset'
 
 const randomId = () =>
   random.integer({
@@ -44,7 +43,7 @@ export const fakeAuthUser = <T extends Partial<AuthUser>>(
 export const fakeAsset = <T extends Partial<Insertable<Asset>>>(overrides: T) =>
   ({
     name: random.string(),
-    type: random.string(INVESTMENT_TYPES),
+    type: 'stock',
     symbol: random.string(),
     ...overrides,
   }) satisfies Insertable<Asset>
