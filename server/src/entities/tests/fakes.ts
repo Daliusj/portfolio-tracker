@@ -1,7 +1,13 @@
-import type { Article, Comment, User } from '@server/database/types'
+import type {
+  User,
+  Asset,
+  Portfolio,
+  PortfolioItem,
+} from '@server/database/types'
 import type { Insertable } from 'kysely'
 import { random } from '@tests/utils/random'
 import type { AuthUser } from '../user'
+import { INVESTMENT_TYPES } from '../asset'
 
 const randomId = () =>
   random.integer({
@@ -18,8 +24,7 @@ export const fakeUser = <T extends Partial<Insertable<User>>>(
 ) =>
   ({
     email: random.email(),
-    firstName: random.first(),
-    lastName: random.last(),
+    userName: random.first(),
     password: 'Password.123!',
     ...overrides,
   }) satisfies Insertable<User>
@@ -33,31 +38,43 @@ export const fakeAuthUser = <T extends Partial<AuthUser>>(
 })
 
 /**
- * Generates a fake article with some default test data.
+ * Generates a fake asset with some default test data.
  * @param overrides userId and any properties that should be different from default fake data.
  */
-export const fakeArticle = <T extends Partial<Insertable<Article>>>(
-  overrides: T
-) =>
+export const fakeAsset = <T extends Partial<Insertable<Asset>>>(overrides: T) =>
   ({
-    title: random.string(),
-    content: random.paragraph(),
-    userId: randomId(),
+    name: random.string(),
+    type: random.string(INVESTMENT_TYPES),
+    symbol: random.string(),
     ...overrides,
-  }) satisfies Insertable<Article>
+  }) satisfies Insertable<Asset>
 
 /**
- * Generates a fake comment with some default test data.
+ * Generates a fake portfolioItem with some default test data.
  * @param overrides articleId and any properties that should be different from default fake data.
  */
-export const fakeComment = <T extends Partial<Insertable<Comment>>>(
+export const fakePortfolioItem = <T extends Partial<Insertable<PortfolioItem>>>(
   overrides: T
 ) =>
   ({
-    content: random.paragraph({ sentences: 2 }),
-    articleId: randomId(),
-    userId: randomId(),
-    isSpam: false,
+    portfolioId: randomId(),
+    assetId: randomId(),
+    quantity: random.floating({ min: 0.1, max: 100, fixed: 3 }),
+    purchasePrice: random.floating({ min: 1, max: 1000, fixed: 2 }),
+    purchaseDate: random.date(),
     ...overrides,
     createdAt: new Date(),
-  }) satisfies Insertable<Comment>
+  }) satisfies Insertable<PortfolioItem>
+
+/**
+ * Generates a fake portfolio with some default test data.
+ * @param overrides articleId and any properties that should be different from default fake data.
+ */
+export const fakePortfolio = <T extends Partial<Insertable<Portfolio>>>(
+  overrides: T
+) =>
+  ({
+    userId: randomId(),
+    ...overrides,
+    createdAt: new Date(),
+  }) satisfies Insertable<Portfolio>
