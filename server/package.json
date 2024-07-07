@@ -51,6 +51,7 @@
     "vitest": "^1.4.0"
   },
   "dependencies": {
+    "@polygon.io/client-js": "^7.3.2",
     "@trpc/server": "^10.45.2",
     "@types/lodash-es": "^4.17.12",
     "bcrypt": "^5.1.1",

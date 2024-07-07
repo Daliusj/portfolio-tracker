@@ -34,6 +34,7 @@ const schema = z
     database: z.object({
       connectionString: z.string().url(),
     }),
+    polygonApiKey: z.string(),
   })
   .readonly()
 
@@ -51,6 +52,7 @@ const config = schema.parse({
   database: {
     connectionString: env.DATABASE_URL,
   },
+  polygonApiKey: env.POLYGON_IO_API_KEY,
 })
 
 export default config
