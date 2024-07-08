@@ -35,6 +35,7 @@ const schema = z
       connectionString: z.string().url(),
     }),
     polygonApiKey: z.string(),
+    alphaVantageApiKey: z.string(),
   })
   .readonly()
 
@@ -53,6 +54,7 @@ const config = schema.parse({
     connectionString: env.DATABASE_URL,
   },
   polygonApiKey: env.POLYGON_IO_API_KEY,
+  alphaVantageApiKey: env.ALPHA_VANTAGE_API_KEY,
 })
 
 export default config
