@@ -33,6 +33,73 @@ describe('findById', () => {
   })
 })
 
+describe('findAsset', () => {
+  it('should find asset by provided full stock name', async () => {
+    const [asset] = await insertAll(
+      db,
+      'asset',
+      fakeAsset({ name: 'Apple', symbol: 'AAPL' })
+    )
+    const assetsFound = await repository.findAsset('Apple')
+    expect(assetsFound).toEqual([asset])
+  })
+
+  it('should find asset by provided full stock name in lower case', async () => {
+    const [asset] = await insertAll(
+      db,
+      'asset',
+      fakeAsset({ name: 'Apple', symbol: 'AAPL' })
+    )
+    const assetsFound = await repository.findAsset('apple')
+    expect(assetsFound).toEqual([asset])
+  })
+
+  it('should find asset by provided partial stock name in lower case', async () => {
+    const [asset] = await insertAll(
+      db,
+      'asset',
+      fakeAsset({ name: 'Apple', symbol: 'AAPL' })
+    )
+    const assetsFound = await repository.findAsset('pple')
+    expect(assetsFound).toEqual([asset])
+  })
+
+  it('should find asset by provided full symbol', async () => {
+    const [asset] = await insertAll(
+      db,
+      'asset',
+      fakeAsset({ name: 'Apple', symbol: 'AAPL' })
+    )
+    const assetsFound = await repository.findAsset('AAPL')
+    expect(assetsFound).toEqual([asset])
+  })
+
+  it('should find asset by provided full symbol in lower case', async () => {
+    const [asset] = await insertAll(
+      db,
+      'asset',
+      fakeAsset({ name: 'Apple', symbol: 'AAPL' })
+    )
+    const assetsFound = await repository.findAsset('aapl')
+    expect(assetsFound).toEqual([asset])
+  })
+
+  it('should find asset by provided partial symbol in lower case', async () => {
+    const [asset] = await insertAll(
+      db,
+      'asset',
+      fakeAsset({ name: 'Apple', symbol: 'AAPL' })
+    )
+    const assetsFound = await repository.findAsset('apl')
+    expect(assetsFound).toEqual([asset])
+  })
+
+  it('should return an empty array if no assets are found', async () => {
+    const assetFound = await repository.findAsset('btc')
+    expect(assetFound).toEqual([])
+  })
+})
+
 describe('findAll', () => {
   it('should return all assets', async () => {
     const [assetOne, assetTwo] = await insertAll(db, 'asset', [

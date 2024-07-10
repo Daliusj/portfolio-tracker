@@ -20,6 +20,20 @@ export function assetRepository(db: Database) {
         .executeTakeFirst()
     },
 
+    async findAsset(query: string): Promise<AssetPublic[]> {
+      const partialQuery = `%${query}%`
+      return db
+        .selectFrom('asset')
+        .select(assetKeysPublic)
+        .where((eb) =>
+          eb.or([
+            eb('name', 'ilike', partialQuery),
+            eb('symbol', 'ilike', partialQuery),
+          ])
+        )
+        .execute()
+    },
+
     async findAll(): Promise<AssetPublic[]> {
       return db.selectFrom('asset').select(assetKeysPublic).execute()
     },

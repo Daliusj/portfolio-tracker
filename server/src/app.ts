@@ -9,8 +9,9 @@ import type { Database } from './database'
 import { appRouter } from './controllers'
 import type { Context } from './trpc'
 import config from './config'
+import seedDatabase from './seedDatabase'
 
-export default function createApp(db: Database) {
+export default async function createApp(db: Database) {
   const app = express()
 
   app.use(cors())
@@ -51,6 +52,8 @@ export default function createApp(db: Database) {
       )
     )
   }
+
+  await seedDatabase()
 
   return app
 }

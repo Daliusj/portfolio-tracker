@@ -36,6 +36,7 @@ const schema = z
     }),
     polygonApiKey: z.string(),
     alphaVantageApiKey: z.string(),
+    fmpApiKey: z.string(),
   })
   .readonly()
 
@@ -53,8 +54,10 @@ const config = schema.parse({
   database: {
     connectionString: env.DATABASE_URL,
   },
+
   polygonApiKey: env.POLYGON_IO_API_KEY,
   alphaVantageApiKey: env.ALPHA_VANTAGE_API_KEY,
+  fmpApiKey: env.FMP_API_KEY,
 })
 
 export default config

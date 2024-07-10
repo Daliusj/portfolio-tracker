@@ -1,11 +1,3 @@
-import buildPolygon from './externalApi/polygonAPi'
-import buildAlphaVantage from './externalApi/alphaVantageApi'
-import buildExternalApiServices from './externalApiServices'
-
-const polygon = buildPolygon()
-const alphaVantage = buildAlphaVantage()
-const externalApiServices = buildExternalApiServices(polygon, alphaVantage)
-
 const services = { marketServices: externalApiServices }
 
 // export type ServicesFactories = typeof services
