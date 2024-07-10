@@ -1,47 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import type { FinancialData } from '..'
-import type { AggregatedResult } from '../polygonAPi'
-import type { HistoricalData } from '../fmpApi'
-
-export const fakeAggregatedResult: AggregatedResult[] = [
-  {
-    v: 1000,
-    vw: 101.5,
-    o: 101,
-    c: 103,
-    h: 103,
-    l: 100,
-    t: 1688196439000,
-    n: 1,
-  },
-  {
-    v: 1000,
-    vw: 101.5,
-    o: 101,
-    c: 102,
-    h: 103,
-    l: 100,
-    t: 1688150400000,
-    n: 1,
-  },
-]
-
-export const fakeTimeSeriesDataAlphaVantage = {
-  '2023-07-01': {
-    '1. open': '51589.15000000',
-    '2. high': '51754.96000000',
-    '3. low': '50916.33000000',
-    '4. close': '103.0',
-    '5. volume': '31.60594154',
-  },
-  '2023-06-30': {
-    '1. open': '53721.97000000',
-    '2. high': '53861.02000000',
-    '3. low': '51450.59000000',
-    '4. close': '102.0',
-    '5. volume': '293.21157472',
-  },
-}
+import type { HistoricalData, FinancialData } from '../fmpApi'
 
 export const fakeTimeSeriesDataFmp: HistoricalData[] = [
   {

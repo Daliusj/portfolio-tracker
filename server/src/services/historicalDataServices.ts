@@ -1,4 +1,4 @@
-import type { Fmp } from './externalApi/fmpApi'
+import type { Fmp } from '../utils/externalApi/fmpApi'
 
 export default (fmpApi: Fmp) => ({
   getDataForTimeRange: async (

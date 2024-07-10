@@ -8,14 +8,10 @@ const db = await wrapInRollbacks(createTestDatabase())
 const repository = assetRepository(db)
 
 describe('create', () => {
-  it('should create a new comment', async () => {
+  it('should create a new asset and return a number of created assets', async () => {
     const asset = fakeAsset({})
-    const createdAsset = await repository.create(asset)
-    expect(createdAsset).toEqual({
-      id: expect.any(Number),
-      createdAt: expect.any(Date),
-      ...asset,
-    })
+    const createdAssetCount = await repository.create(asset)
+    expect(createdAssetCount).toEqual(1)
   })
 })
 
@@ -113,5 +109,18 @@ describe('findAll', () => {
   it('should return an empty array if no assets are found', async () => {
     const assetFound = await repository.findAll()
     expect(assetFound).toEqual([])
+  })
+
+  describe('isAssetsEmpty', () => {
+    it('should return false if database is not empty', async () => {
+      await insertAll(db, 'asset', fakeAsset({}))
+      const isEmpty = await repository.isAssetsEmpty()
+      expect(isEmpty).toBeFalsy()
+    })
+
+    it('should return true if database is empty', async () => {
+      const isEmpty = await repository.isAssetsEmpty()
+      expect(isEmpty).toBeTruthy()
+    })
   })
 })

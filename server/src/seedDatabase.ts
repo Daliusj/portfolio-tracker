@@ -1,15 +1,20 @@
-import type { Fmp } from './services/externalApi/fmpApi'
-import type { AssetRepository } from './repositories/assetRepository'
+import buildFmp from './utils/externalApi/fmpApi'
+import { assetRepository } from './repositories/assetRepository'
+import type { Database } from './database'
 
-export default async (fmpApi: Fmp, assetsRepository: AssetRepository) => {
+export default async (db: Database) => {
+  const fmpApi = buildFmp()
+  const repository = assetRepository(db)
   try {
-    const stocks = await fmpApi.fetchAllStocks()
-    const cryptos = await fmpApi.fetchAllCryptos()
-    const funds = await fmpApi.fetchAllFunds()
+    if (!repository.isAssetsEmpty()) {
+      const stocks = await fmpApi.fetchAllStocks()
+      const cryptos = await fmpApi.fetchAllCryptos()
+      const funds = await fmpApi.fetchAllFunds()
 
-    await assetsRepository.saveStocks(stocks)
-    await assetsRepository.saveCryptos(cryptos)
-    await assetsRepository.saveFunds(funds)
+      await repository.create(stocks)
+      await repository.create(cryptos)
+      await repository.create(funds)
+    }
   } catch (err) {
     throw new Error(
       `Error seeding the database: ${
@@ -18,3 +23,5 @@ export default async (fmpApi: Fmp, assetsRepository: AssetRepository) => {
     )
   }
 }
+
+// TODO add timestamp to database

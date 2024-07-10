@@ -1,5 +1,6 @@
 import axios from 'axios'
 import config from '@server/config'
+import type { InvestmentType } from '@server/database/types'
 
 export const CLOSE_KEY = 'close'
 const STOCKS_HISTORICAL_URL =
@@ -18,6 +19,7 @@ export type FinancialData = {
 type Ticker = {
   symbol: string
   name: string
+  type: InvestmentType
 }
 
 type FullTicker = {
@@ -90,7 +92,10 @@ const fetchPrices = async (
   }
 }
 
-const fetchAllTickers = async (url: string): Promise<Ticker[]> => {
+const fetchAllTickers = async (
+  url: string,
+  type: InvestmentType
+): Promise<Ticker[]> => {
   try {
     const response = await axios.get(url, {
       params: {
@@ -105,6 +110,7 @@ const fetchAllTickers = async (url: string): Promise<Ticker[]> => {
     return response.data.map((fullTicker: FullTicker) => ({
       symbol: fullTicker.symbol,
       name: fullTicker.name,
+      type,
     }))
   } catch (err) {
     throw new Error(
@@ -134,15 +140,15 @@ export default function buildFmp() {
   }
 
   const fetchAllStocks = async () => {
-    const data = await fetchAllTickers(STOCKS_HISTORICAL_URL)
+    const data = await fetchAllTickers(STOCKS_HISTORICAL_URL, 'stock')
     return data
   }
   const fetchAllCryptos = async () => {
-    const data = await fetchAllTickers(CRYPTOS_HISTORICAL_URL)
+    const data = await fetchAllTickers(CRYPTOS_HISTORICAL_URL, 'crypto')
     return data
   }
   const fetchAllFunds = async () => {
-    const data = await fetchAllTickers(FUNDS_HISTORICAL_URL)
+    const data = await fetchAllTickers(FUNDS_HISTORICAL_URL, 'fund')
     return data
   }
 

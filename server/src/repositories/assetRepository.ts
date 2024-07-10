@@ -4,12 +4,11 @@ import type { Insertable } from 'kysely'
 
 export function assetRepository(db: Database) {
   return {
-    async create(asset: Insertable<Asset>): Promise<AssetPublic> {
-      return db
-        .insertInto('asset')
-        .values(asset)
-        .returning(assetKeysPublic)
-        .executeTakeFirstOrThrow()
+    async create(
+      asset: Insertable<Asset> | Insertable<Asset>[]
+    ): Promise<number> {
+      const result = await db.insertInto('asset').values(asset).execute()
+      return result.length
     },
 
     async findById(assetId: number): Promise<AssetPublic | undefined> {
@@ -36,6 +35,12 @@ export function assetRepository(db: Database) {
 
     async findAll(): Promise<AssetPublic[]> {
       return db.selectFrom('asset').select(assetKeysPublic).execute()
+    },
+
+    async isAssetsEmpty(): Promise<Boolean> {
+      const assetsCount = (await db.selectFrom('asset').selectAll().execute())
+        .length
+      return !assetsCount
     },
   }
 }
