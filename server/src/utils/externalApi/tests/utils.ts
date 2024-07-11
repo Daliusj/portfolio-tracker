@@ -1,50 +1,29 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import type { FinancialData } from '../fmpApi'
-import { fakeFinancialData } from './fakes'
+import type { FinancialData, Ticker } from '../fmpApi'
+import { fakeAssetsList, fakeFinancialData } from './fakes'
 
 export const fakeFmpWorking = () => {
-  const fetchTimeRangeStockPrice = async (
+  const fetchTimeRangePrices = async (
     symbol: string,
     fromDate: string,
     toDate: string
   ): Promise<FinancialData[]> => fakeFinancialData
 
-  const fetchTimeRangeCryptoPrice = async (
-    symbol: string,
-    fromDate: string,
-    toDate: string
-  ): Promise<FinancialData[]> => fakeFinancialData
-
-  const fetchDayStockPrice = async (
+  const fetchDayPrice = async (
     symbol: string,
     date: string
-  ): Promise<FinancialData> => {
-    const [data] = fakeFinancialData
-    return data
-  }
+  ): Promise<FinancialData[]> => [fakeFinancialData[0]]
 
-  const fetchDayCryptoPrice = async (
-    symbol: string,
-    date: string
-  ): Promise<FinancialData> => {
-    const [data] = fakeFinancialData
-    return data
-  }
-
-  const fetchAllStocks = async () => {}
-  const fetchAllCrypto = async () => {}
-  const fetchAllFunds = async () => {}
-  const searchSymbols = async () => {}
+  const fetchAllStocks = async (): Promise<Ticker[]> => fakeAssetsList
+  const fetchAllCryptos = async (): Promise<Ticker[]> => fakeAssetsList
+  const fetchAllFunds = async (): Promise<Ticker[]> => fakeAssetsList
 
   return {
-    fetchDayCryptoPrice,
-    fetchDayStockPrice,
-    fetchTimeRangeCryptoPrice,
-    fetchTimeRangeStockPrice,
-    fetchAllCrypto,
-    fetchAllFunds,
+    fetchTimeRangePrices,
+    fetchDayPrice,
     fetchAllStocks,
-    searchSymbols,
+    fetchAllCryptos,
+    fetchAllFunds,
   }
 }
 
@@ -52,34 +31,31 @@ export const fakeFmpNotWorking = () => {
   const mockError = (message: string) => {
     throw new Error(message)
   }
-  const fetchTimeRangeStockPrice = async (
+  const fetchTimeRangePrices = async (
     symbol: string,
     fromDate: string,
     toDate: string
+  ): Promise<FinancialData[]> => mockError('Failed to fetch data')
+
+  const fetchDayPrice = async (
+    symbol: string,
+    date: string
   ): Promise<FinancialData[]> => mockError('Failed to fetch stock data')
 
-  const fetchTimeRangeCryptoPrice = async (
-    symbol: string,
-    fromDate: string,
-    toDate: string
-  ): Promise<FinancialData[]> => mockError('Failed to fetch crypto data')
+  const fetchAllStocks = async (): Promise<Ticker[]> =>
+    mockError('Failed to fetch data')
 
-  const fetchDayStockPrice = async (
-    symbol: string,
-    date: string
-  ): Promise<FinancialData> =>
-    mockError('Failed to fetch stock data for the day')
+  const fetchAllCryptos = async (): Promise<Ticker[]> =>
+    mockError('Failed to fetch data')
 
-  const fetchDayCryptoPrice = async (
-    symbol: string,
-    date: string
-  ): Promise<FinancialData> =>
-    mockError('Failed to fetch crypto data for the day')
+  const fetchAllFunds = async (): Promise<Ticker[]> =>
+    mockError('Failed to fetch data')
 
   return {
-    fetchDayCryptoPrice,
-    fetchDayStockPrice,
-    fetchTimeRangeCryptoPrice,
-    fetchTimeRangeStockPrice,
+    fetchAllCryptos,
+    fetchAllFunds,
+    fetchAllStocks,
+    fetchDayPrice,
+    fetchTimeRangePrices,
   }
 }

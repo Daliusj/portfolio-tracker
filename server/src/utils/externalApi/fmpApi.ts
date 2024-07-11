@@ -16,7 +16,7 @@ export type FinancialData = {
   closePrice: number
 }
 
-type Ticker = {
+export type Ticker = {
   symbol: string
   name: string
   type: InvestmentType
@@ -139,15 +139,15 @@ export default function buildFmp() {
     return parseTimeSeriesData(data)
   }
 
-  const fetchAllStocks = async () => {
+  const fetchAllStocks = async (): Promise<Ticker[]> => {
     const data = await fetchAllTickers(STOCKS_HISTORICAL_URL, 'stock')
     return data
   }
-  const fetchAllCryptos = async () => {
+  const fetchAllCryptos = async (): Promise<Ticker[]> => {
     const data = await fetchAllTickers(CRYPTOS_HISTORICAL_URL, 'crypto')
     return data
   }
-  const fetchAllFunds = async () => {
+  const fetchAllFunds = async (): Promise<Ticker[]> => {
     const data = await fetchAllTickers(FUNDS_HISTORICAL_URL, 'fund')
     return data
   }

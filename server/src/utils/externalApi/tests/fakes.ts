@@ -1,4 +1,4 @@
-import type { HistoricalData, FinancialData } from '../fmpApi'
+import type { HistoricalData, FinancialData, Ticker } from '../fmpApi'
 
 export const fakeTimeSeriesDataFmp: HistoricalData[] = [
   {
@@ -49,7 +49,15 @@ export const fakeInputData = {
   dateTo: '2023-07-01',
 }
 
-export const fakeAsset = {
-  name: 'Apple',
-  Symbol: 'AAPL',
-}
+export const fakeAssetsList: Ticker[] = [
+  {
+    name: 'Apple',
+    symbol: 'AAPL',
+    type: 'stock',
+  },
+  {
+    name: 'Google',
+    symbol: 'GOOG',
+    type: 'stock',
+  },
+]
