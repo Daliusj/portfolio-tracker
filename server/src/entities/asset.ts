@@ -10,6 +10,9 @@ export const assetSchema = z.object({
   name: z.string().min(1).max(500),
   type: z.enum(INVESTMENT_TYPES),
   symbol: z.string().min(1).max(10),
+  price: z.number().positive(),
+  exchange: z.string().min(1).max(500),
+  exchangeShortName: z.string().min(1).max(500),
   createdAt: z.date().default(() => new Date()),
 })
 
@@ -20,3 +23,5 @@ export type AssetPublic = Pick<
   Selectable<Asset>,
   (typeof assetKeysPublic)[number]
 >
+
+export type AssetPrice = Pick<Selectable<Asset>, 'price' | 'symbol'>

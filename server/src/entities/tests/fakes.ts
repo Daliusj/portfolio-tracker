@@ -45,6 +45,10 @@ export const fakeAsset = <T extends Partial<Insertable<Asset>>>(overrides: T) =>
     name: random.string(),
     type: 'stock',
     symbol: random.string(),
+    price: random.floating({ min: 0, max: 100 }),
+    exchange: random.string(),
+    exchangeShortName: random.string(),
+
     ...overrides,
   }) satisfies Insertable<Asset>
 

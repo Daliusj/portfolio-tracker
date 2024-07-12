@@ -10,8 +10,15 @@ const repository = assetRepository(db)
 describe('create', () => {
   it('should create a new asset and return a number of created assets', async () => {
     const asset = fakeAsset({})
-    const createdAssetCount = await repository.create(asset)
-    expect(createdAssetCount).toEqual(1)
+    const createdAssets = await repository.create(asset)
+    expect(createdAssets).toEqual([
+      {
+        id: expect.any(Number),
+        createdAt: expect.any(Date),
+        ...asset,
+        price: `${asset.price}`,
+      },
+    ])
   })
 })
 
@@ -122,5 +129,28 @@ describe('findAll', () => {
       const isEmpty = await repository.isAssetsEmpty()
       expect(isEmpty).toBeTruthy()
     })
+  })
+})
+
+describe('updatePrice', () => {
+  it('should update assets prices', async () => {
+    const [asset1, asset2] = await insertAll(db, 'asset', [
+      fakeAsset({ symbol: 'AAPL' }),
+      fakeAsset({ symbol: 'GOOG' }),
+    ])
+    const updateAsset = await repository.updatePrices([
+      {
+        price: '100.0',
+        symbol: 'AAPL',
+      },
+      {
+        price: '100.0',
+        symbol: 'GOOG',
+      },
+    ])
+    expect(updateAsset).toEqual([
+      { ...asset1, price: '100.0' },
+      { ...asset2, price: '100.0' },
+    ])
   })
 })

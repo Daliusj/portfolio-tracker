@@ -13,8 +13,11 @@ export type Timestamp = ColumnType<Date, Date | string, Date | string>
 
 export interface Asset {
   createdAt: Generated<Timestamp>
+  exchange: string
+  exchangeShortName: string
   id: Generated<number>
   name: string
+  price: Numeric
   symbol: string
   type: InvestmentType
 }

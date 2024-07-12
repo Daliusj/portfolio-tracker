@@ -1,14 +1,23 @@
 import type { Database, Asset } from '@server/database'
-import { type AssetPublic, assetKeysPublic } from '@server/entities/asset'
+import {
+  type AssetPrice,
+  type AssetPublic,
+  assetKeysPublic,
+} from '@server/entities/asset'
 import type { Insertable } from 'kysely'
+import { sql } from 'kysely'
 
 export function assetRepository(db: Database) {
   return {
     async create(
       asset: Insertable<Asset> | Insertable<Asset>[]
-    ): Promise<number> {
-      const result = await db.insertInto('asset').values(asset).execute()
-      return result.length
+    ): Promise<AssetPublic[]> {
+      const result = await db
+        .insertInto('asset')
+        .values(asset)
+        .returningAll()
+        .execute()
+      return result
     },
 
     async findById(assetId: number): Promise<AssetPublic | undefined> {
@@ -42,7 +51,24 @@ export function assetRepository(db: Database) {
         .length
       return !assetsCount
     },
+
+    async updatePrices(assetPrices: AssetPrice[]): Promise<AssetPublic[]> {
+      const cases = assetPrices.map(
+        (assetPrice) => sql`WHEN ${assetPrice.symbol} THEN ${assetPrice.price}`
+      )
+      const caseStatement = sql.join(cases, sql` `)
+      const symbols = assetPrices.map((assetPrice) => assetPrice.symbol)
+      const query = db
+        .updateTable('asset')
+        .set({
+          price: sql`CASE symbol ${caseStatement} ELSE price END`,
+        })
+        .where(sql`symbol`, 'in', symbols)
+        .returning(assetKeysPublic)
+
+      const updatedAssets = await query.execute()
+      return updatedAssets
+    },
   }
 }
-
 export type AssetRepository = ReturnType<typeof assetRepository>

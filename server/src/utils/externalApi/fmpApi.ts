@@ -3,11 +3,12 @@ import config from '@server/config'
 import type { InvestmentType } from '@server/database/types'
 
 export const CLOSE_KEY = 'close'
-const STOCKS_HISTORICAL_URL =
-  'https://financialmodelingprep.com/api/v3/stock/list'
-const FUNDS_HISTORICAL_URL = 'https://financialmodelingprep.com/api/v3/etf/list'
-const CRYPTOS_HISTORICAL_URL =
+const STOCKS_LIST_URL = 'https://financialmodelingprep.com/api/v3/stock/list'
+const FUNDS_LIST_URL = 'https://financialmodelingprep.com/api/v3/etf/list'
+const CRYPTOS_LIST_URL =
   'https://financialmodelingprep.com/api/v3/symbol/available-cryptocurrencies'
+const HISTORICAL_PRICES_URL =
+  'https://financialmodelingprep.com/api/v3/historical-price-full'
 
 const apiKey = config.fmpApiKey
 
@@ -68,16 +69,13 @@ const fetchPrices = async (
   toDate: string
 ): Promise<HistoricalData[]> => {
   try {
-    const response = await axios.get(
-      `https://financialmodelingprep.com/api/v3/historical-price-full/${symbol}`,
-      {
-        params: {
-          from: fromDate,
-          to: toDate,
-          apiKey,
-        },
-      }
-    )
+    const response = await axios.get(`${HISTORICAL_PRICES_URL}/${symbol}`, {
+      params: {
+        from: fromDate,
+        to: toDate,
+        apiKey,
+      },
+    })
 
     if (response.data['Error Message']) {
       throw new Error(response.data['Error Message'])
@@ -140,15 +138,15 @@ export default function buildFmp() {
   }
 
   const fetchAllStocks = async (): Promise<Ticker[]> => {
-    const data = await fetchAllTickers(STOCKS_HISTORICAL_URL, 'stock')
+    const data = await fetchAllTickers(STOCKS_LIST_URL, 'stock')
     return data
   }
   const fetchAllCryptos = async (): Promise<Ticker[]> => {
-    const data = await fetchAllTickers(CRYPTOS_HISTORICAL_URL, 'crypto')
+    const data = await fetchAllTickers(CRYPTOS_LIST_URL, 'crypto')
     return data
   }
   const fetchAllFunds = async (): Promise<Ticker[]> => {
-    const data = await fetchAllTickers(FUNDS_HISTORICAL_URL, 'fund')
+    const data = await fetchAllTickers(FUNDS_LIST_URL, 'fund')
     return data
   }
 
