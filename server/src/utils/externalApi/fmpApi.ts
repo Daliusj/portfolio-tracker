@@ -21,6 +21,9 @@ export type Ticker = {
   symbol: string
   name: string
   type: InvestmentType
+  exchange: string
+  exchangeShortName: string
+  price: number
 }
 
 type FullTicker = {
