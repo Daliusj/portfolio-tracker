@@ -47,8 +47,7 @@ export function assetRepository(db: Database) {
     },
 
     async isAssetsEmpty(): Promise<Boolean> {
-      const assetsCount = (await db.selectFrom('asset').selectAll().execute())
-        .length
+      const assetsCount = await db.selectFrom('asset').executeTakeFirst()
       return !assetsCount
     },
 
