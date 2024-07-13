@@ -20,12 +20,19 @@ export function assetRepository(db: Database) {
       return result
     },
 
-    async findById(assetId: number): Promise<AssetPublic | undefined> {
+    async findById(assetId: number | number[]): Promise<AssetPublic[]> {
+      if (Array.isArray(assetId)) {
+        return db
+          .selectFrom('asset')
+          .select(assetKeysPublic)
+          .where('id', 'in', assetId)
+          .execute()
+      }
       return db
         .selectFrom('asset')
         .select(assetKeysPublic)
         .where('id', '=', assetId)
-        .executeTakeFirst()
+        .execute()
     },
 
     async findAsset(query: string): Promise<AssetPublic[]> {

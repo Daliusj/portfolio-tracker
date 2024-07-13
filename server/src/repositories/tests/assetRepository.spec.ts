@@ -26,13 +26,22 @@ describe('findById', () => {
   it('should find asset by id', async () => {
     const [asset] = await insertAll(db, 'asset', fakeAsset({}))
     const assetsFound = await repository.findById(asset.id)
-    expect(assetsFound).toEqual(asset)
+    expect(assetsFound).toEqual([asset])
   })
 
-  it('should return undifined if no assets are found', async () => {
+  it('should find assets by array of ids', async () => {
+    const [assetOne, assetTwo] = await insertAll(db, 'asset', [
+      fakeAsset({}),
+      fakeAsset({}),
+    ])
+    const assetsFound = await repository.findById([assetOne.id, assetTwo.id])
+    expect(assetsFound).toEqual([assetOne, assetTwo])
+  })
+
+  it('should return an empty array if no assets are found', async () => {
     const assetId = 456
     const assetFound = await repository.findById(assetId)
-    expect(assetFound).toBeUndefined()
+    expect(assetFound).toEqual([])
   })
 })
 
