@@ -22,8 +22,22 @@ export interface Asset {
   type: InvestmentType
 }
 
+export interface Currency {
+  code: string
+  id: Generated<number>
+  name: string
+}
+
+export interface Exchange {
+  currencyCode: string
+  id: Generated<number>
+  name: string
+  shortName: string
+}
+
 export interface Portfolio {
   createdAt: Generated<Timestamp>
+  currencySymbol: string
   id: Generated<number>
   userId: number
 }
@@ -48,6 +62,8 @@ export interface User {
 
 export interface DB {
   asset: Asset
+  currency: Currency
+  exchange: Exchange
   portfolio: Portfolio
   portfolioItem: PortfolioItem
   user: User

@@ -22,7 +22,26 @@ export function portfolioRepository(db: Database) {
         .where('userId', '=', userId)
         .execute()
     },
+
+    async findFullPortfolio(portfolioId: number) {
+      return db
+        .selectFrom('asset')
+        .innerJoin('portfolioItem', 'portfolioItem.assetId', 'asset.id')
+        .innerJoin('portfolio', 'portfolio.id', 'portfolioItem.portfolioId')
+        .innerJoin('exchange', 'exchange.shortName', 'asset.exchangeShortName')
+        .innerJoin('currency', 'currency.code', 'exchange.currencyCode')
+        .select([
+          'asset.id',
+          'asset.name',
+          'asset.price',
+          'asset.type',
+          'portfolioItem.quantity',
+          'currency.code',
+        ])
+        .where('portfolio.id', '=', portfolioId)
+        .execute()
+    },
   }
 }
 
-export type AssetRepository = ReturnType<typeof portfolioRepository>
+export type PortfolioRepository = ReturnType<typeof portfolioRepository>

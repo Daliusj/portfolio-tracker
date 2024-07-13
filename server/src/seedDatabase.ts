@@ -24,4 +24,4 @@ export default async (db: Database) => {
   }
 }
 
-// TODO add timestamp to database
+// TODO add update timestamp to database

@@ -39,4 +39,6 @@ export function portfolioItemRepository(db: Database) {
   }
 }
 
-export type AssetRepository = ReturnType<typeof portfolioItemRepository>
+export type PortfolioItemsRepository = ReturnType<
+  typeof portfolioItemRepository
+>
