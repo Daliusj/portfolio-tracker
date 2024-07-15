@@ -84,7 +84,7 @@ describe('findFullPortfolioByPortfolioId', () => {
         price: assetOne.price,
         type: assetOne.type,
         quantity: portfolioItemOne.quantity,
-        code: 'USD',
+        currencyCode: 'USD',
       },
       {
         id: assetTwo.id,
@@ -92,7 +92,7 @@ describe('findFullPortfolioByPortfolioId', () => {
         price: assetTwo.price,
         type: assetTwo.type,
         quantity: portfolioItemTwo.quantity,
-        code: 'USD',
+        currencyCode: 'USD',
       },
       {
         id: assetThree.id,
@@ -100,7 +100,7 @@ describe('findFullPortfolioByPortfolioId', () => {
         price: assetThree.price,
         type: assetThree.type,
         quantity: portfolioItemThree.quantity,
-        code: 'EUR',
+        currencyCode: 'EUR',
       },
     ])
   })

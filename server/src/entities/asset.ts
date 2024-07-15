@@ -25,3 +25,10 @@ export type AssetPublic = Pick<
 >
 
 export type AssetPrice = Pick<Selectable<Asset>, 'price' | 'symbol'>
+
+export const assetFieldsForFullPortfolio = assetSchema.pick({
+  id: true,
+  name: true,
+  price: true,
+  type: true,
+})

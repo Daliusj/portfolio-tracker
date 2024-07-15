@@ -1,5 +1,6 @@
 import type { Database, Portfolio } from '@server/database'
 import {
+  type FullPortfolioPublic,
   type PortfolioPublic,
   portfolioKeysPublic,
 } from '@server/entities/portfolio'
@@ -23,7 +24,9 @@ export function portfolioRepository(db: Database) {
         .execute()
     },
 
-    async findFullPortfolio(portfolioId: number) {
+    async findFullPortfolio(
+      portfolioId: number
+    ): Promise<FullPortfolioPublic[]> {
       return db
         .selectFrom('asset')
         .innerJoin('portfolioItem', 'portfolioItem.assetId', 'asset.id')
@@ -36,7 +39,7 @@ export function portfolioRepository(db: Database) {
           'asset.price',
           'asset.type',
           'portfolioItem.quantity',
-          'currency.code',
+          'currency.code as currencyCode',
         ])
         .where('portfolio.id', '=', portfolioId)
         .execute()

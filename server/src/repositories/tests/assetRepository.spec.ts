@@ -8,7 +8,7 @@ const db = await wrapInRollbacks(createTestDatabase())
 const repository = assetRepository(db)
 
 describe('create', () => {
-  it('should create a new asset and return a number of created assets', async () => {
+  it('should create a new asset and return created assets', async () => {
     const asset = fakeAsset({})
     const createdAssets = await repository.create(asset)
     expect(createdAssets).toEqual([

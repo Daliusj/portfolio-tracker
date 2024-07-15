@@ -24,3 +24,7 @@ export type PortfolioItemPublic = Pick<
   Selectable<PortfolioItem>,
   (typeof portfolioItemKeysPublic)[number]
 >
+
+export const portfolioItemFieldsForFullPortfolio = portfolioItemSchema.pick({
+  quantity: true,
+})

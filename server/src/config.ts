@@ -36,6 +36,7 @@ const schema = z
     }),
 
     fmpApiKey: z.string(),
+    exchangeRateApiKey: z.string(),
   })
   .readonly()
 
@@ -55,6 +56,7 @@ const config = schema.parse({
   },
 
   fmpApiKey: env.FMP_API_KEY,
+  exchangeRateApiKey: env.EXCHANGE_RATE_API_KEY,
 })
 
 export default config
