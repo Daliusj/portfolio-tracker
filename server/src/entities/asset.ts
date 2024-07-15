@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import type { Selectable } from 'kysely'
+import type { Selectable, Insertable } from 'kysely'
 import type { Asset } from '@server/database/types'
 import { idSchema } from './shared'
 
@@ -24,7 +24,7 @@ export type AssetPublic = Pick<
   (typeof assetKeysPublic)[number]
 >
 
-export type AssetPrice = Pick<Selectable<Asset>, 'price' | 'symbol'>
+export type AssetPrice = Pick<Insertable<Asset>, 'price' | 'symbol'>
 
 export const assetFieldsForFullPortfolio = assetSchema.pick({
   id: true,

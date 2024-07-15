@@ -8,19 +8,6 @@ import type { Insertable } from 'kysely'
 
 export function currencyExchangeRateRepository(db: Database) {
   return {
-    async create(
-      currencyExchangeRate:
-        | Insertable<CurrencyExchangeRate>
-        | Insertable<CurrencyExchangeRate>[]
-    ): Promise<CurrencyExchangeRatePublic[]> {
-      const result = await db
-        .insertInto('currencyExchangeRate')
-        .values(currencyExchangeRate)
-        .returningAll()
-        .execute()
-      return result
-    },
-
     async findRate(
       symbolCombination: Insertable<CurrencySymbolsCombination>
     ): Promise<CurrencyExchangeRatePublic | undefined> {
@@ -35,6 +22,30 @@ export function currencyExchangeRateRepository(db: Database) {
         )
         .executeTakeFirst()
       return result
+    },
+
+    async upsert(
+      exchangeRates: Insertable<CurrencyExchangeRate>[]
+    ): Promise<CurrencyExchangeRatePublic[]> {
+      const results: CurrencyExchangeRatePublic[] = []
+
+      const promises = exchangeRates.map(async (exchangeRate) => {
+        const result = await db
+          .insertInto('currencyExchangeRate')
+          .values(exchangeRate)
+          .onConflict((oc) =>
+            oc.columns(['currencyFrom', 'currencyTo']).doUpdateSet((eb) => ({
+              exchangeRate: eb.ref('excluded.exchangeRate'),
+            }))
+          )
+          .returningAll()
+          .execute()
+
+        return result[0]
+      })
+      const resolvedResults = await Promise.all(promises)
+      results.push(...resolvedResults)
+      return results
     },
   }
 }

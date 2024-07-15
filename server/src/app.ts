@@ -53,7 +53,7 @@ export default async function createApp(db: Database) {
     )
   }
   await seedDatabase(db)
-  // await assetsUpdate(db)
+  // await update(db)
 
   return app
 }

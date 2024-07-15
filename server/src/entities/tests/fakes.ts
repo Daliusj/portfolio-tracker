@@ -4,6 +4,7 @@ import type {
   Portfolio,
   PortfolioItem,
   CurrencyExchangeRate,
+  Currency,
 } from '@server/database/types'
 import type { Insertable } from 'kysely'
 import { random } from '@tests/utils/random'
@@ -92,8 +93,21 @@ export const fakeCurrencyExchangeRate = <
   overrides: T
 ) =>
   ({
-    currencyFrom: 'USD',
-    currencyTo: 'EUR',
+    currencyFrom: random.string({ length: 3 }),
+    currencyTo: random.string({ length: 3 }),
     exchangeRate: random.floating({ min: 0.5, max: 5, fixed: 2 }),
     ...overrides,
   }) satisfies Insertable<CurrencyExchangeRate>
+
+/**
+ * Generates a fake currency with some default test data.
+ * @param overrides  properties that should be different from default fake data.
+ */
+export const fakeCurrency = <T extends Partial<Insertable<Currency>>>(
+  overrides: T
+) =>
+  ({
+    name: 'United States Dollar',
+    code: 'USD',
+    ...overrides,
+  }) satisfies Insertable<Currency>

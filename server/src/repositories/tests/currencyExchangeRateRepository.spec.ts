@@ -7,39 +7,6 @@ import { currencyExchangeRateRepository } from '../currencyExchangeRatesReposito
 const db = await wrapInRollbacks(createTestDatabase())
 const repository = currencyExchangeRateRepository(db)
 
-describe('create', () => {
-  it('should create a new currency exchange rate and return created records', async () => {
-    const exchangeRate = fakeCurrencyExchangeRate({})
-    const createdExchangeRates = await repository.create(exchangeRate)
-    expect(createdExchangeRates).toEqual([
-      {
-        lastUpdate: expect.any(Date),
-        ...exchangeRate,
-        exchangeRate: `${exchangeRate.exchangeRate}`,
-      },
-    ])
-  })
-  it('should create multiple currency exchange rates and return created records', async () => {
-    const exchangeRate = fakeCurrencyExchangeRate({})
-    const createdExchangeRates = await repository.create([
-      exchangeRate,
-      exchangeRate,
-    ])
-    expect(createdExchangeRates).toEqual([
-      {
-        lastUpdate: expect.any(Date),
-        ...exchangeRate,
-        exchangeRate: `${exchangeRate.exchangeRate}`,
-      },
-      {
-        lastUpdate: expect.any(Date),
-        ...exchangeRate,
-        exchangeRate: `${exchangeRate.exchangeRate}`,
-      },
-    ])
-  })
-})
-
 describe('findRate', () => {
   it('should find exchange rate by currency symbol combination', async () => {
     const [currencyRate] = await insertAll(
@@ -61,5 +28,34 @@ describe('findRate', () => {
         currencyTo: 'USD',
       })
     ).toBeUndefined()
+  })
+})
+
+describe('upsert', () => {
+  it('should insert a new currency exchange rate if it does not exist', async () => {
+    const exchangeRate = fakeCurrencyExchangeRate({})
+    const upsertedExchangeRates = await repository.upsert([exchangeRate])
+    expect(upsertedExchangeRates.length).toBe(1)
+    expect(upsertedExchangeRates[0]).toEqual({
+      lastUpdate: expect.any(Date),
+      ...exchangeRate,
+      exchangeRate: `${exchangeRate.exchangeRate}`,
+    })
+  })
+
+  it('should update an existing currency exchange rate if it already exists', async () => {
+    const exchangeRate = fakeCurrencyExchangeRate({})
+    const [insertedRate] = await insertAll(
+      db,
+      'currencyExchangeRate',
+      exchangeRate
+    )
+    const updatedExchangeRate = { ...insertedRate, exchangeRate: '1.2345' } // Simulate update
+    const upsertedExchangeRates = await repository.upsert([updatedExchangeRate])
+    expect(upsertedExchangeRates.length).toBe(1)
+    expect(upsertedExchangeRates[0]).toEqual({
+      ...insertedRate,
+      exchangeRate: '1.2345',
+    })
   })
 })

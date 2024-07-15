@@ -153,12 +153,31 @@ export default function buildFmp() {
     return data
   }
 
+  const fetchAllStocksPrices = async () => {
+    const stocks = await fetchAllStocks()
+    return stocks.map((stock) => ({
+      symbol: stock.symbol,
+      price: stock.price,
+    }))
+  }
+  const fetchAllFundsPrices = async () => {
+    const stocks = await fetchAllFunds()
+    return stocks.map((stock) => ({ symbol: stock.symbol, price: stock.price }))
+  }
+  const fetchAllCryptosPrices = async () => {
+    const stocks = await fetchAllCryptos()
+    return stocks.map((stock) => ({ symbol: stock.symbol, price: stock.price }))
+  }
+
   return {
     fetchDayPrice,
     fetchTimeRangePrices,
     fetchAllStocks,
     fetchAllCryptos,
     fetchAllFunds,
+    fetchAllStocksPrices,
+    fetchAllFundsPrices,
+    fetchAllCryptosPrices,
   }
 }
 
