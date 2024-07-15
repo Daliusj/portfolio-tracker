@@ -28,6 +28,13 @@ export interface Currency {
   name: string
 }
 
+export interface CurrencyExchangeRate {
+  currencyFrom: string
+  currencyTo: string
+  exchangeRate: Numeric
+  lastUpdate: Generated<Timestamp>
+}
+
 export interface Exchange {
   currencyCode: string
   id: Generated<number>
@@ -63,6 +70,7 @@ export interface User {
 export interface DB {
   asset: Asset
   currency: Currency
+  currencyExchangeRate: CurrencyExchangeRate
   exchange: Exchange
   portfolio: Portfolio
   portfolioItem: PortfolioItem
