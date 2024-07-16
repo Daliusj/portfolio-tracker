@@ -44,6 +44,24 @@ describe('findByUserId', () => {
   })
 })
 
+describe('findById', () => {
+  it('should find portfolio by id', async () => {
+    const [user] = await insertAll(db, 'user', fakeUser({}))
+    const [portfolio] = await insertAll(
+      db,
+      'portfolio',
+      fakePortfolio({ userId: user.id })
+    )
+    const portfolioFound = await repository.findById(portfolio.id)
+    expect(portfolioFound).toEqual(portfolio)
+  })
+
+  it('should return undifined if no portfolios are found', async () => {
+    const portfoliosFound = await repository.findById(56)
+    expect(portfoliosFound).toBeUndefined()
+  })
+})
+
 describe('findFullPortfolioByPortfolioId', () => {
   it('should return full portfolio data from joined tables by portfolio id', async () => {
     const [assetOne, assetTwo, assetThree] = await insertAll(db, 'asset', [

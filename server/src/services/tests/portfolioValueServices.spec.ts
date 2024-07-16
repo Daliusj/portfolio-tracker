@@ -1,4 +1,3 @@
-import { fakeFmp } from '@server/utils/externalApi/tests/utils'
 import { insertAll } from '@tests/utils/records'
 import { createTestDatabase } from '@tests/utils/database'
 import { wrapInRollbacks } from '@tests/utils/transactions'
@@ -7,20 +6,27 @@ import {
   fakePortfolio,
   fakePortfolioItem,
 } from '@server/entities/tests/fakes'
-import { portfolioRepository } from '@server/repositories/portfolioRepository'
 import portfolioValueServices from '../portfolioValueServices'
 import { fakeUser } from '../../entities/tests/fakes'
 
 const db = await wrapInRollbacks(createTestDatabase())
 
-const fmpWorking = fakeFmp()
-
-const portfolioRepo = portfolioRepository(db)
-
-const services = portfolioValueServices(fmpWorking, portfolioRepo)
+const services = portfolioValueServices(db)
 
 describe('getFullPortfolioValue', () => {
   it('should return portfolio total value', async () => {
+    const [rateOne, rateTwo] = await insertAll(db, 'currencyExchangeRate', [
+      {
+        currencyFrom: 'EUR',
+        currencyTo: 'USD',
+        exchangeRate: 2,
+      },
+      {
+        currencyFrom: 'EUR',
+        currencyTo: 'EUR',
+        exchangeRate: 1,
+      },
+    ])
     const [assetOne, assetTwo, assetThree] = await insertAll(db, 'asset', [
       fakeAsset({ type: 'fund', price: 100, exchangeShortName: 'NYSE' }),
       fakeAsset({ type: 'stock', price: 200, exchangeShortName: 'NASDAQ' }),
@@ -54,9 +60,15 @@ describe('getFullPortfolioValue', () => {
     const value = await services.getFullPortfolioValue(portfolio.id)
 
     expect(value).toEqual(
-      Number(portfolioItemOne.quantity) * Number(assetOne.price) +
-        Number(portfolioItemTwo.quantity) * Number(assetTwo.price) +
-        Number(portfolioItemThree.quantity) * Number(assetThree.price)
+      Number(portfolioItemOne.quantity) *
+        Number(assetOne.price) *
+        Number(rateOne.exchangeRate) +
+        Number(portfolioItemTwo.quantity) *
+          Number(assetTwo.price) *
+          Number(rateOne.exchangeRate) +
+        Number(portfolioItemThree.quantity) *
+          Number(assetThree.price) *
+          Number(rateTwo.exchangeRate)
     )
   })
 })

@@ -24,6 +24,14 @@ export function portfolioRepository(db: Database) {
         .execute()
     },
 
+    async findById(id: number): Promise<PortfolioPublic | undefined> {
+      return db
+        .selectFrom('portfolio')
+        .select(portfolioKeysPublic)
+        .where('id', '=', id)
+        .executeTakeFirst()
+    },
+
     async findFullPortfolio(
       portfolioId: number
     ): Promise<FullPortfolioPublic[]> {
