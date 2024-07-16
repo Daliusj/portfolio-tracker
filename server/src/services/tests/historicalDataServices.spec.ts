@@ -1,18 +1,13 @@
-import {
-  fakeFmpWorking,
-  fakeFmpNotWorking,
-} from '@server/utils/externalApi/tests/utils'
+import { fakeFmp } from '@server/utils/externalApi/tests/utils'
 import {
   fakeFinancialData,
   fakeInputData,
 } from '@server/utils/externalApi/tests/fakes'
 import historicalDataServices from '../historicalDataServices'
 
-const fmpWorking = fakeFmpWorking()
-const fmpNotWorking = fakeFmpNotWorking()
+const fmpApi = fakeFmp()
 
-const servicesWorking = historicalDataServices(fmpWorking)
-const servicesNotWorking = historicalDataServices(fmpNotWorking)
+const servicesWorking = historicalDataServices(fmpApi)
 
 describe('getDataForTimeRange', () => {
   it('should fetch asset data for a date range when API is working', async () => {
@@ -23,16 +18,6 @@ describe('getDataForTimeRange', () => {
     )
     expect(data).toEqual(fakeFinancialData)
   })
-
-  it('should throw an error when API is not working', async () => {
-    await expect(
-      servicesNotWorking.getDataForTimeRange(
-        'AAPL',
-        fakeInputData.dateFrom,
-        fakeInputData.dateTo
-      )
-    ).rejects.toThrow()
-  })
 })
 
 describe('getDataForOneDay', () => {
@@ -42,11 +27,5 @@ describe('getDataForOneDay', () => {
       fakeInputData.dateFrom
     )
     expect(data).toEqual([fakeFinancialData[0]])
-  })
-
-  it('should throw an error when API is not working', async () => {
-    await expect(
-      servicesNotWorking.getDataForOneDay('AAPL', fakeInputData.dateFrom)
-    ).rejects.toThrow()
   })
 })

@@ -1,14 +1,27 @@
 import axios from 'axios'
 import config from '@server/config'
+import { format } from 'date-fns'
 import type { InvestmentType } from '@server/database/types'
 
-export const CLOSE_KEY = 'close'
 const STOCKS_LIST_URL = 'https://financialmodelingprep.com/api/v3/stock/list'
 const FUNDS_LIST_URL = 'https://financialmodelingprep.com/api/v3/etf/list'
 const CRYPTOS_LIST_URL =
   'https://financialmodelingprep.com/api/v3/symbol/available-cryptocurrencies'
 const HISTORICAL_PRICES_URL =
   'https://financialmodelingprep.com/api/v3/historical-price-full'
+
+const MAIN_CRYPTOS = [
+  'BTCUSD', // Bitcoin
+  'ETHUSD', // Ethereum
+  'BNBUSD', // Binance Coin
+  'USDTUSD', // Tether
+  'ADAUSD', // Cardano
+  'XRPUSD', // XRP
+  'SOLUSD', // Solana
+  'DOTUSD', // Polkadot
+  'DOGEUSD', // Dogecoin
+  'USDCUSD', // USD Coin
+]
 
 const apiKey = config.fmpApiKey
 
@@ -29,10 +42,11 @@ export type Ticker = {
 type FullTicker = {
   symbol: string
   name: string
-  price: number
-  exchange: string
+  price?: number
+  exchange?: string
   exchangeShortName: string
   type: string
+  stockExchange?: string
 }
 
 export type HistoricalData = {
@@ -93,7 +107,7 @@ const fetchPrices = async (
   }
 }
 
-const fetchAllTickers = async (
+const fetchStocksAndETF = async (
   url: string,
   type: InvestmentType
 ): Promise<Ticker[]> => {
@@ -112,6 +126,9 @@ const fetchAllTickers = async (
       symbol: fullTicker.symbol,
       name: fullTicker.name,
       type,
+      exchange: fullTicker.exchange,
+      exchangeShortName: fullTicker.exchangeShortName,
+      price: fullTicker.price,
     }))
   } catch (err) {
     throw new Error(
@@ -141,15 +158,12 @@ export default function buildFmp() {
   }
 
   const fetchAllStocks = async (): Promise<Ticker[]> => {
-    const data = await fetchAllTickers(STOCKS_LIST_URL, 'stock')
+    const data = await fetchStocksAndETF(STOCKS_LIST_URL, 'stock')
     return data
   }
-  const fetchAllCryptos = async (): Promise<Ticker[]> => {
-    const data = await fetchAllTickers(CRYPTOS_LIST_URL, 'crypto')
-    return data
-  }
+
   const fetchAllFunds = async (): Promise<Ticker[]> => {
-    const data = await fetchAllTickers(FUNDS_LIST_URL, 'fund')
+    const data = await fetchStocksAndETF(FUNDS_LIST_URL, 'fund')
     return data
   }
 
@@ -164,6 +178,58 @@ export default function buildFmp() {
     const stocks = await fetchAllFunds()
     return stocks.map((stock) => ({ symbol: stock.symbol, price: stock.price }))
   }
+
+  const fetchCryptosFullListing = async (): Promise<FullTicker[]> => {
+    try {
+      const response = await axios.get(CRYPTOS_LIST_URL, {
+        params: {
+          apikey: apiKey,
+        },
+      })
+
+      if (response.data['Error Message']) {
+        throw new Error(response.data['Error Message'])
+      }
+
+      return response.data
+    } catch (err) {
+      throw new Error(
+        `Error fetching available cryptocurrencies: ${
+          err instanceof Error ? err.message : 'An unknown error occurred'
+        }`
+      )
+    }
+  }
+
+  const fetchAllCryptos = async (): Promise<Ticker[]> => {
+    const allCryptos = await fetchCryptosFullListing()
+
+    const mainCryptos = allCryptos.filter((crypto) =>
+      MAIN_CRYPTOS.includes(crypto.symbol)
+    )
+    const today = format(new Date(), 'yyyy-MM-dd')
+    const pricePromises = MAIN_CRYPTOS.map(async (crypto) => {
+      const [priceData] = await fetchPrices(crypto, today, today)
+      return { symbol: crypto, price: priceData?.close || 0 }
+    })
+
+    const prices = await Promise.all(pricePromises)
+
+    const mainCryptosWithPrices = mainCryptos.map((crypto) => {
+      const priceData = prices.find((price) => price.symbol === crypto.symbol)
+      return {
+        symbol: crypto.symbol,
+        name: crypto.name,
+        type: 'crypto' as InvestmentType,
+        exchange: crypto.stockExchange || 'CCC',
+        exchangeShortName: crypto.exchangeShortName,
+        price: priceData ? priceData.price : 0,
+      }
+    })
+
+    return mainCryptosWithPrices
+  }
+
   const fetchAllCryptosPrices = async () => {
     const stocks = await fetchAllCryptos()
     return stocks.map((stock) => ({ symbol: stock.symbol, price: stock.price }))

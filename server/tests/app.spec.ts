@@ -1,10 +1,14 @@
 // starts with the real database configuration
 import createApp from '@server/app'
 import supertest from 'supertest'
+import { databaseUpdate } from '@server/scripts/databaseUpdate'
+import { seedDatabase } from '@server/scripts/seedDatabase'
 import { createTestDatabase } from './utils/database'
 
 const database = createTestDatabase()
-const app = createApp(database)
+const dbUpdate = databaseUpdate(database)
+const dbSeed = seedDatabase(database)
+const app = createApp(database, dbUpdate, dbSeed)
 
 afterAll(() => {
   database.destroy()

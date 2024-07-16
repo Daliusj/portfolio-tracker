@@ -1,4 +1,5 @@
 import type { HistoricalData, FinancialData, Ticker } from '../fmpApi'
+import { type CurrencyData } from '../exchangeRatesApi'
 
 export const fakeTimeSeriesDataFmp: HistoricalData[] = [
   {
@@ -49,15 +50,105 @@ export const fakeInputData = {
   dateTo: '2023-07-01',
 }
 
-export const fakeAssetsList: Ticker[] = [
+export const fakeStocksList: Ticker[] = [
   {
-    name: 'Apple',
     symbol: 'AAPL',
+    name: 'Apple Inc.',
+    price: 226.49,
+    exchange: 'NASDAQ Global Select',
+    exchangeShortName: 'NASDAQ',
     type: 'stock',
   },
   {
-    name: 'Google',
-    symbol: 'GOOG',
+    symbol: 'SW',
+    name: 'Smurfit WestRock plc',
+    price: 45.4,
+    exchange: 'New York Stock Exchange',
+    exchangeShortName: 'NYSE',
     type: 'stock',
+  },
+]
+export const fakeFundsList: Ticker[] = [
+  {
+    symbol: 'GLOW',
+    name: 'VictoryShares WestEnd Global Equity ETF',
+    price: 25.4112,
+    exchange: 'Nasdaq',
+    exchangeShortName: 'NASDAQ',
+    type: 'fund',
+  },
+  {
+    symbol: 'BITS',
+    name: 'Global X Blockchain & Bitcoin Strategy ETF',
+    price: 66.74,
+    exchange: 'NASDAQ Global Market',
+    exchangeShortName: 'NASDAQ',
+    type: 'fund',
+  },
+]
+export const fakeCryptosList: Ticker[] = [
+  {
+    symbol: 'BTCUSD',
+    name: 'Bitcoin USD',
+    price: 63677.82,
+    exchange: '',
+    exchangeShortName: 'CRYPTO',
+    type: 'crypto',
+  },
+  {
+    symbol: 'ETHUSD',
+    name: 'Ethereum USD',
+    price: 3413.35,
+    exchange: '',
+    exchangeShortName: 'CRYPTO',
+    type: 'crypto',
+  },
+]
+
+export const fakeStocksPrices = [
+  {
+    symbol: 'AAPL',
+    price: 250.0,
+  },
+  {
+    symbol: 'SW',
+    price: 50.0,
+  },
+]
+export const fakeFundsPrices = [
+  {
+    symbol: 'GLOW',
+    price: 30.0,
+  },
+  {
+    symbol: 'BITS',
+    price: 70.0,
+  },
+]
+export const fakeCryptosPrices = [
+  {
+    symbol: 'BTCUSD',
+    price: 64000.0,
+  },
+  {
+    symbol: 'ETHUSD',
+    price: 3500.0,
+  },
+]
+
+export const fakeCurrencyExchangeRates: CurrencyData[] = [
+  {
+    base: 'USD',
+    rates: {
+      EUR: 0.9,
+      GBP: 0.8,
+    },
+  },
+  {
+    base: 'EUR',
+    rates: {
+      USD: 1.1,
+      GBP: 0.9,
+    },
   },
 ]

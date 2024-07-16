@@ -1,4 +1,4 @@
-import { fakeFmpWorking } from '@server/utils/externalApi/tests/utils'
+import { fakeFmp } from '@server/utils/externalApi/tests/utils'
 import { insertAll } from '@tests/utils/records'
 import { createTestDatabase } from '@tests/utils/database'
 import { wrapInRollbacks } from '@tests/utils/transactions'
@@ -13,7 +13,7 @@ import { fakeUser } from '../../entities/tests/fakes'
 
 const db = await wrapInRollbacks(createTestDatabase())
 
-const fmpWorking = fakeFmpWorking()
+const fmpWorking = fakeFmp()
 
 const portfolioRepo = portfolioRepository(db)
 

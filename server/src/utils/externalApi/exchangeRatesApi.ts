@@ -8,41 +8,46 @@ const apiKey = config.exchangeRateApiKey
 type CurrencyRates = {
   [currencyCode: string]: number
 }
-type CurrencyData = {
+export type CurrencyData = {
   base: string
   rates: CurrencyRates
 }
 
-export default () => ({
-  fetchRates: async (baseCodes: string[]): Promise<CurrencyData[]> => {
-    if (!Array.isArray(baseCodes)) {
-      throw new Error('baseCodes should be an array')
-    }
+export default function buildExchangeRatesApi() {
+  return {
+    fetchRates: async (baseCodes: string[]): Promise<CurrencyData[]> => {
+      if (!Array.isArray(baseCodes)) {
+        throw new Error('baseCodes should be an array')
+      }
 
-    try {
-      const requests = baseCodes.map((baseCode) =>
-        axios.get(`${BASE_URL}${apiKey}${LATEST_ENDPOINT}${baseCode}`)
-      )
+      try {
+        const requests = baseCodes.map((baseCode) =>
+          axios.get(`${BASE_URL}${apiKey}${LATEST_ENDPOINT}${baseCode}`)
+        )
 
-      const responses = await Promise.all(requests)
+        const responses = await Promise.all(requests)
 
-      const results = responses.map((response) => {
-        if (response.data.result === 'error') {
-          throw new Error(response.data['error-type'])
-        }
-        return {
-          base: response.data.base_code,
-          rates: response.data.conversion_rates,
-        }
-      })
+        const results = responses.map((response) => {
+          if (response.data.result === 'error') {
+            throw new Error(response.data['error-type'])
+          }
+          return {
+            base: response.data.base_code,
+            rates: response.data.conversion_rates,
+          }
+        })
 
-      return results as unknown as CurrencyData[]
-    } catch (err) {
-      throw new Error(
-        `Error fetching currency exchange rates: ${
-          err instanceof Error ? err.message : 'An unknown error occurred'
-        }`
-      )
-    }
-  },
-})
+        return results as unknown as CurrencyData[]
+      } catch (err) {
+        throw new Error(
+          `Error fetching currency exchange rates: ${
+            err instanceof Error ? err.message : 'An unknown error occurred'
+          }`
+        )
+      }
+    },
+  }
+}
+
+export type BuildExchangeRatesApi = typeof buildExchangeRatesApi
+export type ExchangeRatesApi = ReturnType<BuildExchangeRatesApi>
