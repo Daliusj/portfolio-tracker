@@ -8,14 +8,12 @@ export default authenticatedProcedure
   .input(
     portfolioSchema.pick({
       id: true,
-      currencySymbol: true,
     })
   )
   .mutation(async ({ input: portfolioData, ctx: { authUser, repos } }) => {
-    const portfolioCreated = await repos.portfolioRepository.update(
+    const portfolioCreated = await repos.portfolioRepository.remove(
       portfolioData.id,
-      authUser.id,
-      portfolioData.currencySymbol
+      authUser.id
     )
     return portfolioCreated
   })

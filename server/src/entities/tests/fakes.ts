@@ -79,7 +79,7 @@ export const fakePortfolio = <T extends Partial<Insertable<Portfolio>>>(
 ) =>
   ({
     userId: randomId(),
-    currencySymbol: 'Eur',
+    currencySymbol: 'EUR',
     ...overrides,
   }) satisfies Insertable<Portfolio>
 

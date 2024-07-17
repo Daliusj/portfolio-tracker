@@ -6,7 +6,7 @@ import {
   fakeUser,
 } from '@server/entities/tests/fakes'
 import { wrapInRollbacks } from '@tests/utils/transactions'
-import { insertAll } from '@tests/utils/records'
+import { insertAll, selectAll } from '@tests/utils/records'
 import { portfolioRepository } from '../portfolioRepository'
 
 const db = await wrapInRollbacks(createTestDatabase())
@@ -22,6 +22,41 @@ describe('create', () => {
       createdAt: expect.any(Date),
       ...portfolio,
     })
+  })
+})
+
+describe('update', () => {
+  it('should update portfolio currency symbol', async () => {
+    const [user] = await insertAll(db, 'user', fakeUser({}))
+    const [portfolio] = await insertAll(
+      db,
+      'portfolio',
+      fakePortfolio({ userId: user.id })
+    )
+    const updatedPortfolio = await repository.update(
+      portfolio.id,
+      user.id,
+      'USD'
+    )
+    expect(updatedPortfolio).toEqual({
+      ...portfolio,
+      currencySymbol: 'USD',
+    })
+  })
+})
+
+describe('delete', () => {
+  it('should delete portfolio', async () => {
+    const [user] = await insertAll(db, 'user', fakeUser({}))
+    const [portfolio] = await insertAll(
+      db,
+      'portfolio',
+      fakePortfolio({ userId: user.id })
+    )
+    const deletedPortfolio = await repository.remove(portfolio.id, user.id)
+    expect(deletedPortfolio).toEqual(portfolio)
+    const portfoliosOnDb = await selectAll(db, 'portfolio')
+    expect(portfoliosOnDb).toEqual([])
   })
 })
 
@@ -62,7 +97,7 @@ describe('findById', () => {
   })
 })
 
-describe('findFullPortfolioByPortfolioId', () => {
+describe('findFull', () => {
   it('should return full portfolio data from joined tables by portfolio id', async () => {
     const [assetOne, assetTwo, assetThree] = await insertAll(db, 'asset', [
       fakeAsset({ type: 'fund', price: 100, exchangeShortName: 'NYSE' }),
@@ -94,7 +129,7 @@ describe('findFullPortfolioByPortfolioId', () => {
           quantity: 6,
         }),
       ])
-    const portfolioData = await repository.findFullPortfolio(portfolio.id)
+    const portfolioData = await repository.findFull(portfolio.id)
     expect(portfolioData).toEqual([
       {
         id: assetOne.id,
@@ -119,6 +154,107 @@ describe('findFullPortfolioByPortfolioId', () => {
         type: assetThree.type,
         quantity: portfolioItemThree.quantity,
         currencyCode: 'EUR',
+      },
+    ])
+  })
+})
+
+describe('findFullByAssetsType', () => {
+  it('should return full portfolio data from joined tables by portfolio id', async () => {
+    const [assetOne, assetTwo, assetThree] = await insertAll(db, 'asset', [
+      fakeAsset({ type: 'fund', price: 100, exchangeShortName: 'NYSE' }),
+      fakeAsset({ type: 'stock', price: 200, exchangeShortName: 'NASDAQ' }),
+      fakeAsset({ type: 'stock', price: 300, exchangeShortName: 'Euronext' }),
+    ])
+    const [user] = await insertAll(db, 'user', fakeUser())
+    const [portfolio] = await insertAll(db, 'portfolio', [
+      fakePortfolio({ userId: user.id }),
+    ])
+    const [, portfolioItemTwo, portfolioItemThree] = await insertAll(
+      db,
+      'portfolioItem',
+      [
+        fakePortfolioItem({
+          portfolioId: portfolio.id,
+          assetId: assetOne.id,
+          purchasePrice: 150,
+          quantity: 2,
+        }),
+        fakePortfolioItem({
+          portfolioId: portfolio.id,
+          assetId: assetTwo.id,
+          purchasePrice: 500,
+          quantity: 4,
+        }),
+        fakePortfolioItem({
+          portfolioId: portfolio.id,
+          assetId: assetThree.id,
+          purchasePrice: 1200,
+          quantity: 6,
+        }),
+      ]
+    )
+    const portfolioData = await repository.findFullByAssetsType(
+      portfolio.id,
+      'stock'
+    )
+    expect(portfolioData).toEqual([
+      {
+        id: assetTwo.id,
+        name: assetTwo.name,
+        price: assetTwo.price,
+        type: assetTwo.type,
+        quantity: portfolioItemTwo.quantity,
+        currencyCode: 'USD',
+      },
+      {
+        id: assetThree.id,
+        name: assetThree.name,
+        price: assetThree.price,
+        type: assetThree.type,
+        quantity: portfolioItemThree.quantity,
+        currencyCode: 'EUR',
+      },
+    ])
+  })
+})
+
+describe('findFullByAssetId', () => {
+  it('should return full portfolio data from joined tables by portfolio id', async () => {
+    const [assetOne, assetTwo] = await insertAll(db, 'asset', [
+      fakeAsset({ type: 'fund', price: 100, exchangeShortName: 'NYSE' }),
+      fakeAsset({ type: 'stock', price: 200, exchangeShortName: 'NASDAQ' }),
+    ])
+    const [user] = await insertAll(db, 'user', fakeUser())
+    const [portfolio] = await insertAll(db, 'portfolio', [
+      fakePortfolio({ userId: user.id }),
+    ])
+    const [, portfolioItemTwo] = await insertAll(db, 'portfolioItem', [
+      fakePortfolioItem({
+        portfolioId: portfolio.id,
+        assetId: assetOne.id,
+        purchasePrice: 150,
+        quantity: 2,
+      }),
+      fakePortfolioItem({
+        portfolioId: portfolio.id,
+        assetId: assetTwo.id,
+        purchasePrice: 500,
+        quantity: 4,
+      }),
+    ])
+    const portfolioData = await repository.findFullByAssetId(
+      portfolio.id,
+      portfolioItemTwo.assetId
+    )
+    expect(portfolioData).toEqual([
+      {
+        id: assetTwo.id,
+        name: assetTwo.name,
+        price: assetTwo.price,
+        type: assetTwo.type,
+        quantity: portfolioItemTwo.quantity,
+        currencyCode: 'USD',
       },
     ])
   })
