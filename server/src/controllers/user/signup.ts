@@ -17,8 +17,7 @@ export default publicProcedure
     userSchema.pick({
       email: true,
       password: true,
-      firstName: true,
-      lastName: true,
+      userName: true,
     })
   )
   .mutation(async ({ input: user, ctx: { repos } }) => {

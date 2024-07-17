@@ -6,8 +6,9 @@ import {
 import historicalDataServices from '../historicalDataServices'
 
 const fmpApi = fakeFmp()
+const db = {} as any
 
-const servicesWorking = historicalDataServices(fmpApi)
+const servicesWorking = historicalDataServices(db, fmpApi)
 
 describe('getDataForTimeRange', () => {
   it('should fetch asset data for a date range when API is working', async () => {

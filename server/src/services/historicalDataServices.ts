@@ -1,6 +1,7 @@
+import type { Database } from '@server/database'
 import type { Fmp } from '../utils/externalApi/fmpApi'
 
-export default (fmpApi: Fmp) => ({
+export default (db: Database, fmpApi: Fmp) => ({
   getDataForTimeRange: async (
     symbol: string,
     dateFrom: string,

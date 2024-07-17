@@ -1,54 +1,103 @@
-import type { Database } from '@server/database'
+import type { Database, InvestmentType } from '@server/database'
 import { currencyExchangeRateRepository } from '@server/repositories/currencyExchangeRatesRepository'
+import type {
+  FullPortfolioPublic,
+  PortfolioPublic,
+} from '@server/entities/portfolio'
+import type { Fmp } from '@server/utils/externalApi/fmpApi'
 import { portfolioRepository } from '../repositories/portfolioRepository'
 
-export default (db: Database) => ({
-  getFullPortfolioValue: async (portfolioId: number) => {
-    const portfolioRepo = portfolioRepository(db)
-    const exchangeRateRepo = currencyExchangeRateRepository(db)
-    const portfolio = await portfolioRepo.findById(portfolioId)
-    const porfolioAssets = await portfolioRepo.findFullPortfolio(portfolioId)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default (db: Database, fmpApi: Fmp) => {
+  const portfolioRepo = portfolioRepository(db)
+  const exchangeRateRepo = currencyExchangeRateRepository(db)
 
-    try {
-      if (portfolio?.currencySymbol && porfolioAssets.length) {
-        const valuePromises = porfolioAssets.map(async (asset) => {
-          const exchangeData = await exchangeRateRepo.findRate({
-            currencyFrom: portfolio.currencySymbol.toUpperCase(),
-            currencyTo: asset.currencyCode,
-          })
-          const value =
-            Number(asset.price) *
-            Number(asset.quantity) *
-            Number(exchangeData?.exchangeRate)
+  const calculateValue = async (
+    portfolio: PortfolioPublic,
+    portfolioAssets: FullPortfolioPublic[]
+  ) => {
+    const valuePromises = portfolioAssets.map(async (asset) => {
+      const exchangeData = await exchangeRateRepo.findRate({
+        currencyFrom: portfolio.currencySymbol.toUpperCase(),
+        currencyTo: asset.currencyCode,
+      })
+      const value =
+        Number(asset.price) *
+        Number(asset.quantity) *
+        Number(exchangeData?.exchangeRate)
+      return value
+    })
+    const values = await Promise.all(valuePromises)
+    return values.reduce((acc, value) => acc + value)
+  }
+
+  return {
+    getTotalValue: async (portfolioId: number) => {
+      const portfolio = await portfolioRepo.findById(portfolioId)
+      const portfolioAssets = await portfolioRepo.findFull(portfolioId)
+
+      try {
+        if (portfolio?.currencySymbol && portfolioAssets.length) {
+          const value = await calculateValue(portfolio, portfolioAssets)
           return value
-        })
-        const values = await Promise.all(valuePromises)
-        return values.reduce((acc, value) => acc + value)
+        }
+        throw new Error(
+          `No assets found for portfolioId ${portfolioId} or currency symbol is missing.`
+        )
+      } catch (err) {
+        throw new Error(
+          `Error calculating portfolio value: ${
+            err instanceof Error ? err.message : 'An unknown error occurred'
+          }`
+        )
       }
-      throw new Error(
-        `No assets found for portfolioId ${portfolioId} or currency symbol is missing.`
-      )
-    } catch (err) {
-      throw new Error(
-        `Error calculating portfolio value: ${
-          err instanceof Error ? err.message : 'An unknown error occurred'
-        }`
-      )
-    }
-  },
+    },
 
-  getValueByAssetsType: async (portfolioId, type) => {
-    // getPortfolioItems
-    // getAssetsByType
-    // getValue
-    // convertValueToUserCurrency
-    // return value in user's prefered currency
-  },
+    getAssetsTypeValue: async (portfolioId: number, type: InvestmentType) => {
+      const portfolio = await portfolioRepo.findById(portfolioId)
+      const portfolioAssets = await portfolioRepo.findFullByAssetsType(
+        portfolioId,
+        type
+      )
 
-  getAssetvalue: async (userId, PortfolioItemId) => {
-    // getAsset
-    // getValue
-    // convertValueToUserCurrency
-    // return value in user's prefered currency
-  },
-})
+      try {
+        if (portfolio?.currencySymbol && portfolioAssets.length) {
+          const value = await calculateValue(portfolio, portfolioAssets)
+          return value
+        }
+        throw new Error(
+          `No assets found for portfolioId ${portfolioId} or currency symbol is missing.`
+        )
+      } catch (err) {
+        throw new Error(
+          `Error calculating portfolio value: ${
+            err instanceof Error ? err.message : 'An unknown error occurred'
+          }`
+        )
+      }
+    },
+
+    getAssetValue: async (portfolioId: number, assetId: number) => {
+      const portfolio = await portfolioRepo.findById(portfolioId)
+      const portfolioAsset = await portfolioRepo.findFullByAssetId(
+        portfolioId,
+        assetId
+      )
+      try {
+        if (portfolio?.currencySymbol && portfolioAsset.length) {
+          const value = await calculateValue(portfolio, portfolioAsset)
+          return value
+        }
+        throw new Error(
+          `No assets found for portfolioId ${portfolioId} or currency symbol is missing.`
+        )
+      } catch (err) {
+        throw new Error(
+          `Error calculating portfolio value: ${
+            err instanceof Error ? err.message : 'An unknown error occurred'
+          }`
+        )
+      }
+    },
+  }
+}

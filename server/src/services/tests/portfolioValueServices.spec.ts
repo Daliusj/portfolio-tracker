@@ -13,7 +13,7 @@ const db = await wrapInRollbacks(createTestDatabase())
 
 const services = portfolioValueServices(db)
 
-describe('getFullPortfolioValue', () => {
+describe('getTotalValue', () => {
   it('should return portfolio total value', async () => {
     const [rateOne, rateTwo] = await insertAll(db, 'currencyExchangeRate', [
       {
@@ -57,7 +57,7 @@ describe('getFullPortfolioValue', () => {
           quantity: 6,
         }),
       ])
-    const value = await services.getFullPortfolioValue(portfolio.id)
+    const value = await services.getTotalValue(portfolio.id)
 
     expect(value).toEqual(
       Number(portfolioItemOne.quantity) *
@@ -69,6 +69,115 @@ describe('getFullPortfolioValue', () => {
         Number(portfolioItemThree.quantity) *
           Number(assetThree.price) *
           Number(rateTwo.exchangeRate)
+    )
+  })
+})
+
+describe('getAssetsTypeValue', () => {
+  it('should return portfolio total value', async () => {
+    const [rateOne, rateTwo] = await insertAll(db, 'currencyExchangeRate', [
+      {
+        currencyFrom: 'EUR',
+        currencyTo: 'USD',
+        exchangeRate: 2,
+      },
+      {
+        currencyFrom: 'EUR',
+        currencyTo: 'EUR',
+        exchangeRate: 1,
+      },
+    ])
+    const [assetOne, assetTwo, assetThree] = await insertAll(db, 'asset', [
+      fakeAsset({ type: 'fund', price: 100, exchangeShortName: 'NYSE' }),
+      fakeAsset({ type: 'stock', price: 200, exchangeShortName: 'NASDAQ' }),
+      fakeAsset({ type: 'stock', price: 300, exchangeShortName: 'Euronext' }),
+    ])
+    const [user] = await insertAll(db, 'user', fakeUser())
+    const [portfolio] = await insertAll(db, 'portfolio', [
+      fakePortfolio({ userId: user.id }),
+    ])
+    const [, portfolioItemTwo, portfolioItemThree] = await insertAll(
+      db,
+      'portfolioItem',
+      [
+        fakePortfolioItem({
+          portfolioId: portfolio.id,
+          assetId: assetOne.id,
+          purchasePrice: 150,
+          quantity: 2,
+        }),
+        fakePortfolioItem({
+          portfolioId: portfolio.id,
+          assetId: assetTwo.id,
+          purchasePrice: 500,
+          quantity: 4,
+        }),
+        fakePortfolioItem({
+          portfolioId: portfolio.id,
+          assetId: assetThree.id,
+          purchasePrice: 1200,
+          quantity: 6,
+        }),
+      ]
+    )
+    const value = await services.getAssetsTypeValue(portfolio.id, 'stock')
+
+    expect(value).toEqual(
+      Number(portfolioItemTwo.quantity) *
+        Number(assetTwo.price) *
+        Number(rateOne.exchangeRate) +
+        Number(portfolioItemThree.quantity) *
+          Number(assetThree.price) *
+          Number(rateTwo.exchangeRate)
+    )
+  })
+})
+
+describe('getAssetValue', () => {
+  it('should return asset value', async () => {
+    const [rateOne] = await insertAll(db, 'currencyExchangeRate', [
+      {
+        currencyFrom: 'EUR',
+        currencyTo: 'USD',
+        exchangeRate: 2,
+      },
+      {
+        currencyFrom: 'EUR',
+        currencyTo: 'EUR',
+        exchangeRate: 1,
+      },
+    ])
+    const [assetOne, assetTwo] = await insertAll(db, 'asset', [
+      fakeAsset({ type: 'fund', price: 100, exchangeShortName: 'NYSE' }),
+      fakeAsset({ type: 'stock', price: 200, exchangeShortName: 'NASDAQ' }),
+    ])
+    const [user] = await insertAll(db, 'user', fakeUser())
+    const [portfolio] = await insertAll(db, 'portfolio', [
+      fakePortfolio({ userId: user.id }),
+    ])
+    const [, portfolioItemTwo] = await insertAll(db, 'portfolioItem', [
+      fakePortfolioItem({
+        portfolioId: portfolio.id,
+        assetId: assetOne.id,
+        purchasePrice: 150,
+        quantity: 2,
+      }),
+      fakePortfolioItem({
+        portfolioId: portfolio.id,
+        assetId: assetTwo.id,
+        purchasePrice: 500,
+        quantity: 4,
+      }),
+    ])
+    const value = await services.getAssetValue(
+      portfolio.id,
+      portfolioItemTwo.assetId
+    )
+
+    expect(value).toEqual(
+      Number(portfolioItemTwo.quantity) *
+        Number(assetTwo.price) *
+        Number(rateOne.exchangeRate)
     )
   })
 })
