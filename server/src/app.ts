@@ -9,8 +9,9 @@ import type { Database } from './database'
 import { appRouter } from './controllers'
 import type { Context } from './trpc'
 import config from './config'
+import type { Fmp } from './utils/externalApi/fmpApi'
 
-export default async function createApp(db: Database) {
+export default async function createApp(db: Database, fmp: Fmp) {
   const app = express()
 
   app.use(cors())
@@ -32,6 +33,7 @@ export default async function createApp(db: Database) {
       createContext: ({ req, res }: CreateExpressContextOptions): Context => ({
         // What we provide to our procedures under `ctx` key.
         db,
+        fmp,
         req,
         res,
       }),
