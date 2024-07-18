@@ -1,8 +1,7 @@
-// TODO update assetes prices every day 00:00 UTC
-
+/* eslint-disable no-console */
 import type { Database } from '@server/database'
+import { uniqBy, chunk } from 'lodash-es'
 import { assetRepository as buildAssetRepository } from '../repositories/assetRepository'
-
 import type { Fmp } from '../utils/externalApi/fmpApi'
 
 export function databaseUpdatePrices(db: Database, fmpApi: Fmp) {
@@ -14,12 +13,30 @@ export function databaseUpdatePrices(db: Database, fmpApi: Fmp) {
         const stockPrices = await fmpApi.fetchAllStocksPrices()
         const fundPrices = await fmpApi.fetchAllFundsPrices()
         const cryptoPrices = await fmpApi.fetchAllCryptosPrices()
-        const updatedAssets = await assetRepo.updatePrices([
-          ...stockPrices,
-          ...fundPrices,
-          ...cryptoPrices,
-        ])
-        return updatedAssets
+
+        const joinedAssets = uniqBy(
+          [...stockPrices, ...cryptoPrices, ...fundPrices],
+          'symbol'
+        )
+
+        const assetsChunked = chunk(joinedAssets, 100)
+
+        const createChunks = async (chunks: any[]) => {
+          await Promise.all(
+            chunks.map(async (chunkData, index) => {
+              try {
+                console.log(`Processing chunk ${index + 1} of ${chunks.length}`)
+                await assetRepo.updatePrices(chunkData)
+                console.log(`Chunk ${index + 1} successfully processed`)
+              } catch (error) {
+                console.error(`Error processing chunk ${index + 1}:`, error)
+                throw error
+              }
+            })
+          )
+        }
+
+        await Promise.all([createChunks(assetsChunked)])
       } catch (err) {
         throw new Error(
           `Error updating assets prices: ${

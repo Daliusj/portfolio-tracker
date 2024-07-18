@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { chunk } from 'lodash-es'
+import { chunk, uniqBy } from 'lodash-es'
 import type { Fmp } from '../utils/externalApi/fmpApi'
 import { assetRepository } from '../repositories/assetRepository'
 import type { Database } from '../database'
@@ -24,11 +24,11 @@ export function seedDatabase(db: Database, fmpApi: Fmp) {
               asset.price
           )
 
-        const filteredAssets = filterEmptyData([
-          ...new Set([...stocks, ...cryptos, ...funds]),
-        ])
+        const filteredAssets = filterEmptyData(
+          uniqBy([...stocks, ...cryptos, ...funds], 'symbol')
+        )
 
-        const assetsChuncked = chunk(filteredAssets, 100)
+        const assetsChunked = chunk(filteredAssets, 100)
 
         const createChunks = async (chunks: any[]) => {
           await Promise.all(
@@ -45,7 +45,7 @@ export function seedDatabase(db: Database, fmpApi: Fmp) {
           )
         }
 
-        await Promise.all([createChunks(assetsChuncked)])
+        await Promise.all([createChunks(assetsChunked)])
       }
     } catch (err) {
       throw new Error(
