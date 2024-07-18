@@ -7,13 +7,17 @@ export const INVESTMENT_TYPES = ['crypto', 'fund', 'stock'] as const
 
 export const assetSchema = z.object({
   id: idSchema,
-  name: z.string().min(1).max(500),
+  name: z.string().min(1).max(50),
   type: z.enum(INVESTMENT_TYPES),
   symbol: z.string().min(1).max(10),
   price: z.number().positive(),
   exchange: z.string().min(1).max(500),
   exchangeShortName: z.string().min(1).max(500),
   createdAt: z.date().default(() => new Date()),
+})
+
+export const assetQuerySchema = z.object({
+  query: z.string().min(1).max(50),
 })
 
 export const assetKeysAll = Object.keys(assetSchema.shape) as (keyof Asset)[]
