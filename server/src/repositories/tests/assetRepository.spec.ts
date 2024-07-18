@@ -20,6 +20,17 @@ describe('create', () => {
       },
     ])
   })
+
+  it('should create new assets and return created assets with array of assets data', async () => {
+    const createdAssets = await repository.create([
+      fakeAsset({}),
+      fakeAsset({}),
+      fakeAsset({}),
+      fakeAsset({}),
+      fakeAsset({}),
+    ])
+    expect(createdAssets).toHaveLength(5)
+  })
 })
 
 describe('findById', () => {

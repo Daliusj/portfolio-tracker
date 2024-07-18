@@ -55,6 +55,26 @@ export const fakeAsset = <T extends Partial<Insertable<Asset>>>(overrides: T) =>
   }) satisfies Insertable<Asset>
 
 /**
+ * Generates a fake public asset with some default test data.
+ * @param overrides userId and any properties that should be different from default fake data.
+ */
+export const fakePublicAsset = <T extends Partial<Insertable<Asset>>>(
+  overrides: T
+) =>
+  ({
+    id: random.integer(),
+    createdAt: random.date(),
+    name: random.string(),
+    type: 'stock',
+    symbol: random.string(),
+    price: `${random.floating({ min: 0, max: 100 })}`,
+    exchange: random.string(),
+    exchangeShortName: random.string(),
+
+    ...overrides,
+  }) satisfies Insertable<Asset>
+
+/**
  * Generates a fake portfolioItem with some default test data.
  * @param overrides articleId and any properties that should be different from default fake data.
  */
@@ -96,6 +116,23 @@ export const fakeCurrencyExchangeRate = <
     currencyFrom: random.string({ length: 3 }),
     currencyTo: random.string({ length: 3 }),
     exchangeRate: random.floating({ min: 0.5, max: 5, fixed: 2 }),
+    ...overrides,
+  }) satisfies Insertable<CurrencyExchangeRate>
+
+/**
+ * Generates a fake currencyExchangeRatePublic with some default test data.
+ * @param overrides  properties that should be different from default fake data.
+ */
+export const fakeCurrencyExchangeRatePublic = <
+  T extends Partial<Insertable<CurrencyExchangeRate>>,
+>(
+  overrides: T
+) =>
+  ({
+    currencyFrom: random.string({ length: 3 }),
+    currencyTo: random.string({ length: 3 }),
+    exchangeRate: `${random.floating({ min: 0.5, max: 5, fixed: 2 })}`,
+    lastUpdate: random.date(),
     ...overrides,
   }) satisfies Insertable<CurrencyExchangeRate>
 

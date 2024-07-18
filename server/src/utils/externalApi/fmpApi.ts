@@ -90,7 +90,7 @@ const fetchPrices = async (
       params: {
         from: fromDate,
         to: toDate,
-        apiKey,
+        apikey: apiKey,
       },
     })
 
@@ -100,7 +100,7 @@ const fetchPrices = async (
     return response.data.historical
   } catch (err) {
     throw new Error(
-      `Error fetching data for ${symbol}: ${
+      `FMP API Error fetching data for ${symbol}: ${
         err instanceof Error ? err.message : 'An unknown error occurred'
       }`
     )
@@ -114,7 +114,7 @@ const fetchStocksAndETF = async (
   try {
     const response = await axios.get(url, {
       params: {
-        apiKey,
+        apikey: apiKey,
       },
     })
 
@@ -132,7 +132,7 @@ const fetchStocksAndETF = async (
     }))
   } catch (err) {
     throw new Error(
-      `Error fetching tickers list data: ${
+      `FMP API Error fetching srtocks and funds list data: ${
         err instanceof Error ? err.message : 'An unknown error occurred'
       }`
     )
@@ -194,7 +194,7 @@ export default function buildFmp() {
       return response.data
     } catch (err) {
       throw new Error(
-        `Error fetching available cryptocurrencies: ${
+        `FMP API  Error fetching available cryptocurrencies: ${
           err instanceof Error ? err.message : 'An unknown error occurred'
         }`
       )

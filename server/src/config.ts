@@ -5,6 +5,9 @@ const { env } = process
 
 if (!env.NODE_ENV) env.NODE_ENV = 'development'
 
+if (!env.DB_INIT_SEED) env.DB_INIT_SEED = 'false'
+if (!env.DB_UPDATE) env.DB_UPDATE = 'false'
+
 // force UTC timezone, so it matches the default timezone in production
 env.TZ = 'UTC'
 
@@ -18,6 +21,9 @@ const schema = z
       .default('development'),
     isCi: z.preprocess(coerceBoolean, z.boolean().default(false)),
     port: z.coerce.number().default(3000),
+
+    seed: z.preprocess(coerceBoolean, z.boolean().default(false)),
+    update: z.preprocess(coerceBoolean, z.boolean().default(false)),
 
     auth: z.object({
       tokenKey: z.string().default(() => {
@@ -35,6 +41,10 @@ const schema = z
       connectionString: z.string().url(),
     }),
 
+    testDatabase: z.object({
+      connectionString: z.string().url(),
+    }),
+
     fmpApiKey: z.string(),
     exchangeRateApiKey: z.string(),
   })
@@ -45,6 +55,9 @@ const config = schema.parse({
   port: env.PORT,
   isCi: env.CI,
 
+  seed: env.DB_INIT_SEED,
+  update: env.DB_UPDATE,
+
   auth: {
     tokenKey: env.TOKEN_KEY,
     expiresIn: env.TOKEN_EXPIRES_IN,
@@ -53,6 +66,10 @@ const config = schema.parse({
 
   database: {
     connectionString: env.DATABASE_URL,
+  },
+
+  testDatabase: {
+    connectionString: env.TEST_DATABASE_URL,
   },
 
   fmpApiKey: env.FMP_API_KEY,

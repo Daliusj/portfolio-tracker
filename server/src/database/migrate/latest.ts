@@ -64,6 +64,10 @@ const isFileRunDirectly = pathToThisFile.includes(pathPassedToNode)
 
 if (isFileRunDirectly) {
   const db = createDatabase(config.database)
+  const testDb = createDatabase(config.testDatabase)
 
+  console.log('Start production database migration')
   await migrateLatest(db)
+  console.log('Start test database migration')
+  await migrateLatest(testDb)
 }

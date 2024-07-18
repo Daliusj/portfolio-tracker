@@ -10,8 +10,15 @@ import { appRouter } from './controllers'
 import type { Context } from './trpc'
 import config from './config'
 import type { Fmp } from './utils/externalApi/fmpApi'
+import type { Scripts } from './scripts'
+import type { ExchangeRatesApi } from './utils/externalApi/exchangeRatesApi'
 
-export default async function createApp(db: Database, fmp: Fmp) {
+export default async function createApp(
+  db: Database,
+  scripts: Scripts,
+  fmp: Fmp,
+  exchangeRatesApi: ExchangeRatesApi
+) {
   const app = express()
 
   app.use(cors())
@@ -52,6 +59,46 @@ export default async function createApp(db: Database, fmp: Fmp) {
         })
       )
     )
+  }
+
+  if (config.seed) {
+    const dbSeed = scripts.seedDatabase(db, fmp)
+    try {
+      // eslint-disable-next-line no-console
+      console.log('Start seeding the database with assets listings')
+      await dbSeed.seed()
+      // eslint-disable-next-line no-console
+      console.log('Seeding completed')
+    } catch (err) {
+      throw new Error(
+        `Error seeding the database: ${
+          err instanceof Error ? err.message : 'An unknown error occurred'
+        }`
+      )
+    }
+  }
+  if (config.update) {
+    const dbUpdatePrices = scripts.databaseUpdatePrices(db, fmp)
+    const dbUpdateRates = scripts.databaseUpsertExchangeRates(
+      db,
+      exchangeRatesApi
+    )
+    try {
+      // eslint-disable-next-line no-console
+      console.log(
+        'Start updating the database with assets prices and currency exchange rates'
+      )
+      await dbUpdatePrices.update()
+      await dbUpdateRates.update()
+      // eslint-disable-next-line no-console
+      console.log('Updating completed')
+    } catch (err) {
+      throw new Error(
+        `Error updating the database: ${
+          err instanceof Error ? err.message : 'An unknown error occurred'
+        }`
+      )
+    }
   }
 
   return app
