@@ -10,7 +10,7 @@ export const portfolioItemSchema = z.object({
   assetId: idSchema,
   quantity: z.number().positive(),
   purchasePrice: z.number().positive(),
-  purchaseDate: z.date().default(() => new Date()),
+  purchaseDate: z.string().date(),
   createdAt: z.date().default(() => new Date()),
 })
 

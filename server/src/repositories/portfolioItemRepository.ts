@@ -12,7 +12,10 @@ export function portfolioItemRepository(db: Database) {
     ): Promise<PortfolioItemPublic> {
       return db
         .insertInto('portfolioItem')
-        .values(portfolioItem)
+        .values({
+          ...portfolioItem,
+          purchaseDate: new Date(`${portfolioItem.purchaseDate} 12:00:00`),
+        })
         .returning(portfolioItemKeysPublic)
         .executeTakeFirstOrThrow()
     },
@@ -35,6 +38,42 @@ export function portfolioItemRepository(db: Database) {
         .select(portfolioItemKeysPublic)
         .where('portfolioId', '=', portfolioId)
         .execute()
+    },
+
+    async update(
+      portfolioItem: Insertable<PortfolioItem>,
+      portfolioItemId: number
+    ): Promise<PortfolioItemPublic> {
+      await db
+        .updateTable('portfolioItem')
+        .set({
+          purchaseDate: new Date(`${portfolioItem.purchaseDate} 12:00:00`),
+          purchasePrice: portfolioItem.purchasePrice,
+          quantity: portfolioItem.quantity,
+        })
+        .where('id', '=', portfolioItemId)
+        .executeTakeFirst()
+
+      return db
+        .selectFrom('portfolioItem')
+        .selectAll()
+        .where('id', '=', portfolioItemId)
+        .executeTakeFirstOrThrow()
+    },
+
+    async remove(portfolioItemId: number): Promise<PortfolioItemPublic> {
+      const deletedPortfolioItem = await db
+        .selectFrom('portfolioItem')
+        .selectAll()
+        .where('id', '=', portfolioItemId)
+        .executeTakeFirstOrThrow()
+
+      await db
+        .deleteFrom('portfolioItem')
+        .where('id', '=', portfolioItemId)
+        .executeTakeFirst()
+
+      return deletedPortfolioItem
     },
   }
 }

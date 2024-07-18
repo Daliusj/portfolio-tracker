@@ -5,7 +5,7 @@ import portfolioValueServices from './portfolioValueServices'
 
 export type ServicesFactory = <T>(db: Database, fmpApi: Fmp) => T
 
-const services = { historicalDataServices, portfolioValueServices }
+const services = { portfolioValueServices, historicalDataServices }
 
 export type ServicesFactories = typeof services
 export type Services = {

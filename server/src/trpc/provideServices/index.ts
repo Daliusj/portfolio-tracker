@@ -38,7 +38,7 @@ export default function provideServices<TKeys extends ServicesKeys>(
 
     return next({
       ctx: {
-        repos: {
+        services: {
           ...servicesAlreadyProvided,
           ...servicesWanted,
         },

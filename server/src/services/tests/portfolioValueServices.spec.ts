@@ -10,8 +10,8 @@ import portfolioValueServices from '../portfolioValueServices'
 import { fakeUser } from '../../entities/tests/fakes'
 
 const db = await wrapInRollbacks(createTestDatabase())
-
-const services = portfolioValueServices(db)
+const fmp = {} as any
+const services = portfolioValueServices(db, fmp)
 
 describe('getTotalValue', () => {
   it('should return portfolio total value', async () => {

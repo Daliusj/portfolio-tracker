@@ -6,7 +6,7 @@ import {
   fakePortfolio,
 } from '@server/entities/tests/fakes'
 import { wrapInRollbacks } from '@tests/utils/transactions'
-import { insertAll } from '@tests/utils/records'
+import { insertAll, selectAll } from '@tests/utils/records'
 import { portfolioItemRepository } from '../portfolioItemRepository'
 
 const db = await wrapInRollbacks(createTestDatabase())
@@ -32,6 +32,7 @@ describe('create', () => {
       ...portfolioItem,
       purchasePrice: `${portfolioItem.purchasePrice}`,
       quantity: `${portfolioItem.quantity}`,
+      purchaseDate: new Date(`${portfolioItem.purchaseDate} 12:00:00`),
     })
   })
 })
@@ -103,5 +104,62 @@ describe('findByPortfolioId', () => {
     const portfolioId = 45
     const portfolioItemsFound = await repository.findByPortfolioId(portfolioId)
     expect(portfolioItemsFound).toEqual([])
+  })
+})
+
+describe('update', () => {
+  it('should update portfolio item', async () => {
+    const [user] = await insertAll(db, 'user', fakeUser({}))
+    const [portfolio] = await insertAll(
+      db,
+      'portfolio',
+      fakePortfolio({ userId: user.id })
+    )
+    const [asset] = await insertAll(db, 'asset', fakeAsset({}))
+    const [portfolioItem] = await insertAll(
+      db,
+      'portfolioItem',
+      fakePortfolioItem({ assetId: asset.id, portfolioId: portfolio.id })
+    )
+    const updatedPortfolioItem = await repository.update(
+      {
+        assetId: asset.id,
+        portfolioId: portfolio.id,
+        purchaseDate: '2022-05-14',
+        purchasePrice: 999,
+        quantity: 999,
+      },
+      portfolioItem.id
+    )
+    expect(updatedPortfolioItem).toEqual({
+      ...portfolioItem,
+      assetId: asset.id,
+      portfolioId: portfolio.id,
+      purchaseDate: new Date(`2022-05-14 12:00:00`),
+      purchasePrice: '999',
+      quantity: '999',
+    })
+  })
+})
+
+describe('delete', () => {
+  it('should delete portfolio item', async () => {
+    const [user] = await insertAll(db, 'user', fakeUser({}))
+    const [portfolio] = await insertAll(
+      db,
+      'portfolio',
+      fakePortfolio({ userId: user.id })
+    )
+    const [asset] = await insertAll(db, 'asset', fakeAsset({}))
+    const [portfolioItem] = await insertAll(
+      db,
+      'portfolioItem',
+      fakePortfolioItem({ assetId: asset.id, portfolioId: portfolio.id })
+    )
+
+    const deletedPortfolioItem = await repository.remove(portfolioItem.id)
+    expect(deletedPortfolioItem).toEqual(portfolioItem)
+    const portfolioItemsOnDb = await selectAll(db, 'portfolioItem')
+    expect(portfolioItemsOnDb).toEqual([])
   })
 })

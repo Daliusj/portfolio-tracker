@@ -4,7 +4,7 @@ import { portfolioRepository } from '@server/repositories/portfolioRepository'
 
 export default authenticatedProcedure
   .use(provideRepos({ portfolioRepository }))
-  .mutation(async ({ ctx: { authUser, repos } }) => {
+  .query(async ({ ctx: { authUser, repos } }) => {
     const portfolioCreated = await repos.portfolioRepository.findByUserId(
       authUser.id
     )
