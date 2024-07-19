@@ -4,6 +4,7 @@ import portfolio from './portfolio'
 import historicalData from './historicalData'
 import portfolioItem from './portfolioItem'
 import asset from './asset'
+import portfolioValue from './portfolioValue'
 
 export const appRouter = router({
   user,
@@ -11,6 +12,7 @@ export const appRouter = router({
   historicalData,
   portfolioItem,
   asset,
+  portfolioValue,
 })
 
 export type AppRouter = typeof appRouter

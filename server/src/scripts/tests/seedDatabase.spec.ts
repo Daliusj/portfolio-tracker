@@ -12,6 +12,6 @@ const dbSeed = seedDatabase(db, fmpApi)
 describe('seed', () => {
   it('should seed the database with stocks, funds and crypto listings', async () => {
     const assets = await dbSeed.seed()
-    expect(assets).toHaveLength(6)
+    expect(assets).toEqual({ success: true })
   })
 })

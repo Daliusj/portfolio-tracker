@@ -5,10 +5,12 @@ import { idSchema } from './shared'
 import { assetFieldsForFullPortfolio } from './asset'
 import { portfolioItemFieldsForFullPortfolio } from './portfolioItems'
 
+const BASE_CURRENCIES = ['USD', 'EUR'] as const
+
 export const portfolioSchema = z.object({
   id: idSchema,
   userId: idSchema,
-  currencySymbol: z.string().length(3),
+  currencySymbol: z.enum(BASE_CURRENCIES),
   createdAt: z.date().default(() => new Date()),
 })
 

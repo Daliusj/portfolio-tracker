@@ -1,5 +1,3 @@
-// TODO update assetes prices every day 00:00 UTC
-
 import type { Database } from '../database'
 import type { CurrencyPublic } from '../entities/currency'
 import { currencyExchangeRateRepository } from '../repositories/currencyExchangeRatesRepository'
@@ -13,8 +11,10 @@ export function databaseUpsertExchangeRates(
   const currencyRepo = currencyRepository(db)
   const currencyExchangeRatesRepo = currencyExchangeRateRepository(db)
 
-  const generateCurrencyCombinations = (currencies: CurrencyPublic[]) =>
-    currencies.flatMap((sourceCurrency) =>
+  const generateCurrencyCombinations = (currencies: CurrencyPublic[]) => {
+    // Filter only base currencies for the 'from' field
+    const baseCurrencies = currencies.filter((currency) => currency.isBase)
+    return baseCurrencies.flatMap((sourceCurrency) =>
       currencies
         .map((targetCurrency) => ({
           from: sourceCurrency.code,
@@ -22,6 +22,7 @@ export function databaseUpsertExchangeRates(
         }))
         .filter((pair) => pair.from !== pair.to)
     )
+  }
 
   return {
     update: async () => {

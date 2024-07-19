@@ -16,6 +16,10 @@ export const assetSchema = z.object({
   createdAt: z.date().default(() => new Date()),
 })
 
+export const assetIdArrSchema = z.object({
+  id: z.array(idSchema),
+})
+
 export const assetQuerySchema = z.object({
   query: z.string().min(1).max(50),
 })

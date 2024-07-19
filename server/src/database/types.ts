@@ -25,6 +25,7 @@ export interface Asset {
 export interface Currency {
   code: string
   id: Generated<number>
+  isBase: boolean
   name: string
 }
 

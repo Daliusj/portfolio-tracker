@@ -1,8 +1,8 @@
 import { router } from '@server/trpc'
 import get from './get'
-import getAll from './getAll'
+import getById from './getById'
 
 export default router({
   get,
-  getAll,
+  getById,
 })

@@ -1,6 +1,9 @@
-// Only sharing the types!
-// Types are stripped out by the compiler, so this is safe.
 export type * from '../database/types'
-
-export type * from '../entities/article'
 export type * from '../entities/user'
+export type * from '../entities/asset'
+export type * from '../entities/currency'
+export type * from '../entities/currencyExchangeRates'
+export type * from '../entities/historicalData'
+export type * from '../entities/portfolio'
+export type * from '../entities/portfolioItems'
+export type * from '../entities/portfolioValue'

@@ -1,8 +1,6 @@
 import { router } from '@server/trpc'
-import getForDay from './getforDay'
-import getForTimeRange from './getForTimeRange'
+import get from './get'
 
 export default router({
-  getForDay,
-  getForTimeRange,
+  get,
 })

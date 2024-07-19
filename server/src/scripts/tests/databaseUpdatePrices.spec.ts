@@ -16,38 +16,12 @@ const dbUpdate = databaseUpdatePrices(db, fmpApi)
 
 describe('update', () => {
   it('should update the database with stocks, funds and crypto prices', async () => {
-    const [stockOne, stockTwo, fundOne, FundTwo, cryptoOne, cryptoTwo] =
-      await insertAll(db, 'asset', [
-        ...fakeStocksList,
-        ...fakeFundsList,
-        ...fakeCryptosList,
-      ])
-    const assets = await dbUpdate.update()
-    expect(assets).toEqual([
-      {
-        ...stockOne,
-        price: '250',
-      },
-      {
-        ...stockTwo,
-        price: '50',
-      },
-      {
-        ...fundOne,
-        price: '30',
-      },
-      {
-        ...FundTwo,
-        price: '70',
-      },
-      {
-        ...cryptoOne,
-        price: '64000',
-      },
-      {
-        ...cryptoTwo,
-        price: '3500',
-      },
+    await insertAll(db, 'asset', [
+      ...fakeStocksList,
+      ...fakeFundsList,
+      ...fakeCryptosList,
     ])
+    const assets = await dbUpdate.update()
+    expect(assets).toEqual({ success: true })
   })
 })

@@ -7,6 +7,7 @@ export const currencySchema = z.object({
   id: idSchema,
   name: z.string().min(1).max(100),
   code: z.string().length(3),
+  isBase: z.boolean(),
 })
 
 export const currencyKeysAll = Object.keys(

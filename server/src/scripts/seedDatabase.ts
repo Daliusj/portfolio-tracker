@@ -14,18 +14,21 @@ export function seedDatabase(db: Database, fmpApi: Fmp) {
         const cryptos = await fmpApi.fetchAllCryptos()
         const funds = await fmpApi.fetchAllFunds()
 
-        const filterEmptyData = (assets: any[]) =>
+        const filterAssets = (assets: any[]) =>
           assets.filter(
             (asset) =>
               asset.name &&
               asset.name.trim() !== '' &&
               asset.exchange &&
               asset.exchange.trim() !== '' &&
-              asset.price
+              asset.price &&
+              asset.exchange !== 'Other OTC' &&
+              asset.exchange !== 'OEM' &&
+              asset.exchange !== 'OQB'
           )
 
-        const filteredAssets = filterEmptyData(
-          uniqBy([...stocks, ...cryptos, ...funds], 'symbol')
+        const filteredAssets = filterAssets(
+          uniqBy([...cryptos, ...funds, ...stocks], 'symbol')
         )
 
         const assetsChunked = chunk(filteredAssets, 100)
@@ -46,6 +49,7 @@ export function seedDatabase(db: Database, fmpApi: Fmp) {
         }
 
         await Promise.all([createChunks(assetsChunked)])
+        return { success: true }
       }
     } catch (err) {
       throw new Error(

@@ -12,11 +12,12 @@ const db = {} as any
 const fmp = fakeFmp()
 
 it('should get asset data for one day', async () => {
-  const { getForDay } = createCaller(authContext({ db, fmp }))
-  const returnedData = await getForDay({
+  const { get } = createCaller(authContext({ db, fmp }))
+  const returnedData = await get({
     symbol: 'AAPL',
-    date: fakeInputData.dateFrom,
+    dateFrom: fakeInputData.dateFrom,
+    dateTo: fakeInputData.dateTo,
   })
 
-  expect(returnedData).toEqual([fakeFinancialData[0]])
+  expect(returnedData).toEqual(fakeFinancialData)
 })

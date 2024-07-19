@@ -27,6 +27,7 @@ describe('getDataForOneDay', () => {
       'AAPL',
       fakeInputData.dateFrom
     )
+    console.log(fakeFinancialData[0])
     expect(data).toEqual([fakeFinancialData[0]])
   })
 })

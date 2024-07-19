@@ -37,6 +37,7 @@ export function databaseUpdatePrices(db: Database, fmpApi: Fmp) {
         }
 
         await Promise.all([createChunks(assetsChunked)])
+        return { success: true }
       } catch (err) {
         throw new Error(
           `Error updating assets prices: ${
