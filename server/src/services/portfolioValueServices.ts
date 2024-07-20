@@ -28,7 +28,7 @@ export default (db: Database, fmpApi: Fmp) => {
       return value
     })
     const values = await Promise.all(valuePromises)
-    return values.reduce((acc, value) => acc + value)
+    return values.reduce((acc, value) => acc + value).toFixed(2)
   }
 
   return {
