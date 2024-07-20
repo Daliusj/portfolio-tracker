@@ -81,11 +81,13 @@ it('should get total portfolio value by asset type', async () => {
   })
 
   expect(returnedValue).toEqual(
-    Number(portfolioItemTwo.quantity) *
-      Number(assetTwo.price) *
-      Number(rateOne.exchangeRate) +
+    (
+      Number(portfolioItemTwo.quantity) *
+        Number(assetTwo.price) *
+        Number(rateOne.exchangeRate) +
       Number(portfolioItemThree.quantity) *
         Number(assetThree.price) *
         Number(rateTwo.exchangeRate)
+    ).toFixed(2)
   )
 })

@@ -76,14 +76,16 @@ it('should get total portfolio value', async () => {
   })
 
   expect(returnedValue).toEqual(
-    Number(portfolioItemOne.quantity) *
-      Number(assetOne.price) *
-      Number(rateOne.exchangeRate) +
+    (
+      Number(portfolioItemOne.quantity) *
+        Number(assetOne.price) *
+        Number(rateOne.exchangeRate) +
       Number(portfolioItemTwo.quantity) *
         Number(assetTwo.price) *
         Number(rateOne.exchangeRate) +
       Number(portfolioItemThree.quantity) *
         Number(assetThree.price) *
         Number(rateTwo.exchangeRate)
+    ).toFixed(2)
   )
 })

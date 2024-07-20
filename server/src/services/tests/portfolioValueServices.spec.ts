@@ -60,15 +60,17 @@ describe('getTotalValue', () => {
     const value = await services.getTotalValue(portfolio.id)
 
     expect(value).toEqual(
-      Number(portfolioItemOne.quantity) *
-        Number(assetOne.price) *
-        Number(rateOne.exchangeRate) +
+      (
+        Number(portfolioItemOne.quantity) *
+          Number(assetOne.price) *
+          Number(rateOne.exchangeRate) +
         Number(portfolioItemTwo.quantity) *
           Number(assetTwo.price) *
           Number(rateOne.exchangeRate) +
         Number(portfolioItemThree.quantity) *
           Number(assetThree.price) *
           Number(rateTwo.exchangeRate)
+      ).toFixed(2)
     )
   })
 })
@@ -123,12 +125,14 @@ describe('getAssetsTypeValue', () => {
     const value = await services.getAssetsTypeValue(portfolio.id, 'stock')
 
     expect(value).toEqual(
-      Number(portfolioItemTwo.quantity) *
-        Number(assetTwo.price) *
-        Number(rateOne.exchangeRate) +
+      (
+        Number(portfolioItemTwo.quantity) *
+          Number(assetTwo.price) *
+          Number(rateOne.exchangeRate) +
         Number(portfolioItemThree.quantity) *
           Number(assetThree.price) *
           Number(rateTwo.exchangeRate)
+      ).toFixed(2)
     )
   })
 })
@@ -175,9 +179,11 @@ describe('getAssetValue', () => {
     )
 
     expect(value).toEqual(
-      Number(portfolioItemTwo.quantity) *
+      (
+        Number(portfolioItemTwo.quantity) *
         Number(assetTwo.price) *
         Number(rateOne.exchangeRate)
+      ).toFixed(2)
     )
   })
 })
