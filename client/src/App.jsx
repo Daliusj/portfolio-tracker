@@ -1,8 +1,7 @@
-// src/App.jsx
-import React from 'react'
 import { Routes, Route } from 'react-router-dom'
-import Home from './pages/Home'
-import About from './pages/About'
+import Home from './views/Home'
+import About from './views/About'
+import { Login } from './views/Login'
 
 function App() {
   return (
@@ -10,6 +9,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </div>
   )
