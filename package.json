@@ -6,5 +6,10 @@
   "workspaces": [
     "client",
     "server"
-  ]
+  ],
+  "dependencies": {
+    "playwright": "^1.45.3",
+    "react-router-dom": "^6.25.1",
+    "vitest": "^2.0.4"
+  }
 }

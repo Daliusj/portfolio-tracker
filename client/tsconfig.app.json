@@ -1,5 +1,5 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "extends": "@tsconfig/recommended/tsconfig.json",
   "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "../server/src/shared/**/*"],
   "exclude": ["src/**/tests/*", "node_modules"],
   "compilerOptions": {
