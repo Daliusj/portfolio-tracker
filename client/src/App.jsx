@@ -1,18 +1,15 @@
 import { Routes, Route } from 'react-router-dom'
-import Home from './views/Home'
-import About from './views/About'
-import { Login } from './views/Login'
+import Home from './pages/Home'
+import Header from './layouts/Header'
 
 function App() {
   return (
-    <div className="App">
+    <div className="app">
+      <Header></Header>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/login" element={<Login />} />
       </Routes>
     </div>
   )
 }
-
 export default App
