@@ -3,9 +3,14 @@
 @tailwind utilities;
 
 .app {
-  @apply h-full bg-neutral-600 text-white;
+  @apply h-full bg-slate-300 dark:bg-neutral-600;
 }
 
 .box {
-  @apply bg-neutral-900;
+  @apply bg-white dark:bg-neutral-800;
+}
+
+.sidebar {
+  max-height: 700px;
+  overflow-y: auto;
 }

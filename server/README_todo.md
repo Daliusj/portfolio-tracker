@@ -7,3 +7,4 @@ TODO:
 5. Error handling
 6. add scheduler for daily db updates
 7. add data filtering before inserting into database
+8. add API endpoint for asset logos
