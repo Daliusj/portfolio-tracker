@@ -24,7 +24,21 @@ type AuthProviderProps = {
   children: ReactNode
 }
 
-const AuthContext = createContext<AuthContextType | null>(null)
+const defaultAuthContext: AuthContextType = {
+  authUserId: null,
+  isLoggedIn: false,
+  login: async () => {
+    throw new Error('login function not initialized')
+  },
+  logout: () => {
+    throw new Error('logout function not initialized')
+  },
+  signup: async () => {
+    throw new Error('signup function not initialized')
+  },
+}
+
+const AuthContext = createContext<AuthContextType>(defaultAuthContext)
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [authToken, setAuthToken] = useState(getStoredAccessToken(localStorage))
@@ -60,7 +74,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   )
 }
 
-// Custom hook to use auth context
 export const useAuth = () => {
   return useContext(AuthContext)
 }
