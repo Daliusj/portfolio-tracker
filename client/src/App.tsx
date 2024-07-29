@@ -4,7 +4,8 @@ import Home from './pages/Home'
 import Header from './components/Header'
 import { useThemeMode } from 'flowbite-react'
 import { AuthProvider } from './context/AuthContext'
-import { Login } from './pages/Login'
+import Login from './pages/Login'
+import Signup from './pages/Signup'
 
 function App() {
   const { mode } = useThemeMode()
@@ -15,6 +16,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
         </Routes>
       </AuthProvider>
     </div>
