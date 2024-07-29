@@ -144,17 +144,17 @@ export default function buildFmp() {
     symbol: string,
     fromDate: string,
     toDate: string
-  ): Promise<FinancialData[]> => {
+  ): Promise<FinancialData[] | undefined> => {
     const data = await fetchPrices(symbol, fromDate, toDate)
-    return parseTimeSeriesData(data)
+    return data ? parseTimeSeriesData(data) : undefined
   }
 
   const fetchDayPrice = async (
     symbol: string,
     date: string
-  ): Promise<FinancialData[]> => {
+  ): Promise<FinancialData[] | undefined> => {
     const data = await fetchPrices(symbol, date, date)
-    return parseTimeSeriesData(data)
+    return data ? parseTimeSeriesData(data) : undefined
   }
 
   const fetchAllStocks = async (): Promise<Ticker[]> => {

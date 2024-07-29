@@ -1,6 +1,7 @@
 import { authenticatedProcedure } from '@server/trpc/authenticatedProcedure'
 import provideRepos from '@server/trpc/provideRepos'
 import { portfolioItemSchema } from '@server/entities/portfolioItems'
+import { TRPCError } from '@trpc/server'
 import { portfolioItemRepository } from '../../repositories/portfolioItemRepository'
 
 export default authenticatedProcedure
@@ -11,8 +12,16 @@ export default authenticatedProcedure
     })
   )
   .mutation(async ({ input: portfolioItemData, ctx: { repos } }) => {
-    const portfolioCreated = await repos.portfolioItemRepository.remove(
+    const itemDeleted = await repos.portfolioItemRepository.remove(
       portfolioItemData.id
     )
-    return portfolioCreated
+
+    if (!itemDeleted) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'Portfolio item not found with this id',
+      })
+    }
+
+    return itemDeleted
   })

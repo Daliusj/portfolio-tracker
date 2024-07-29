@@ -20,7 +20,7 @@ export function portfolioRepository(db: Database) {
       portfolioId: number,
       userId: number,
       currencySymbol: string
-    ): Promise<PortfolioPublic> {
+    ): Promise<PortfolioPublic | undefined> {
       await db
         .updateTable('portfolio')
         .set({ currencySymbol })
@@ -35,20 +35,20 @@ export function portfolioRepository(db: Database) {
         .where(({ and, eb }) =>
           and([eb('id', '=', portfolioId), eb('userId', '=', userId)])
         )
-        .executeTakeFirstOrThrow()
+        .executeTakeFirst()
     },
 
     async remove(
       portfolioId: number,
       userId: number
-    ): Promise<PortfolioPublic> {
+    ): Promise<PortfolioPublic | undefined> {
       const deletedPortfolio = await db
         .selectFrom('portfolio')
         .selectAll()
         .where(({ and, eb }) =>
           and([eb('id', '=', portfolioId), eb('userId', '=', userId)])
         )
-        .executeTakeFirstOrThrow()
+        .executeTakeFirst()
 
       await db
         .deleteFrom('portfolio')

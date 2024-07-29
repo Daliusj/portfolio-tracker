@@ -1,6 +1,7 @@
 import { authenticatedProcedure } from '@server/trpc/authenticatedProcedure'
 import provideRepos from '@server/trpc/provideRepos'
 import { portfolioItemSchema } from '@server/entities/portfolioItems'
+import { TRPCError } from '@trpc/server'
 import { portfolioItemRepository } from '../../repositories/portfolioItemRepository'
 
 export default authenticatedProcedure
@@ -11,9 +12,16 @@ export default authenticatedProcedure
     })
   )
   .query(async ({ input: portfolioItemData, ctx: { repos } }) => {
-    const portfolioCreated =
+    const portfolioItemReturned =
       await repos.portfolioItemRepository.findByPortfolioId(
         portfolioItemData.portfolioId
       )
-    return portfolioCreated
+    if (!portfolioItemReturned.length) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'Portfolio items not found for this portfolio',
+      })
+    }
+
+    return portfolioItemReturned
   })

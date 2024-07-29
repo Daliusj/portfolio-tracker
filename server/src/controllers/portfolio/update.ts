@@ -2,6 +2,7 @@ import { authenticatedProcedure } from '@server/trpc/authenticatedProcedure'
 import provideRepos from '@server/trpc/provideRepos'
 import { portfolioRepository } from '@server/repositories/portfolioRepository'
 import { portfolioSchema } from '@server/entities/portfolio'
+import { TRPCError } from '@trpc/server'
 
 export default authenticatedProcedure
   .use(provideRepos({ portfolioRepository }))
@@ -12,10 +13,17 @@ export default authenticatedProcedure
     })
   )
   .mutation(async ({ input: portfolioData, ctx: { authUser, repos } }) => {
-    const portfolioCreated = await repos.portfolioRepository.update(
+    const portfolioUpdated = await repos.portfolioRepository.update(
       portfolioData.id,
       authUser.id,
       portfolioData.currencySymbol
     )
-    return portfolioCreated
+    if (!portfolioUpdated) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'Portfolio not found with this id.',
+      })
+    }
+
+    return portfolioUpdated
   })

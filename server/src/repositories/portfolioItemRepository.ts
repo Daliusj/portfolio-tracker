@@ -61,12 +61,14 @@ export function portfolioItemRepository(db: Database) {
         .executeTakeFirstOrThrow()
     },
 
-    async remove(portfolioItemId: number): Promise<PortfolioItemPublic> {
+    async remove(
+      portfolioItemId: number
+    ): Promise<PortfolioItemPublic | undefined> {
       const deletedPortfolioItem = await db
         .selectFrom('portfolioItem')
         .selectAll()
         .where('id', '=', portfolioItemId)
-        .executeTakeFirstOrThrow()
+        .executeTakeFirst()
 
       await db
         .deleteFrom('portfolioItem')
