@@ -21,6 +21,7 @@ export default (db: Database, fmpApi: Fmp) => {
         currencyFrom: portfolio.currencySymbol.toUpperCase(),
         currencyTo: asset.currencyCode,
       })
+
       const value =
         Number(asset.price) *
         Number(asset.quantity) *

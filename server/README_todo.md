@@ -8,4 +8,6 @@ TODO:
 6. add scheduler for daily db updates
 7. add data filtering before inserting into database
 8. add API endpoint for asset logos
-9. add caching for history data
+9. add caching for history data (optional)
+10. Add cascade on delete to portfolio item table
+11. add pagination to get assets

@@ -9,7 +9,7 @@ export default (db: Database, fmpApi: Fmp) => ({
   ) => {
     try {
       const data = await fmpApi.fetchTimeRangePrices(symbol, dateFrom, dateTo)
-      return data
+      return data?.length ? data : []
     } catch (err) {
       throw new Error(
         `Error getting data from FmpApi: ${
@@ -21,7 +21,7 @@ export default (db: Database, fmpApi: Fmp) => ({
   getDataForOneDay: async (symbol: string, date: string) => {
     try {
       const data = await fmpApi.fetchDayPrice(symbol, date)
-      return data
+      return data?.length ? data : []
     } catch (err) {
       throw new Error(
         `Error getting data from FmpApi: ${

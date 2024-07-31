@@ -12,15 +12,12 @@ export function databaseUpsertExchangeRates(
   const currencyExchangeRatesRepo = currencyExchangeRateRepository(db)
 
   const generateCurrencyCombinations = (currencies: CurrencyPublic[]) => {
-    // Filter only base currencies for the 'from' field
     const baseCurrencies = currencies.filter((currency) => currency.isBase)
     return baseCurrencies.flatMap((sourceCurrency) =>
-      currencies
-        .map((targetCurrency) => ({
-          from: sourceCurrency.code,
-          to: targetCurrency.code,
-        }))
-        .filter((pair) => pair.from !== pair.to)
+      currencies.map((targetCurrency) => ({
+        from: sourceCurrency.code,
+        to: targetCurrency.code,
+      }))
     )
   }
 
@@ -34,6 +31,14 @@ export function databaseUpsertExchangeRates(
         )
         const ratesDataFull = await exchangeRatesApi.fetchRates(baseCurrencies)
         const ratesData = currenciesCombinations.map((pair) => {
+          if (pair.from === pair.to) {
+            return {
+              currencyFrom: pair.from,
+              currencyTo: pair.to,
+              exchangeRate: 1,
+            }
+          }
+
           const allRates = ratesDataFull.find(
             (exchange) => exchange.base === pair.from
           )?.rates
