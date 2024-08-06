@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Sidebar from '../components/SideTree'
+import Sidebar from '../components/SideTree/SideTree'
 import ChartBox from '@/components/ChartBox/ChartBox'
 import TableBox from '@/components/TableBox/TableBox'
 import { trpc } from '@/trpc'

@@ -9,10 +9,9 @@
 }
 
 .sidebar {
-  max-height: 700px;
-  overflow-y: auto;
+  @apply h-full;
 }
 
 .header {
-  @apply mb-4;
+  @apply mb-10;
 }

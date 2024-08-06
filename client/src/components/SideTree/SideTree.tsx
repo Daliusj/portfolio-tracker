@@ -1,6 +1,7 @@
-import React from 'react'
-import { Sidebar as SidebarFlowbite } from 'flowbite-react'
+import React, { useState } from 'react'
+import { Sidebar as SidebarFlowbite, Button } from 'flowbite-react'
 import { HiBell, HiBriefcase, HiTrendingUp } from 'react-icons/hi'
+import PortfolioForm from '@/context/PortfolioForm/PortfolioForm'
 
 type Props = {
   logoUrl: string
@@ -10,7 +11,8 @@ type Props = {
 
 export default function ({ logoUrl, name, valueChange }: Props) {
   return (
-    <div className="sidebar ">
+    <div className="sidebar">
+      <PortfolioForm />
       <SidebarFlowbite aria-label="Sidebar with multi-level dropdown">
         <SidebarFlowbite.Items>
           <SidebarFlowbite.ItemGroup>

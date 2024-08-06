@@ -5,7 +5,7 @@ import { idSchema } from './shared'
 import { assetFieldsForFullPortfolio } from './asset'
 import { portfolioItemFieldsForFullPortfolio } from './portfolioItems'
 
-const BASE_CURRENCIES = ['USD', 'EUR'] as const
+export const BASE_CURRENCIES = ['USD', 'EUR'] as const
 
 export const portfolioSchema = z.object({
   id: idSchema,
