@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef } from 'react'
 import { Line } from 'react-chartjs-2'
 import { Chart, registerables } from 'chart.js'
 import annotationPlugin from 'chartjs-plugin-annotation'
@@ -111,7 +111,7 @@ const CustomLineChart: React.FC = () => {
     },
   }
 
-  return <Line ref={chartRef} data={data} options={options} />
+  return <Line ref={chartRef} data={data} options={options} className="h-full" />
 }
 
 export default CustomLineChart

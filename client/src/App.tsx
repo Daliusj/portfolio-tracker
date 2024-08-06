@@ -1,25 +1,33 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
-import Header from './components/Header'
+import Header from './components/Header/Header'
 import { useThemeMode } from 'flowbite-react'
-import { AuthProvider } from './context/AuthContext'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { trpc, trpcClient } from './trpc'
+import { AuthProvider } from './context/AuthContext'
 
 function App() {
   const { mode } = useThemeMode()
+  const queryClient = new QueryClient()
+
   return (
-    <div className={`${mode === 'dark' ? 'dark' : ''} app`}>
-      <AuthProvider>
-        <Header></Header>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-        </Routes>
-      </AuthProvider>
-    </div>
+    <trpc.Provider client={trpcClient} queryClient={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <div className={`${mode === 'dark' ? 'dark' : ''} app`}>
+            <Header></Header>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+            </Routes>
+          </div>
+        </AuthProvider>
+      </QueryClientProvider>
+    </trpc.Provider>
   )
 }
 export default App

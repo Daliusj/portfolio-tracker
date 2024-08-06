@@ -28,7 +28,9 @@ export function UserForm({ type }: UserFormProps) {
     e.preventDefault()
     try {
       await signup({ email, userName, password })
-    } catch {}
+    } catch (err) {
+      console.log(err)
+    }
   }
   return (
     <form className="flex max-w-md flex-col gap-4">

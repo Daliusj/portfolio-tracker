@@ -4,7 +4,7 @@ import { Table } from 'flowbite-react'
 export default function AssetsTable() {
   return (
     <div className="overflow-x-auto">
-      <Table hoverable>
+      <Table hoverable className=" bg-white px-3 py-4 dark:bg-slate-900">
         <Table.Head>
           <Table.HeadCell>Product name</Table.HeadCell>
           <Table.HeadCell>Color</Table.HeadCell>

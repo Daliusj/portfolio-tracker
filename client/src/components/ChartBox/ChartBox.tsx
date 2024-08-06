@@ -5,7 +5,7 @@ import React from 'react'
 export default function ChartBox() {
   return (
     <div>
-      <div className="flex w-full space-x-80">
+      <div className="flex w-full space-x-80 ">
         <div>
           <div>Portfolio balance</div>
           <div className="flex">

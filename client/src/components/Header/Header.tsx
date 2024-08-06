@@ -2,16 +2,19 @@ import React from 'react'
 import { Button, DarkThemeToggle, Flowbite } from 'flowbite-react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
+import logoPng from './logo.png'
+import { HiSearch } from 'react-icons/hi'
 
-export default function Header() {
+export default function () {
   const { isLoggedIn, logout } = useAuth()
 
   return (
-    <div className="h-20">
-      <Flowbite>
-        <DarkThemeToggle />
-      </Flowbite>
-      <div className="flex space-x-6">
+    <div className="header flex h-10 justify-between">
+      <img src={logoPng} />
+      <div className="flex justify-between">
+        <Button>
+          <HiSearch size={18} />
+        </Button>
         {!isLoggedIn && (
           <Button as={Link} href="#" to={'/login'}>
             Login
@@ -23,6 +26,9 @@ export default function Header() {
           </Button>
         )}
         {isLoggedIn && <Button onClick={logout}>Logout</Button>}
+        <Flowbite>
+          <DarkThemeToggle />
+        </Flowbite>
       </div>
     </div>
   )

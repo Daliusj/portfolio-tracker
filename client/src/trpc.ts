@@ -1,23 +1,20 @@
 import { createTRPCProxyClient, httpBatchLink } from '@trpc/client'
-// @ts-ignore - importing through a direct path propagates types faster
+import { createTRPCReact } from '@trpc/react-query'
+
 import type { AppRouter } from '@server/shared/trpc'
 import { apiBase } from '@/config'
 import { getStoredAccessToken } from '@/utils/auth'
 import SuperJSON from 'superjson'
 
-export const trpc = createTRPCProxyClient<AppRouter>({
-  // auto convert Date <-> string
+export const trpc = createTRPCReact<AppRouter>()
+export const trpcClient = trpc.createClient({
   transformer: SuperJSON,
   links: [
     httpBatchLink({
       url: apiBase,
-
-      // send the access token with every request
-      headers: () => {
+      async headers() {
         const token = getStoredAccessToken(localStorage)
-
         if (!token) return {}
-
         return {
           Authorization: `Bearer ${token}`,
         }

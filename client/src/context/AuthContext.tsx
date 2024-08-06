@@ -13,11 +13,7 @@ type AuthContextType = {
   isLoggedIn: boolean
   login: (userLogin: { email: string; password: string }) => Promise<void>
   logout: () => void
-  signup: (userSignup: {
-    email: string
-    userName: string
-    password: string
-  }) => Promise<{ id: number }>
+  signup: (userSignup: { email: string; userName: string; password: string }) => Promise<void>
 }
 
 type AuthProviderProps = {
@@ -27,13 +23,13 @@ type AuthProviderProps = {
 const defaultAuthContext: AuthContextType = {
   authUserId: null,
   isLoggedIn: false,
-  login: async () => {
+  login: () => {
     throw new Error('login function not initialized')
   },
   logout: () => {
     throw new Error('logout function not initialized')
   },
-  signup: async () => {
+  signup: () => {
     throw new Error('signup function not initialized')
   },
 }
@@ -51,17 +47,28 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, [authToken])
 
+  const loginMutation = trpc.user.login.useMutation()
+
   const login = async (userLogin: { email: string; password: string }) => {
-    const { accessToken } = await trpc.user.login.mutate(userLogin)
-    setAuthToken(accessToken)
+    loginMutation.mutate(userLogin, {
+      onSuccess: (data) => {
+        const { accessToken } = data
+        setAuthToken(accessToken)
+      },
+      onError: (error) => {
+        console.error('Login failed', error)
+      },
+    })
   }
 
   const logout = () => {
     setAuthToken(null)
   }
 
+  const signupMutation = trpc.user.signup.useMutation()
+
   const signup = async (userSignup: { email: string; userName: string; password: string }) => {
-    return await trpc.user.signup.mutate(userSignup)
+    signupMutation.mutate(userSignup)
   }
 
   const authUserId = authToken ? getUserIdFromToken(authToken) : null
