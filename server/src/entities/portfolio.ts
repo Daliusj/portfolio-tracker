@@ -7,6 +7,8 @@ import { portfolioItemFieldsForFullPortfolio } from './portfolioItems'
 
 export const BASE_CURRENCIES = ['USD', 'EUR'] as const
 
+export type BaseCurrency = (typeof BASE_CURRENCIES)[number]
+
 export const portfolioSchema = z.object({
   id: idSchema,
   userId: idSchema,

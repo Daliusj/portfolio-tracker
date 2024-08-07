@@ -10,13 +10,15 @@ export default authenticatedProcedure
     portfolioSchema.pick({
       id: true,
       currencySymbol: true,
+      name: true,
     })
   )
   .mutation(async ({ input: portfolioData, ctx: { authUser, repos } }) => {
     const portfolioUpdated = await repos.portfolioRepository.update(
       portfolioData.id,
       authUser.id,
-      portfolioData.currencySymbol
+      portfolioData.currencySymbol,
+      portfolioData.name
     )
     if (!portfolioUpdated) {
       throw new TRPCError({

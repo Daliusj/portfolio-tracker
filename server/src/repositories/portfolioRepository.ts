@@ -19,11 +19,12 @@ export function portfolioRepository(db: Database) {
     async update(
       portfolioId: number,
       userId: number,
-      currencySymbol: string
+      currencySymbol: string,
+      name: string
     ): Promise<PortfolioPublic | undefined> {
       await db
         .updateTable('portfolio')
-        .set({ currencySymbol })
+        .set({ currencySymbol, name })
         .where(({ and, eb }) =>
           and([eb('id', '=', portfolioId), eb('userId', '=', userId)])
         )

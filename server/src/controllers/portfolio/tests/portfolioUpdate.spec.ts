@@ -15,6 +15,7 @@ it('should throw an error if user is not authenticated', async () => {
     update({
       id: 5,
       currencySymbol: 'USD',
+      name: 'MyPortfolio',
     })
   ).rejects.toThrow(/unauthenticated/i)
 })
@@ -30,12 +31,14 @@ it('should update a portfolio', async () => {
   const portfolioReturned = await update({
     id: portfolio.id,
     currencySymbol: 'USD',
+    name: 'MyPortfolio',
   })
 
   expect(portfolioReturned).toMatchObject({
     id: expect.any(Number),
     currencySymbol: 'USD',
     userId: user.id,
+    name: 'MyPortfolio',
   })
 
   const [portfolioCreated] = await selectAll(db, 'portfolio', (eb) =>

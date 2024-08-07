@@ -26,7 +26,7 @@ describe('create', () => {
 })
 
 describe('update', () => {
-  it('should update portfolio currency symbol', async () => {
+  it('should update portfolio currency symbol and name', async () => {
     const [user] = await insertAll(db, 'user', fakeUser({}))
     const [portfolio] = await insertAll(
       db,
@@ -36,11 +36,13 @@ describe('update', () => {
     const updatedPortfolio = await repository.update(
       portfolio.id,
       user.id,
-      'USD'
+      'USD',
+      'MyPortfolio'
     )
     expect(updatedPortfolio).toEqual({
       ...portfolio,
       currencySymbol: 'USD',
+      name: 'MyPortfolio',
     })
   })
 })
