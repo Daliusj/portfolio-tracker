@@ -1,29 +1,35 @@
-import { BASE_CURRENCIES } from '../../../../server/src/shared/baseCurrencies'
+import { BASE_CURRENCIES } from '../../../../../server/src/shared/baseCurrencies'
 import { Modal, Label, TextInput, Button } from 'flowbite-react'
 import React, { useId, useState } from 'react'
 import RadioOptions from './RadioOptions'
+import { trpc } from '@/trpc'
+import type { BaseCurrency } from '@server/shared/types'
 
-export default function () {
+type PortfolioFormProps = {
+  openModal: boolean
+  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+export default function ({ openModal, setOpenModal }: PortfolioFormProps) {
   const [portfolioName, setPortfolioName] = useState('')
-  const [portfolioCurrency, setPortfolioCurrency] = useState('')
-  const [openModal, setOpenModal] = useState(false)
+  const [currencySymbol, setCurrencySymbol] = useState<BaseCurrency>('USD')
+
+  const portfolioMutation = trpc.portfolio.create.useMutation()
 
   const handleSubmit = () => {
-    console.log(portfolioName, portfolioCurrency)
+    portfolioMutation.mutate({ name: portfolioName, currencySymbol })
+    console.log(portfolioName, currencySymbol)
     setOpenModal(false)
   }
 
   const onCloseModal = () => {
     setOpenModal(false)
     setPortfolioName('')
-    setPortfolioCurrency(BASE_CURRENCIES[0])
+    setCurrencySymbol(BASE_CURRENCIES[0])
   }
 
   return (
     <div>
-      <Button color="green" size="sm" onClick={() => setOpenModal(true)}>
-        Create Portfolio
-      </Button>
       <Modal show={openModal} size="md" onClose={onCloseModal} popup>
         <Modal.Header />
         <Modal.Body>
@@ -51,12 +57,14 @@ export default function () {
                 <RadioOptions
                   key={useId()}
                   currency={currency}
-                  portfolioCurrency={portfolioCurrency}
-                  setPortfolioCurrency={setPortfolioCurrency}
+                  portfolioCurrency={currencySymbol}
+                  setPortfolioCurrency={setCurrencySymbol}
                 />
               ))}
             </fieldset>
-            <Button onClick={handleSubmit}>Create</Button>
+            <Button onClick={handleSubmit} color="blue">
+              Create
+            </Button>
           </div>
         </Modal.Body>
       </Modal>

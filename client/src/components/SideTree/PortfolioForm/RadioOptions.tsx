@@ -1,13 +1,14 @@
 import { Radio, Label } from 'flowbite-react'
 import React, { useId } from 'react'
+import type { BaseCurrency } from '@server/shared/types'
 
-type Props = {
-  currency: string
+type RadioOptionsProps = {
+  currency: BaseCurrency
   portfolioCurrency: string
-  setPortfolioCurrency: React.Dispatch<React.SetStateAction<string>>
+  setPortfolioCurrency: React.Dispatch<React.SetStateAction<BaseCurrency>>
 }
 
-export default function ({ currency, portfolioCurrency, setPortfolioCurrency }: Props) {
+export default function ({ currency, portfolioCurrency, setPortfolioCurrency }: RadioOptionsProps) {
   const id = useId()
   return (
     <div className="flex items-center gap-2">

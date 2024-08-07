@@ -7,6 +7,7 @@ import {
   getUserIdFromToken,
   storeAccessToken,
 } from '../utils/auth'
+import { useNavigate } from 'react-router-dom'
 
 type AuthContextType = {
   authUserId: number | null
@@ -49,11 +50,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const loginMutation = trpc.user.login.useMutation()
 
+  const navigate = useNavigate()
+
   const login = async (userLogin: { email: string; password: string }) => {
     loginMutation.mutate(userLogin, {
       onSuccess: (data) => {
         const { accessToken } = data
         setAuthToken(accessToken)
+        navigate('/')
       },
       onError: (error) => {
         console.error('Login failed', error)
@@ -68,7 +72,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const signupMutation = trpc.user.signup.useMutation()
 
   const signup = async (userSignup: { email: string; userName: string; password: string }) => {
-    signupMutation.mutate(userSignup)
+    signupMutation.mutate(userSignup, {
+      onSuccess: () => {
+        navigate('/login')
+      },
+      onError: (error) => {
+        console.error('Signup failed', error)
+      },
+    })
   }
 
   const authUserId = authToken ? getUserIdFromToken(authToken) : null
