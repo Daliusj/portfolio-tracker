@@ -47,6 +47,7 @@ export interface Portfolio {
   createdAt: Generated<Timestamp>
   currencySymbol: string
   id: Generated<number>
+  name: string
   userId: number
 }
 
