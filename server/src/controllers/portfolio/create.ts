@@ -8,6 +8,7 @@ export default authenticatedProcedure
   .input(
     portfolioSchema.pick({
       currencySymbol: true,
+      name: true,
     })
   )
   .mutation(async ({ input: portfolioData, ctx: { authUser, repos } }) => {

@@ -10,6 +10,7 @@ export const BASE_CURRENCIES = ['USD', 'EUR'] as const
 export const portfolioSchema = z.object({
   id: idSchema,
   userId: idSchema,
+  name: z.string().min(1).max(30),
   currencySymbol: z.enum(BASE_CURRENCIES),
   createdAt: z.date().default(() => new Date()),
 })

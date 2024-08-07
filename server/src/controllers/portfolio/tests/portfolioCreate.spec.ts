@@ -14,6 +14,7 @@ it('should throw an error if user is not authenticated', async () => {
   await expect(
     create({
       currencySymbol: 'USD',
+      name: 'MyPortfolio',
     })
   ).rejects.toThrow(/unauthenticated/i)
 })
@@ -23,6 +24,7 @@ it('should create a persisted portfolio', async () => {
   const { create } = createCaller(authContext({ db }, user))
   const portfolioReturned = await create({
     currencySymbol: 'USD',
+    name: 'MyPortfolio',
   })
 
   expect(portfolioReturned).toMatchObject({
