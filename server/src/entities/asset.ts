@@ -4,6 +4,7 @@ import type { Asset } from '@server/database/types'
 import { idSchema } from './shared'
 
 export const INVESTMENT_TYPES = ['crypto', 'fund', 'stock'] as const
+const POSTGRES_INT_MAX = 2147483647
 
 export const assetSchema = z.object({
   id: idSchema,
@@ -22,6 +23,8 @@ export const assetIdArrSchema = z.object({
 
 export const assetQuerySchema = z.object({
   query: z.string().min(1).max(50),
+  offset: z.number().int().min(0).max(POSTGRES_INT_MAX).default(0),
+  limit: z.number().int().min(1).max(100).default(20),
 })
 
 export const assetKeysAll = Object.keys(assetSchema.shape) as (keyof Asset)[]

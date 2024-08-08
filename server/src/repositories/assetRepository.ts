@@ -7,6 +7,11 @@ import {
 import type { Insertable } from 'kysely'
 import { sql } from 'kysely'
 
+type Pagination = {
+  offset: number
+  limit: number
+}
+
 export function assetRepository(db: Database) {
   return {
     async create(
@@ -35,7 +40,10 @@ export function assetRepository(db: Database) {
         .execute()
     },
 
-    async findAsset(query: string): Promise<AssetPublic[]> {
+    async findAsset(
+      query: string,
+      { offset, limit }: Pagination
+    ): Promise<AssetPublic[]> {
       const partialQuery = `%${query}%`
       return db
         .selectFrom('asset')
@@ -46,6 +54,8 @@ export function assetRepository(db: Database) {
             eb('symbol', 'ilike', partialQuery),
           ])
         )
+        .offset(offset)
+        .limit(limit)
         .execute()
     },
 

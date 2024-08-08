@@ -8,11 +8,14 @@ export default publicProcedure
   .input(
     assetQuerySchema.pick({
       query: true,
+      offset: true,
+      limit: true,
     })
   )
   .query(async ({ input: assetData, ctx: { repos } }) => {
     const portfolioCreated = await repos.assetRepository.findAsset(
-      assetData.query
+      assetData.query,
+      { offset: assetData.offset, limit: assetData.limit }
     )
     return portfolioCreated
   })

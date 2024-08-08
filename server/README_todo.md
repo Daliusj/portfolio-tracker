@@ -10,6 +10,4 @@ TODO:
 8. add API endpoint for asset logos
 9. add caching for history data (optional)
 10. Add cascade on delete to portfolio item table
-11. add pagination to get assets
-12. add asset one day value change end point
-13. add portfolio title
+11. add asset one day value change end point

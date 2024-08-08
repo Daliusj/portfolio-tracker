@@ -63,7 +63,10 @@ describe('findAsset', () => {
       'asset',
       fakeAsset({ name: 'Apple', symbol: 'AAPL' })
     )
-    const assetsFound = await repository.findAsset('Apple')
+    const assetsFound = await repository.findAsset('Apple', {
+      offset: 0,
+      limit: 10,
+    })
     expect(assetsFound).toEqual([asset])
   })
 
@@ -73,7 +76,10 @@ describe('findAsset', () => {
       'asset',
       fakeAsset({ name: 'Apple', symbol: 'AAPL' })
     )
-    const assetsFound = await repository.findAsset('apple')
+    const assetsFound = await repository.findAsset('apple', {
+      offset: 0,
+      limit: 10,
+    })
     expect(assetsFound).toEqual([asset])
   })
 
@@ -83,7 +89,10 @@ describe('findAsset', () => {
       'asset',
       fakeAsset({ name: 'Apple', symbol: 'AAPL' })
     )
-    const assetsFound = await repository.findAsset('pple')
+    const assetsFound = await repository.findAsset('pple', {
+      offset: 0,
+      limit: 10,
+    })
     expect(assetsFound).toEqual([asset])
   })
 
@@ -93,7 +102,10 @@ describe('findAsset', () => {
       'asset',
       fakeAsset({ name: 'Apple', symbol: 'AAPL' })
     )
-    const assetsFound = await repository.findAsset('AAPL')
+    const assetsFound = await repository.findAsset('AAPL', {
+      offset: 0,
+      limit: 10,
+    })
     expect(assetsFound).toEqual([asset])
   })
 
@@ -103,7 +115,10 @@ describe('findAsset', () => {
       'asset',
       fakeAsset({ name: 'Apple', symbol: 'AAPL' })
     )
-    const assetsFound = await repository.findAsset('aapl')
+    const assetsFound = await repository.findAsset('aapl', {
+      offset: 0,
+      limit: 10,
+    })
     expect(assetsFound).toEqual([asset])
   })
 
@@ -113,12 +128,18 @@ describe('findAsset', () => {
       'asset',
       fakeAsset({ name: 'Apple', symbol: 'AAPL' })
     )
-    const assetsFound = await repository.findAsset('apl')
+    const assetsFound = await repository.findAsset('apl', {
+      offset: 0,
+      limit: 10,
+    })
     expect(assetsFound).toEqual([asset])
   })
 
   it('should return an empty array if no assets are found', async () => {
-    const assetFound = await repository.findAsset('btc')
+    const assetFound = await repository.findAsset('btc', {
+      offset: 0,
+      limit: 10,
+    })
     expect(assetFound).toEqual([])
   })
 })
