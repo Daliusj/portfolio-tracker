@@ -1,6 +1,13 @@
 import React, { useState } from 'react'
 import { Sidebar as SidebarFlowbite, Button } from 'flowbite-react'
-import { HiBell, HiBriefcase, HiTrendingUp, HiOutlineDotsVertical } from 'react-icons/hi'
+import {
+  HiBell,
+  HiBriefcase,
+  HiTrendingUp,
+  HiOutlineDotsVertical,
+  HiUserCircle,
+  HiCurrencyDollar,
+} from 'react-icons/hi'
 import PortfolioForm from './PortfolioForm/PortfolioForm'
 import AssetForm from './AssetForm/AssetForm'
 
@@ -16,14 +23,19 @@ export default function ({ logoUrl, name, valueChange }: Props) {
 
   return (
     <div className="sidebar flex-col ">
-      <div className="flex justify-between">
-        <Button color="blue" size="sm" onClick={() => setOpenPortfolioModal(true)}>
-          Create Portfolio
-        </Button>
-        <Button color="blue" size="sm" onClick={() => setOpenAssetModal(true)}>
-          Add Asset
-        </Button>
+      <div className="flex flex-wrap gap-2">
+        <Button.Group>
+          <Button color="blue" onClick={() => setOpenPortfolioModal(true)}>
+            <HiUserCircle className="mr-3 h-4 w-4" />
+            Create Portfolio
+          </Button>
+          <Button color="blue" onClick={() => setOpenAssetModal(true)}>
+            <HiCurrencyDollar className="mr-3 h-4 w-4" />
+            Add Asset
+          </Button>
+        </Button.Group>
       </div>
+
       <PortfolioForm openModal={openPortfolioModal} setOpenModal={setOpenPortfolioModal} />
       <AssetForm openModal={openAssetModal} setOpenModal={setOpenAssetModal} />
       <SidebarFlowbite aria-label="Sidebar with multi-level dropdown" className="w-80">
