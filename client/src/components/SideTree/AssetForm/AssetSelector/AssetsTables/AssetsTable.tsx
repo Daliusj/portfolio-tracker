@@ -1,7 +1,8 @@
 import { Table } from 'flowbite-react'
 import React from 'react'
 import { AssetPublic } from '@server/shared/types'
-import TableRow from './tableRow'
+import TableRow from './TableRow'
+import TableHead from './TableHead'
 
 type AssetsTableProps = {
   assets: AssetPublic[] | undefined
@@ -16,12 +17,7 @@ export default function ({ assets, setSelectedAsset, selectedAsset }: AssetsTabl
   return (
     <div className="overflow-x-auto">
       <Table hoverable>
-        <Table.Head>
-          <Table.HeadCell>Name</Table.HeadCell>
-          <Table.HeadCell>Type</Table.HeadCell>
-          <Table.HeadCell>Price</Table.HeadCell>
-          <Table.HeadCell>Exchange</Table.HeadCell>
-        </Table.Head>
+        <TableHead />
         <Table.Body className="divide-y">
           {!assets?.length && selectedAsset && (
             <TableRow asset={selectedAsset} handleClickRow={handleClickRow} isSelected={true} />

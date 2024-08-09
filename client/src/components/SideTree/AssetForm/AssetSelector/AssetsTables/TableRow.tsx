@@ -1,6 +1,7 @@
-import { Table } from 'flowbite-react'
+import { Button, Table } from 'flowbite-react'
 import React, { useId } from 'react'
 import { AssetPublic } from '@server/shared/types'
+import { HiXCircle } from 'react-icons/hi'
 
 type TableRowProps = {
   asset: AssetPublic
@@ -10,11 +11,19 @@ type TableRowProps = {
 export default function ({ asset, handleClickRow, isSelected }: TableRowProps) {
   return (
     <Table.Row
-      onClick={() => handleClickRow(isSelected ? undefined : asset)}
+      onClick={() => !isSelected && handleClickRow(asset)}
       className={` dark:border-gray-700 ${isSelected ? 'bg-blue-800 dark:bg-blue-800' : ' bg-white dark:bg-gray-800'} `}
       key={useId()}
     >
-      <Table.Cell className="font-small whitespace-wrap text-gray-900 dark:text-white">
+      <Table.Cell className="font-small whitespace-no-wrap flex items-center text-gray-900 dark:text-white">
+        {isSelected && (
+          <Button
+            onClick={() => isSelected && handleClickRow(undefined)}
+            className="flex h-5 w-5 items-center justify-center p-0"
+          >
+            <HiXCircle className="mr-3 h-5 w-5 p-0" />
+          </Button>
+        )}
         {`${asset.name}(${asset.symbol})`}
       </Table.Cell>
       <Table.Cell>{asset.type}</Table.Cell>

@@ -18,7 +18,6 @@ export default function ({ openModal, setOpenModal }: PortfolioFormProps) {
 
   const handleSubmit = () => {
     portfolioMutation.mutate({ name: portfolioName, currencySymbol })
-    console.log(portfolioName, currencySymbol)
     setOpenModal(false)
   }
 

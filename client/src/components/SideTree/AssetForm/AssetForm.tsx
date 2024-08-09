@@ -1,10 +1,11 @@
-import { Modal, TextInput, Button, Dropdown } from 'flowbite-react'
+import { Modal, Button, Dropdown, Table } from 'flowbite-react'
+import TableHead from './AssetSelector/AssetsTables/TableHead'
 import React, { useState } from 'react'
 import type { BaseCurrency } from '@server/shared/types'
-import { HiSearch } from 'react-icons/hi'
-import { trpc } from '@/trpc'
-import AssetsTable from './AssetsTable/AssetsTable'
 import { AssetPublic } from '@server/shared/types'
+import { HiFolder } from 'react-icons/hi'
+import TableRow from './AssetSelector/AssetsTables/TableRow'
+import AssetSelector from './AssetSelector/AssetSelector'
 
 type PortfolioFormProps = {
   openModal: boolean
@@ -12,16 +13,11 @@ type PortfolioFormProps = {
 }
 
 export default function ({ openModal, setOpenModal }: PortfolioFormProps) {
-  const [searchQuery, setSearchQuery] = useState('')
   const [currencySymbol, setCurrencySymbol] = useState<BaseCurrency>('USD')
   const [selectedPortfolio, setSelectedPortfolio] = useState('Portfolio One')
   const [selectedAsset, setSelectedAsset] = useState<AssetPublic | undefined>(undefined)
-  const [allowQuery, setAllowQuery] = useState<boolean>(false)
-
-  const assetsQuery = trpc.asset.get.useQuery(
-    { query: searchQuery },
-    { enabled: searchQuery.length > 2 && allowQuery === true }
-  )
+  const [searchQuery, setSearchQuery] = useState('')
+  const [allowSelectAsset, setAllowSelectAsset] = useState(false)
 
   const handleSubmit = () => {
     console.log(selectedPortfolio, selectedAsset)
@@ -35,22 +31,6 @@ export default function ({ openModal, setOpenModal }: PortfolioFormProps) {
 
   const handleDropDownChange = (portfolio: string) => {
     setSelectedPortfolio(portfolio)
-  }
-
-  const handleSearchButton = () => {
-    console.log(assetsQuery.data)
-    setAllowQuery(true)
-  }
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      handleSearchButton()
-    }
-  }
-
-  const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAllowQuery(false)
-    setSearchQuery(event.target.value)
   }
 
   return (
@@ -70,24 +50,33 @@ export default function ({ openModal, setOpenModal }: PortfolioFormProps) {
                 </Dropdown.Item>
               </Dropdown>
             </div>
-            <div className="flex ">
-              <TextInput
-                id="search-query"
-                placeholder="Stock name"
-                value={searchQuery}
-                onKeyDown={handleKeyDown}
-                onChange={handleSearchInputChange}
-                required
-              />
-              <Button color="blue" onClick={handleSearchButton}>
-                <HiSearch size={22} />
+            {!allowSelectAsset && (
+              <Button color="blue" onClick={() => setAllowSelectAsset(true)}>
+                <HiFolder size={28} />
+                Select asset
               </Button>
-            </div>
-            <AssetsTable
-              assets={assetsQuery.data}
-              setSelectedAsset={setSelectedAsset}
-              selectedAsset={selectedAsset}
-            />
+            )}
+
+            {allowSelectAsset && !selectedAsset && (
+              <AssetSelector
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                selectedAsset={selectedAsset}
+                setSelectedAsset={setSelectedAsset}
+              />
+            )}
+            {selectedAsset && (
+              <Table hoverable>
+                <TableHead />
+                <Table.Body>
+                  <TableRow
+                    asset={selectedAsset}
+                    handleClickRow={(asset: AssetPublic | undefined) => setSelectedAsset(asset)}
+                    isSelected={true}
+                  />
+                </Table.Body>
+              </Table>
+            )}
 
             <fieldset className="flex max-w-md flex-col gap-4 text-gray-900 dark:text-white">
               <legend className="mb-4">Portfolio currency</legend>
