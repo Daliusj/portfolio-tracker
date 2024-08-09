@@ -13,5 +13,5 @@ it('should get an asset by query', async () => {
   const asset = await insertAll(db, 'asset', fakeAsset({ symbol: 'AAPL' }))
   const { get } = createCaller(authContext({ db }))
   const assetReturned = await get({ query: 'apl' })
-  expect(assetReturned).toEqual(asset)
+  expect(assetReturned).toEqual({ data: asset, total: '1' })
 })

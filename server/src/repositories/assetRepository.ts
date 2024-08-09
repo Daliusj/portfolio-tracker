@@ -43,20 +43,38 @@ export function assetRepository(db: Database) {
     async findAsset(
       query: string,
       { offset, limit }: Pagination
-    ): Promise<AssetPublic[]> {
+    ): Promise<{ data: AssetPublic[]; total: number }> {
       const partialQuery = `%${query}%`
-      return db
+
+      const numberOfResults = await db
+        .selectFrom('asset')
+        .select(sql<number>`count(*)`.as('total'))
+        .where((eb) =>
+          eb.or([
+            eb('name', 'ilike', partialQuery),
+            eb('symbol', 'ilike', partialQuery),
+            eb('exchange', 'ilike', partialQuery),
+            eb('exchangeShortName', 'ilike', partialQuery),
+          ])
+        )
+        .executeTakeFirstOrThrow()
+
+      const data = await db
         .selectFrom('asset')
         .select(assetKeysPublic)
         .where((eb) =>
           eb.or([
             eb('name', 'ilike', partialQuery),
             eb('symbol', 'ilike', partialQuery),
+            eb('exchange', 'ilike', partialQuery),
+            eb('exchangeShortName', 'ilike', partialQuery),
           ])
         )
         .offset(offset)
         .limit(limit)
         .execute()
+
+      return { data, total: numberOfResults.total }
     },
 
     async findAll(): Promise<AssetPublic[]> {

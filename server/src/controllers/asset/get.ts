@@ -13,9 +13,10 @@ export default publicProcedure
     })
   )
   .query(async ({ input: assetData, ctx: { repos } }) => {
-    const portfolioCreated = await repos.assetRepository.findAsset(
+    const returnedData = await repos.assetRepository.findAsset(
       assetData.query,
       { offset: assetData.offset, limit: assetData.limit }
     )
-    return portfolioCreated
+
+    return returnedData
   })

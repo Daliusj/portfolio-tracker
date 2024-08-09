@@ -67,7 +67,7 @@ describe('findAsset', () => {
       offset: 0,
       limit: 10,
     })
-    expect(assetsFound).toEqual([asset])
+    expect(assetsFound).toEqual({ data: [asset], total: '1' })
   })
 
   it('should find asset by provided full stock name in lower case', async () => {
@@ -80,7 +80,7 @@ describe('findAsset', () => {
       offset: 0,
       limit: 10,
     })
-    expect(assetsFound).toEqual([asset])
+    expect(assetsFound).toEqual({ data: [asset], total: '1' })
   })
 
   it('should find asset by provided partial stock name in lower case', async () => {
@@ -93,7 +93,7 @@ describe('findAsset', () => {
       offset: 0,
       limit: 10,
     })
-    expect(assetsFound).toEqual([asset])
+    expect(assetsFound).toEqual({ data: [asset], total: '1' })
   })
 
   it('should find asset by provided full symbol', async () => {
@@ -106,7 +106,7 @@ describe('findAsset', () => {
       offset: 0,
       limit: 10,
     })
-    expect(assetsFound).toEqual([asset])
+    expect(assetsFound).toEqual({ data: [asset], total: '1' })
   })
 
   it('should find asset by provided full symbol in lower case', async () => {
@@ -119,7 +119,7 @@ describe('findAsset', () => {
       offset: 0,
       limit: 10,
     })
-    expect(assetsFound).toEqual([asset])
+    expect(assetsFound).toEqual({ data: [asset], total: '1' })
   })
 
   it('should find asset by provided partial symbol in lower case', async () => {
@@ -132,7 +132,7 @@ describe('findAsset', () => {
       offset: 0,
       limit: 10,
     })
-    expect(assetsFound).toEqual([asset])
+    expect(assetsFound).toEqual({ data: [asset], total: '1' })
   })
 
   it('should return an empty array if no assets are found', async () => {
@@ -140,7 +140,7 @@ describe('findAsset', () => {
       offset: 0,
       limit: 10,
     })
-    expect(assetFound).toEqual([])
+    expect(assetFound).toEqual({ data: [], total: '0' })
   })
 })
 
