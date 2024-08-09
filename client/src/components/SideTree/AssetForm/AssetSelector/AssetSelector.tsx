@@ -1,9 +1,10 @@
-import { TextInput, Button, Pagination } from 'flowbite-react'
-import React, { useState } from 'react'
+import { TextInput, Button } from 'flowbite-react'
+import React, { useState, useEffect } from 'react'
 import AssetsTable from './AssetsTables/AssetsTable'
 import { trpc } from '@/trpc'
 import { HiSearch } from 'react-icons/hi'
 import { AssetPublic } from '@server/shared/types'
+import PageSelector from './PageSelector'
 
 type AssetSearchProps = {
   searchQuery: string
@@ -20,14 +21,22 @@ export default function ({
 }: AssetSearchProps) {
   const [allowQuery, setAllowQuery] = useState<boolean>(false)
   const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+
+  const ITEMS_PER_PAGE = 5
 
   const assetsQuery = trpc.asset.get.useQuery(
-    { query: searchQuery, offset: currentPage, limit: 5 },
-    { enabled: searchQuery.length > 2 && allowQuery === true }
+    { query: searchQuery, offset: (currentPage - 1) * ITEMS_PER_PAGE, limit: ITEMS_PER_PAGE },
+    { enabled: searchQuery.length > 2 && allowQuery }
   )
 
+  useEffect(() => {
+    if (assetsQuery.data) {
+      setTotalPages(Math.ceil(assetsQuery.data.total / ITEMS_PER_PAGE))
+    }
+  }, [assetsQuery.data])
+
   const handleSearchButton = () => {
-    console.log(assetsQuery.data)
     setAllowQuery(true)
   }
 
@@ -42,10 +51,13 @@ export default function ({
     setSearchQuery(event.target.value)
   }
 
-  const onPageChange = (page: number) => setCurrentPage(page)
+  const onPageChange = (page: number) => {
+    setCurrentPage(page)
+  }
+
   return (
     <div>
-      <div className="flex ">
+      <div className="flex">
         <TextInput
           id="search-query"
           placeholder="Stock name"
@@ -58,18 +70,23 @@ export default function ({
           <HiSearch size={22} />
         </Button>
       </div>
-      <AssetsTable
-        assets={assetsQuery.data}
-        setSelectedAsset={setSelectedAsset}
-        selectedAsset={selectedAsset}
-      />
-      <div className="flex overflow-x-auto sm:justify-center">
-        <Pagination
-          layout="table"
-          currentPage={currentPage}
-          totalPages={5}
-          onPageChange={onPageChange}
+      {assetsQuery.data && (
+        <AssetsTable
+          assets={assetsQuery.data?.data}
+          setSelectedAsset={setSelectedAsset}
+          selectedAsset={selectedAsset}
         />
+      )}
+      <div className="flex overflow-x-auto sm:justify-center">
+        {assetsQuery.data && (
+          <PageSelector
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={onPageChange}
+            itemsPerPage={ITEMS_PER_PAGE}
+            totalEntries={assetsQuery.data.total}
+          />
+        )}
       </div>
     </div>
   )
