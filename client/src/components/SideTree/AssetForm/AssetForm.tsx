@@ -1,11 +1,12 @@
 import { Modal, Button, Dropdown, Table, TextInput, Datepicker } from 'flowbite-react'
-import TableHead from './AssetSelector/AssetsTables/TableHead'
+import TableHead from './AssetSelector/AssetTables/TableHead'
 import React, { useState } from 'react'
 import { AssetPublic } from '@server/shared/types'
-import TableRow from './AssetSelector/AssetsTables/TableRow'
+import TableRow from './AssetSelector/AssetTables/TableRow'
 import AssetSelector from './AssetSelector/AssetSelector'
 import { trpc } from '@/trpc'
 import { PortfolioPublic } from '@server/shared/types'
+import { usePortfolio } from '@/context/PortfolioContext'
 
 type PortfolioFormProps = {
   openModal: boolean
@@ -13,15 +14,16 @@ type PortfolioFormProps = {
 }
 
 export default function ({ openModal, setOpenModal }: PortfolioFormProps) {
-  const [selectedPortfolio, setSelectedPortfolio] = useState<PortfolioPublic | undefined>(undefined)
+  const userPortfolio = usePortfolio()
+  const [selectedPortfolio, setSelectedPortfolio] = useState<PortfolioPublic | undefined>(
+    userPortfolio.activePortfolio
+  )
   const [selectedAsset, setSelectedAsset] = useState<AssetPublic | undefined>(undefined)
   const [quantity, setQuantity] = useState<number | undefined>(undefined)
   const [price, setPrice] = useState<number | undefined>(undefined)
   const [date, setDate] = useState<Date | undefined>(undefined)
   const [searchQuery, setSearchQuery] = useState('')
   const [allowSelectAsset, setAllowSelectAsset] = useState(false)
-
-  const portfolioQuery = trpc.portfolio.get.useQuery()
 
   const portfolioItemMutation = trpc.portfolioItem.create.useMutation()
 
@@ -61,7 +63,7 @@ export default function ({ openModal, setOpenModal }: PortfolioFormProps) {
             <div className="flex justify-between">
               <h3 className="text-xl font-medium text-gray-900 dark:text-white">Add Asset</h3>
               <Dropdown color="blue" label={selectedPortfolio?.name} dismissOnClick={true}>
-                {portfolioQuery.data?.map((portfolio) => (
+                {userPortfolio.userPortfolios?.map((portfolio) => (
                   <Dropdown.Item onClick={() => handleDropDownChange(portfolio)} key={portfolio.id}>
                     {portfolio.name}
                   </Dropdown.Item>

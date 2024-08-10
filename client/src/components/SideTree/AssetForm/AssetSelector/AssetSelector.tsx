@@ -1,6 +1,6 @@
 import { TextInput, Button } from 'flowbite-react'
 import React, { useState, useEffect } from 'react'
-import AssetsTable from './AssetsTables/AssetsTable'
+import AssetsTable from './AssetTables/AssetsTable'
 import { trpc } from '@/trpc'
 import { HiSearch } from 'react-icons/hi'
 import { AssetPublic } from '@server/shared/types'
