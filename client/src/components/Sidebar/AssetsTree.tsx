@@ -1,8 +1,10 @@
 import React from 'react'
 import { Sidebar as SidebarFlowbite, Button } from 'flowbite-react'
 import { HiBell, HiTrendingUp, HiOutlineDotsVertical } from 'react-icons/hi'
+import { usePortfolioAssets } from '@/context/portfolioAssets'
 
 export default function () {
+  const { data } = usePortfolioAssets()
   const filterAssetType = () => {}
 
   return (
@@ -22,14 +24,14 @@ export default function () {
               <div className="w-12 "></div>
             </div>
 
-            <div className="flex justify-between">
-              <SidebarFlowbite.Item className="pl-12" icon={HiBell} label="-1.23%" labelColor="red">
-                Wallmart
+            {data?.map((asset) => (
+              <SidebarFlowbite.Item className="w-full pl-12" key={asset.id}>
+                <div className="flex justify-between">
+                  <p className="w-full whitespace-normal break-words">{asset.name}</p>
+                  <span className="ml-4 text-red-500">-1.23</span>
+                </div>
               </SidebarFlowbite.Item>
-              <Button>
-                <HiOutlineDotsVertical />
-              </Button>
-            </div>
+            ))}
           </SidebarFlowbite.ItemGroup>
         </SidebarFlowbite.Items>
       </SidebarFlowbite>

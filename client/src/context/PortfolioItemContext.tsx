@@ -50,13 +50,14 @@ const defaultPortfolioItemContext: PortfolioItemContext = {
 
 const PortfolioItemContext = createContext<PortfolioItemContext>(defaultPortfolioItemContext)
 
-export const AssetProvider = ({ children }: PortfolioItemProviderProps) => {
+export const PortfolioItemProvider = ({ children }: PortfolioItemProviderProps) => {
   const [activePortfolioItem, setActivePortfolioItem] = useState<PortfolioItemPublic | undefined>(
     undefined
   )
   const [userPortfolioItems, setUserPortfolioItems] = useState<PortfolioItemPublic[] | undefined>(
     undefined
   )
+
   const [hasLoaded, setHasLoaded] = useState(false)
   const userPortfolios = usePortfolio()
 
