@@ -1,5 +1,5 @@
 import React from 'react'
-import Sidebar from '../components/SideTree/SideTree'
+import Sidebar from '../components/Sidebar/Sidebar'
 import ChartBox from '@/components/ChartBox/ChartBox'
 import TableBox from '@/components/TableBox/TableBox'
 import { PortfolioProvider } from '@/context/PortfolioContext'
@@ -9,7 +9,7 @@ export default function Home() {
     <PortfolioProvider>
       <div>
         <div className="flex justify-between">
-          <Sidebar logoUrl={'c'} name={'aaa'} valueChange={4}></Sidebar>
+          <Sidebar></Sidebar>
           <div>
             <ChartBox />
           </div>

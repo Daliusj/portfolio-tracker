@@ -2,7 +2,7 @@ import React, { ReactNode, createContext, useContext, useEffect, useState } from
 import { BaseCurrency, PortfolioPublic } from '@server/shared/types'
 import { trpc } from '@/trpc'
 
-type PortfolioContextType = {
+type PortfolioContext = {
   userPortfolios: PortfolioPublic[] | undefined
   activePortfolio: PortfolioPublic | undefined
   setActivePortfolio: React.Dispatch<React.SetStateAction<PortfolioPublic | undefined>>
@@ -22,7 +22,7 @@ type PortfolioProviderProps = {
   children: ReactNode
 }
 
-const defaultPortfolioContext: PortfolioContextType = {
+const defaultPortfolioContext: PortfolioContext = {
   userPortfolios: undefined,
   activePortfolio: undefined,
   setActivePortfolio: () => {},
@@ -31,29 +31,19 @@ const defaultPortfolioContext: PortfolioContextType = {
   remove: () => {},
 }
 
-const PortfolioContext = createContext<PortfolioContextType>(defaultPortfolioContext)
+const PortfolioContext = createContext<PortfolioContext>(defaultPortfolioContext)
 
 export const PortfolioProvider = ({ children }: PortfolioProviderProps) => {
   const [activePortfolio, setActivePortfolio] = useState<PortfolioPublic | undefined>(undefined)
   const [userPortfolios, setUserPortfolios] = useState<PortfolioPublic[] | undefined>(undefined)
   const [hasLoaded, setHasLoaded] = useState(false)
 
-  const portfoliosQuery = trpc.portfolio.get.useQuery(undefined, {
-    enabled: hasLoaded,
-    onSuccess: (data) => {
-      setUserPortfolios(data.sort((a, b) => a.id - b.id))
-      setActivePortfolio(data[0])
-    },
-  })
+  const portfoliosQuery = trpc.portfolio.get.useQuery()
 
   const portfolioMutation = {
     create: trpc.portfolio.create.useMutation(),
     update: trpc.portfolio.update.useMutation(),
     remove: trpc.portfolio.remove.useMutation(),
-  }
-
-  const refetchPortfolios = () => {
-    portfoliosQuery.refetch().then(() => setHasLoaded(true))
   }
 
   const update = ({ id, name, currencySymbol }: PortfolioUpdate) => {
@@ -64,7 +54,17 @@ export const PortfolioProvider = ({ children }: PortfolioProviderProps) => {
         currencySymbol,
       },
       {
-        onSuccess: refetchPortfolios,
+        onSuccess: (updatedPortfolio) => {
+          setUserPortfolios((prevPortfolios) =>
+            prevPortfolios?.map((portfolio) =>
+              portfolio.id === id ? { ...portfolio, name, currencySymbol } : portfolio
+            )
+          )
+          if (activePortfolio?.id === id) {
+            setActivePortfolio((prev) => (prev ? { ...prev, name, currencySymbol } : prev))
+          }
+          portfoliosQuery.refetch()
+        },
         onError: (error) => {
           console.error('Profile update', error)
         },
@@ -79,7 +79,13 @@ export const PortfolioProvider = ({ children }: PortfolioProviderProps) => {
         currencySymbol,
       },
       {
-        onSuccess: refetchPortfolios,
+        onSuccess: (newPortfolio) => {
+          setUserPortfolios((prevPortfolios) =>
+            prevPortfolios ? [...prevPortfolios, newPortfolio] : [newPortfolio]
+          )
+          setActivePortfolio(newPortfolio)
+          portfoliosQuery.refetch()
+        },
         onError: (error) => {
           console.error('Profile create failed', error)
         },
@@ -87,9 +93,18 @@ export const PortfolioProvider = ({ children }: PortfolioProviderProps) => {
     )
   }
 
-  const remove = (id: PortfolioRemove) => {
-    portfolioMutation.remove.mutate(id, {
-      onSuccess: refetchPortfolios,
+  const remove = (idObj: PortfolioRemove) => {
+    const { id } = idObj
+    portfolioMutation.remove.mutate(idObj, {
+      onSuccess: () => {
+        setUserPortfolios((prevPortfolios) =>
+          prevPortfolios?.filter((portfolio) => portfolio.id !== id)
+        )
+        if (activePortfolio?.id === id) {
+          setActivePortfolio(userPortfolios?.[0])
+        }
+        portfoliosQuery.refetch()
+      },
       onError: (error) => {
         console.error('Profile remove failed', error)
       },
@@ -97,10 +112,12 @@ export const PortfolioProvider = ({ children }: PortfolioProviderProps) => {
   }
 
   useEffect(() => {
-    if (!hasLoaded) {
-      refetchPortfolios()
+    if (portfoliosQuery.isSuccess && !hasLoaded) {
+      setUserPortfolios(portfoliosQuery.data.sort((a, b) => a.id - b.id))
+      setActivePortfolio(portfoliosQuery.data[0])
+      setHasLoaded(true)
     }
-  }, [hasLoaded])
+  }, [portfoliosQuery.data, portfoliosQuery.isSuccess, hasLoaded])
 
   if (!hasLoaded) {
     return <div>Loading...</div>
