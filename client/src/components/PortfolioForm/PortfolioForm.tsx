@@ -1,30 +1,49 @@
-import { BASE_CURRENCIES } from '../../../../../server/src/shared/baseCurrencies'
+import { BASE_CURRENCIES } from '../../../../server/src/shared/baseCurrencies'
 import { Modal, Label, TextInput, Button } from 'flowbite-react'
-import React, { useId, useState } from 'react'
+import React, { useEffect, useId, useState } from 'react'
 import RadioOptions from './RadioOptions'
-import { trpc } from '@/trpc'
 import type { BaseCurrency } from '@server/shared/types'
+import { usePortfolio } from '@/context/PortfolioContext'
 
 type PortfolioFormProps = {
+  mode: 'new' | 'edit'
   openModal: boolean
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export default function ({ openModal, setOpenModal }: PortfolioFormProps) {
+export default function ({ openModal, setOpenModal, mode }: PortfolioFormProps) {
+  const userPortfolio = usePortfolio()
   const [portfolioName, setPortfolioName] = useState('')
   const [currencySymbol, setCurrencySymbol] = useState<BaseCurrency>('USD')
 
-  const portfolioMutation = trpc.portfolio.create.useMutation()
-
   const handleSubmit = () => {
-    portfolioMutation.mutate({ name: portfolioName, currencySymbol })
+    mode === 'edit' && userPortfolio.activePortfolio
+      ? userPortfolio.update({
+          id: userPortfolio.activePortfolio?.id,
+          name: portfolioName,
+          currencySymbol,
+        })
+      : userPortfolio.create({ name: portfolioName, currencySymbol })
+
     setOpenModal(false)
   }
 
+  useEffect(() => {
+    if (
+      mode === 'edit' &&
+      userPortfolio.activePortfolio?.name &&
+      userPortfolio.activePortfolio?.currencySymbol
+    ) {
+      setPortfolioName(userPortfolio.activePortfolio?.name)
+      setCurrencySymbol(userPortfolio.activePortfolio?.currencySymbol as BaseCurrency)
+    } else {
+      setPortfolioName('')
+      setCurrencySymbol('USD')
+    }
+  }, [mode, userPortfolio.activePortfolio])
+
   const onCloseModal = () => {
     setOpenModal(false)
-    setPortfolioName('')
-    setCurrencySymbol(BASE_CURRENCIES[0])
   }
 
   return (
@@ -34,7 +53,7 @@ export default function ({ openModal, setOpenModal }: PortfolioFormProps) {
         <Modal.Body>
           <div className="space-y-6">
             <h3 className="text-xl font-medium text-gray-900 dark:text-white">
-              Create new Portfolio
+              {mode === 'edit' ? 'Edit portfolio' : 'Create new Portfolio'}
             </h3>
             <div>
               <div className="mb-2 block">
@@ -62,7 +81,7 @@ export default function ({ openModal, setOpenModal }: PortfolioFormProps) {
               ))}
             </fieldset>
             <Button onClick={handleSubmit} color="blue">
-              Create
+              {mode === 'edit' ? 'Update' : 'Create'}
             </Button>
           </div>
         </Modal.Body>

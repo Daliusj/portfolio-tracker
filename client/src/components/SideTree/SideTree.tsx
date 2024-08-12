@@ -1,16 +1,17 @@
 import React, { useState } from 'react'
-import { Sidebar as SidebarFlowbite, Button, Dropdown } from 'flowbite-react'
+import { Sidebar as SidebarFlowbite, Button, Dropdown, CustomFlowbiteTheme } from 'flowbite-react'
 import {
   HiBell,
   HiBriefcase,
   HiTrendingUp,
   HiOutlineDotsVertical,
-  HiUserCircle,
   HiCurrencyDollar,
+  HiDotsVertical,
 } from 'react-icons/hi'
-import PortfolioForm from './PortfolioForm/PortfolioForm'
-import AssetForm from './AssetForm/AssetForm'
+import PortfolioForm from '@/components/PortfolioForm/PortfolioForm'
+import AssetForm from '@/components/AssetForm/AssetForm'
 import { usePortfolio } from '@/context/PortfolioContext'
+import PortfolioSelector from './PortfolioSelector'
 
 type Props = {
   logoUrl: string
@@ -21,32 +22,10 @@ type Props = {
 export default function ({ logoUrl, name, valueChange }: Props) {
   const [openPortfolioModal, setOpenPortfolioModal] = useState(false)
   const [openAssetModal, setOpenAssetModal] = useState(false)
-  const userPortfolios = usePortfolio()
 
   return (
     <div className="sidebar flex-col ">
-      <div className="flex-col">
-        <Dropdown color="blue" label={userPortfolios.activePortfolio?.name} dismissOnClick={true}>
-          {userPortfolios.userPortfolios?.map((portfolio) => (
-            <Dropdown.Item
-              onClick={() => userPortfolios.setActivePortfolio(portfolio)}
-              key={portfolio.id}
-            >
-              {portfolio.name}
-            </Dropdown.Item>
-          ))}
-        </Dropdown>
-        <Button color="blue" onClick={() => setOpenPortfolioModal(true)}>
-          <HiUserCircle className="mr-3 h-4 w-4" />
-          Create Portfolio
-        </Button>
-        <Button color="blue" onClick={() => setOpenAssetModal(true)}>
-          <HiCurrencyDollar className="mr-3 h-4 w-4" />
-          Add Asset
-        </Button>
-      </div>
-
-      <PortfolioForm openModal={openPortfolioModal} setOpenModal={setOpenPortfolioModal} />
+      <PortfolioSelector />
       <AssetForm openModal={openAssetModal} setOpenModal={setOpenAssetModal} />
       <SidebarFlowbite aria-label="Sidebar with multi-level dropdown" className="w-80">
         <SidebarFlowbite.Items>
@@ -88,6 +67,10 @@ export default function ({ logoUrl, name, valueChange }: Props) {
           </SidebarFlowbite.ItemGroup>
         </SidebarFlowbite.Items>
       </SidebarFlowbite>
+      <Button className="bg-orange-600" onClick={() => setOpenAssetModal(true)}>
+        <HiCurrencyDollar className="mr-3 h-4 w-4" />
+        Add Asset
+      </Button>
     </div>
   )
 }
