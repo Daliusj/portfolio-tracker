@@ -7,6 +7,7 @@ import AssetSelector from './AssetSelector/AssetSelector'
 import { trpc } from '@/trpc'
 import { PortfolioPublic } from '@server/shared/types'
 import { usePortfolio } from '@/context/PortfolioContext'
+import { usePortfolioItem } from '@/context/PortfolioItemContext'
 
 type PortfolioFormProps = {
   openModal: boolean
@@ -24,16 +25,15 @@ export default function ({ openModal, setOpenModal }: PortfolioFormProps) {
   const [date, setDate] = useState<Date | undefined>(undefined)
   const [searchQuery, setSearchQuery] = useState('')
   const [allowSelectAsset, setAllowSelectAsset] = useState(false)
-
-  const portfolioItemMutation = trpc.portfolioItem.create.useMutation()
+  const { create } = usePortfolioItem()
 
   const handleSubmit = () => {
     if (selectedPortfolio && selectedAsset && quantity && price && date) {
-      portfolioItemMutation.mutate({
+      create({
         quantity,
         assetId: selectedAsset.id,
         portfolioId: selectedPortfolio.id,
-        purchaseDate: date.toISOString().split('T')[0],
+        purchaseDate: date,
         purchasePrice: price,
       })
       setSelectedPortfolio(undefined)

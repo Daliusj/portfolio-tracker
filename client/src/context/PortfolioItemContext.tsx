@@ -4,9 +4,9 @@ import { trpc } from '@/trpc'
 import { usePortfolio } from './PortfolioContext'
 
 type PortfolioItemContext = {
-  activePortfolioItem: PortfolioItemPublic | undefined
-  userPortfolioItems: PortfolioItemPublic[] | undefined
-  setActivePortfolioItem: React.Dispatch<React.SetStateAction<PortfolioItemPublic | undefined>>
+  activePortfolioItem: PortfolioItemAdjusted | undefined
+  userPortfolioItems: PortfolioItemAdjusted[] | undefined
+  setActivePortfolioItem: React.Dispatch<React.SetStateAction<PortfolioItemAdjusted | undefined>>
   create: ({
     assetId,
     portfolioId,
@@ -29,12 +29,17 @@ type PortfolioItemProviderProps = {
   children: ReactNode
 }
 
+type PortfolioItemAdjusted = Omit<PortfolioItemPublic, 'purchasePrice' | 'quantity'> & {
+  purchasePrice: number
+  quantity: number
+}
+
 type PortfolioItemUpdate = Pick<
-  PortfolioItemPublic,
+  PortfolioItemAdjusted,
   'assetId' | 'id' | 'portfolioId' | 'purchaseDate' | 'purchasePrice' | 'quantity'
 >
 type PortfolioItemCreate = Pick<
-  PortfolioItemPublic,
+  PortfolioItemAdjusted,
   'assetId' | 'portfolioId' | 'purchaseDate' | 'purchasePrice' | 'quantity'
 >
 type PortfolioItemRemove = Pick<PortfolioItemPublic, 'id'>
@@ -51,10 +56,10 @@ const defaultPortfolioItemContext: PortfolioItemContext = {
 const PortfolioItemContext = createContext<PortfolioItemContext>(defaultPortfolioItemContext)
 
 export const PortfolioItemProvider = ({ children }: PortfolioItemProviderProps) => {
-  const [activePortfolioItem, setActivePortfolioItem] = useState<PortfolioItemPublic | undefined>(
+  const [activePortfolioItem, setActivePortfolioItem] = useState<PortfolioItemAdjusted | undefined>(
     undefined
   )
-  const [userPortfolioItems, setUserPortfolioItems] = useState<PortfolioItemPublic[] | undefined>(
+  const [userPortfolioItems, setUserPortfolioItems] = useState<PortfolioItemAdjusted[] | undefined>(
     undefined
   )
 
@@ -85,8 +90,8 @@ export const PortfolioItemProvider = ({ children }: PortfolioItemProviderProps) 
         assetId,
         portfolioId,
         purchaseDate: purchaseDate.toISOString().split('T')[0],
-        purchasePrice: Number(purchasePrice),
-        quantity: Number(quantity),
+        purchasePrice,
+        quantity,
       },
       {
         onSuccess: (updatedPortfolioItem) => {
@@ -123,15 +128,21 @@ export const PortfolioItemProvider = ({ children }: PortfolioItemProviderProps) 
         assetId,
         portfolioId,
         purchaseDate: purchaseDate.toISOString().split('T')[0],
-        purchasePrice: Number(purchasePrice),
-        quantity: Number(quantity),
+        purchasePrice,
+        quantity,
       },
       {
         onSuccess: (newPortfolioItem) => {
+          const adjustedItem: PortfolioItemAdjusted = {
+            ...newPortfolioItem,
+            purchasePrice,
+            quantity,
+          }
+
           setUserPortfolioItems((prevPortfolioItems) =>
-            prevPortfolioItems ? [...prevPortfolioItems, newPortfolioItem] : [newPortfolioItem]
+            prevPortfolioItems ? [...prevPortfolioItems, adjustedItem] : [adjustedItem]
           )
-          setActivePortfolioItem(newPortfolioItem)
+          setActivePortfolioItem(adjustedItem)
           portfolioItemQuery && portfolioItemQuery.refetch()
         },
         onError: (error) => {
@@ -161,7 +172,13 @@ export const PortfolioItemProvider = ({ children }: PortfolioItemProviderProps) 
 
   useEffect(() => {
     if (portfolioItemQuery && portfolioItemQuery.isSuccess && !hasLoaded) {
-      setUserPortfolioItems(portfolioItemQuery.data)
+      const adjustedItems: PortfolioItemAdjusted[] = portfolioItemQuery.data.map((item) => ({
+        ...item,
+        purchasePrice: Number(item.purchasePrice),
+        quantity: Number(item.quantity),
+      }))
+
+      setUserPortfolioItems(adjustedItems)
       setHasLoaded(true)
     }
   }, [portfolioItemQuery, hasLoaded])

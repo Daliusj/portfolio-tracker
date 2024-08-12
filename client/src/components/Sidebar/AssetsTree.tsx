@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useId } from 'react'
 import { Sidebar as SidebarFlowbite, Button } from 'flowbite-react'
-import { HiBell, HiTrendingUp, HiOutlineDotsVertical } from 'react-icons/hi'
+import { HiTrendingUp, HiOutlineDotsVertical } from 'react-icons/hi'
 import { usePortfolioAssets } from '@/context/portfolioAssets'
 
 export default function () {
