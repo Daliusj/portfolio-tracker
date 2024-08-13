@@ -1,8 +1,8 @@
 import { Table } from 'flowbite-react'
 import React from 'react'
 import { AssetPublic } from '@server/shared/types'
-import TableRow from './TableRow'
-import TableHead from './TableHead'
+import TableRow from './Row'
+import TableHead from './Head'
 
 type AssetsTableProps = {
   assets: AssetPublic[] | undefined

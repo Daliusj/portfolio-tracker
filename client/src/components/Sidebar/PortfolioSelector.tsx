@@ -1,7 +1,7 @@
 import { Dropdown } from 'flowbite-react'
 import React, { useState } from 'react'
 import { usePortfolio } from '@/context/PortfolioContext'
-import { HiDotsVertical } from 'react-icons/hi'
+import { HiDotsVertical, HiMenu } from 'react-icons/hi'
 import PortfolioForm from '../PortfolioForm/PortfolioForm'
 import ConfirmationModal from '../ConfirmationModal'
 
@@ -43,7 +43,7 @@ export default function () {
         ))}
       </Dropdown>
 
-      <Dropdown label={<HiDotsVertical />} arrowIcon={false}>
+      <Dropdown label={<HiMenu />} arrowIcon={false}>
         <Dropdown.Item onClick={() => handleCreateNewButton()}>Create new</Dropdown.Item>
         <Dropdown.Item onClick={() => handleEditButton()}>Edit</Dropdown.Item>
         <Dropdown.Item onClick={() => handleDeleteButton()}>Delete</Dropdown.Item>

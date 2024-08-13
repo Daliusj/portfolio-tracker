@@ -1,20 +1,24 @@
 import { Modal, Button, Dropdown, Table, TextInput, Datepicker } from 'flowbite-react'
-import TableHead from './AssetSelector/AssetTables/TableHead'
-import React, { useState } from 'react'
-import { AssetPublic } from '@server/shared/types'
-import TableRow from './AssetSelector/AssetTables/TableRow'
+import TableHead from './AssetSelector/AssetTables/Head'
+import React, { useEffect, useState } from 'react'
+import { AssetPublic, FullPortfolioGroupedPublic, Purchase } from '@server/shared/types'
+import TableRow from './AssetSelector/AssetTables/Row'
 import AssetSelector from './AssetSelector/AssetSelector'
-import { trpc } from '@/trpc'
 import { PortfolioPublic } from '@server/shared/types'
 import { usePortfolio } from '@/context/PortfolioContext'
 import { usePortfolioItem } from '@/context/PortfolioItemContext'
+import { Selectable } from 'kysely'
+import PurchaseTable from './AssetSelector/PurchaseHistoryTable/PurchaseTable'
+import { trpc } from '@/trpc'
 
 type PortfolioFormProps = {
   openModal: boolean
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>
+  mode: 'edit' | 'create' | 'createWithBase'
+  asset?: FullPortfolioGroupedPublic
 }
 
-export default function ({ openModal, setOpenModal }: PortfolioFormProps) {
+export default function ({ openModal, setOpenModal, mode, asset }: PortfolioFormProps) {
   const userPortfolio = usePortfolio()
   const [selectedPortfolio, setSelectedPortfolio] = useState<PortfolioPublic | undefined>(
     userPortfolio.activePortfolio
@@ -24,28 +28,51 @@ export default function ({ openModal, setOpenModal }: PortfolioFormProps) {
   const [price, setPrice] = useState<number | undefined>(undefined)
   const [date, setDate] = useState<Date | undefined>(undefined)
   const [searchQuery, setSearchQuery] = useState('')
-  const [allowSelectAsset, setAllowSelectAsset] = useState(false)
-  const { create } = usePortfolioItem()
+  const [preventSelectAsset, setPreventSelectAsset] = useState(false)
+  const [hasLoaded, setHasLoaded] = useState(false)
+  const [selectedPurchase, setSelectedPurchase] = useState<Selectable<Purchase> | undefined>(
+    undefined
+  )
+  const { create, update, remove } = usePortfolioItem()
+
+  const clearInputs = () => {
+    setSelectedPortfolio(undefined)
+    setSelectedAsset(undefined)
+    setQuantity(undefined)
+    setPrice(undefined)
+    setDate(undefined)
+    setSearchQuery('')
+    setSelectedPurchase(undefined)
+    setOpenModal(false)
+  }
 
   const handleSubmit = () => {
     if (selectedPortfolio && selectedAsset && quantity && price && date) {
-      create({
-        quantity,
-        assetId: selectedAsset.id,
-        portfolioId: selectedPortfolio.id,
-        purchaseDate: date,
-        purchasePrice: price,
-      })
-      setSelectedPortfolio(undefined)
-      setSelectedAsset(undefined)
-      setQuantity(undefined)
-      setPrice(undefined)
-      setDate(undefined)
-      setOpenModal(false)
+      ;(mode === 'create' || mode === 'createWithBase') &&
+        create({
+          quantity,
+          assetId: selectedAsset.id,
+          portfolioId: selectedPortfolio.id,
+          purchaseDate: date,
+          purchasePrice: price,
+        })
+      mode === 'edit' &&
+        selectedPurchase &&
+        update({
+          id: selectedPurchase?.portfolioItemId,
+          quantity,
+          assetId: selectedAsset.id,
+          portfolioId: selectedPortfolio.id,
+          purchaseDate: date,
+          purchasePrice: price,
+        })
+
+      clearInputs()
     }
   }
 
   const onCloseModal = () => {
+    clearInputs()
     setOpenModal(false)
     setSearchQuery('')
   }
@@ -54,6 +81,34 @@ export default function ({ openModal, setOpenModal }: PortfolioFormProps) {
     setSelectedPortfolio(portfolio)
   }
 
+  const formatDate = (date) => {
+    return date
+      ? new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().split('T')[0]
+      : ''
+  }
+
+  const baseAsset =
+    (mode === 'edit' || mode === 'createWithBase') &&
+    asset &&
+    trpc.asset.getById.useQuery({ id: [asset.assetId] })
+
+  useEffect(() => {
+    if (mode === 'edit' && asset && baseAsset) {
+      if (!hasLoaded && baseAsset.isFetched && baseAsset.isSuccess) {
+        setSelectedPurchase(asset.purchases[0])
+        setSelectedAsset(baseAsset.data[0])
+        setPreventSelectAsset(true)
+        setHasLoaded(true)
+      }
+    }
+  }, [baseAsset])
+
+  useEffect(() => {
+    setQuantity(Number(selectedPurchase?.quantity))
+    setPrice(Number(selectedPurchase?.purchasePrice))
+    setDate(selectedPurchase?.purchaseDate)
+  }, [selectedPurchase])
+
   return (
     <div>
       <Modal show={openModal} size="4xl" onClose={onCloseModal} popup>
@@ -61,7 +116,9 @@ export default function ({ openModal, setOpenModal }: PortfolioFormProps) {
         <Modal.Body>
           <div className="space-y-6">
             <div className="flex justify-between">
-              <h3 className="text-xl font-medium text-gray-900 dark:text-white">Add Asset</h3>
+              <h3 className="text-xl font-medium text-gray-900 dark:text-white">
+                {mode === 'edit' ? 'Edit Asset' : 'Add Asset'}
+              </h3>
               <Dropdown color="blue" label={selectedPortfolio?.name} dismissOnClick={true}>
                 {userPortfolio.userPortfolios?.map((portfolio) => (
                   <Dropdown.Item onClick={() => handleDropDownChange(portfolio)} key={portfolio.id}>
@@ -70,20 +127,26 @@ export default function ({ openModal, setOpenModal }: PortfolioFormProps) {
                 ))}
               </Dropdown>
             </div>
-
+            {mode === 'edit' && asset?.purchases && (
+              <PurchaseTable
+                selectedPurchase={selectedPurchase}
+                setSelectedPurchase={setSelectedPurchase}
+                purchases={asset.purchases}
+              />
+            )}
             <div className="rounded-lg border border-solid border-gray-600">
               <div className="mx-2 my-5">
-                {!allowSelectAsset && (
+                {!preventSelectAsset && (
                   <Button
                     color="blue"
                     className="flex items-center justify-center"
-                    onClick={() => setAllowSelectAsset(true)}
+                    onClick={() => setPreventSelectAsset(true)}
                   >
                     Select asset
                   </Button>
                 )}
 
-                {allowSelectAsset && !selectedAsset && (
+                {preventSelectAsset && !selectedAsset && (
                   <div>
                     <AssetSelector
                       searchQuery={searchQuery}
@@ -132,6 +195,7 @@ export default function ({ openModal, setOpenModal }: PortfolioFormProps) {
               <p className="h-2  text-sm text-red-600">{!price && 'Enter purchase price'}</p>
               <legend className="mt-4">Purchase date</legend>
               <Datepicker
+                value={date && formatDate(date)}
                 onSelectedDateChanged={(date) => setDate(date)}
                 autoHide={true}
                 showTodayButton={true}
@@ -146,7 +210,7 @@ export default function ({ openModal, setOpenModal }: PortfolioFormProps) {
             </fieldset>
 
             <Button type="submit" onClick={handleSubmit} color="blue" aria-hidden="false">
-              Create
+              Submit
             </Button>
           </div>
         </Modal.Body>

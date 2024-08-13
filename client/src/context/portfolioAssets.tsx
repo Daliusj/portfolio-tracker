@@ -1,11 +1,11 @@
 import React, { ReactNode, createContext, useContext, useEffect } from 'react'
-import { FullPortfolioPublic } from '@server/shared/types'
+import { FullPortfolioGroupedPublic, FullPortfolioPublic } from '@server/shared/types'
 import { trpc } from '@/trpc'
 import { usePortfolio } from './PortfolioContext'
 import { usePortfolioItem } from './PortfolioItemContext'
 
 type PortfolioAssetsContext = {
-  data: FullPortfolioPublic[] | undefined
+  data: FullPortfolioPublic[] | FullPortfolioGroupedPublic[] | undefined
 }
 
 type PortfolioAssetsProviderProps = {
@@ -23,7 +23,7 @@ export const PortfolioAssetsProvider = ({ children }: PortfolioAssetsProviderPro
   const { activePortfolioItem } = usePortfolioItem()
 
   const { data, isLoading, error, refetch } = trpc.portfolio.getFull.useQuery(
-    { id: activePortfolio?.id || 0 },
+    { id: activePortfolio?.id || 0, group: true },
     {
       enabled: !!activePortfolio,
     }

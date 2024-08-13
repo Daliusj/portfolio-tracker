@@ -80,7 +80,7 @@ export const fullPortfolioGroupedSchema = z.object({
   ),
 })
 
-type Purchase = {
+export type Purchase = {
   portfolioItemId: FullPortfolio['portfolioItemId']
   quantity: FullPortfolio['quantity']
   purchasePrice: FullPortfolio['purchasePrice']
