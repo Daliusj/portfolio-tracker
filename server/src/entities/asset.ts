@@ -6,12 +6,18 @@ import { idSchema } from './shared'
 export const INVESTMENT_TYPES = ['crypto', 'fund', 'stock'] as const
 const POSTGRES_INT_MAX = 2147483647
 
+export const reusableAssetsSchemas = {
+  name: z.string().min(1).max(50),
+  price: z.number().positive(),
+  type: z.enum(INVESTMENT_TYPES),
+}
+
 export const assetSchema = z.object({
   id: idSchema,
-  name: z.string().min(1).max(50),
-  type: z.enum(INVESTMENT_TYPES),
+  name: reusableAssetsSchemas.name,
+  type: reusableAssetsSchemas.type,
   symbol: z.string().min(1).max(10),
-  price: z.number().positive(),
+  price: reusableAssetsSchemas.price,
   exchange: z.string().min(1).max(500),
   exchangeShortName: z.string().min(1).max(500),
   createdAt: z.date().default(() => new Date()),
@@ -36,10 +42,3 @@ export type AssetPublic = Pick<
 >
 
 export type AssetPrice = Pick<Insertable<Asset>, 'price' | 'symbol'>
-
-export const assetFieldsForFullPortfolio = assetSchema.pick({
-  id: true,
-  name: true,
-  price: true,
-  type: true,
-})

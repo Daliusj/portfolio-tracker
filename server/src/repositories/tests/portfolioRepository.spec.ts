@@ -160,28 +160,37 @@ describe('findFull', () => {
     const portfolioData = await repository.findFull(portfolio.id)
     expect(portfolioData).toEqual([
       {
-        id: assetOne.id,
-        name: assetOne.name,
-        price: assetOne.price,
-        type: assetOne.type,
+        assetId: assetOne.id,
+        assetName: assetOne.name,
+        assetPrice: assetOne.price,
+        assetType: assetOne.type,
         quantity: portfolioItemOne.quantity,
         currencyCode: 'USD',
+        portfolioItemId: portfolioItemOne.id,
+        purchaseDate: portfolioItemOne.purchaseDate,
+        purchasePrice: portfolioItemOne.purchasePrice,
       },
       {
-        id: assetTwo.id,
-        name: assetTwo.name,
-        price: assetTwo.price,
-        type: assetTwo.type,
+        assetId: assetTwo.id,
+        assetName: assetTwo.name,
+        assetPrice: assetTwo.price,
+        assetType: assetTwo.type,
         quantity: portfolioItemTwo.quantity,
         currencyCode: 'USD',
+        portfolioItemId: portfolioItemTwo.id,
+        purchaseDate: portfolioItemTwo.purchaseDate,
+        purchasePrice: portfolioItemTwo.purchasePrice,
       },
       {
-        id: assetThree.id,
-        name: assetThree.name,
-        price: assetThree.price,
-        type: assetThree.type,
+        assetId: assetThree.id,
+        assetName: assetThree.name,
+        assetPrice: assetThree.price,
+        assetType: assetThree.type,
         quantity: portfolioItemThree.quantity,
         currencyCode: 'EUR',
+        portfolioItemId: portfolioItemThree.id,
+        purchaseDate: portfolioItemThree.purchaseDate,
+        purchasePrice: portfolioItemThree.purchasePrice,
       },
     ])
   })
@@ -228,20 +237,26 @@ describe('findFullByAssetsType', () => {
     )
     expect(portfolioData).toEqual([
       {
-        id: assetTwo.id,
-        name: assetTwo.name,
-        price: assetTwo.price,
-        type: assetTwo.type,
+        assetId: assetTwo.id,
+        assetName: assetTwo.name,
+        assetPrice: assetTwo.price,
+        assetType: assetTwo.type,
         quantity: portfolioItemTwo.quantity,
         currencyCode: 'USD',
+        portfolioItemId: portfolioItemTwo.id,
+        purchaseDate: portfolioItemTwo.purchaseDate,
+        purchasePrice: portfolioItemTwo.purchasePrice,
       },
       {
-        id: assetThree.id,
-        name: assetThree.name,
-        price: assetThree.price,
-        type: assetThree.type,
+        assetId: assetThree.id,
+        assetName: assetThree.name,
+        assetPrice: assetThree.price,
+        assetType: assetThree.type,
         quantity: portfolioItemThree.quantity,
         currencyCode: 'EUR',
+        portfolioItemId: portfolioItemThree.id,
+        purchaseDate: portfolioItemThree.purchaseDate,
+        purchasePrice: portfolioItemThree.purchasePrice,
       },
     ])
   })
@@ -277,12 +292,15 @@ describe('findFullByAssetId', () => {
     )
     expect(portfolioData).toEqual([
       {
-        id: assetTwo.id,
-        name: assetTwo.name,
-        price: assetTwo.price,
-        type: assetTwo.type,
+        assetId: assetTwo.id,
+        assetName: assetTwo.name,
+        assetPrice: assetTwo.price,
+        assetType: assetTwo.type,
         quantity: portfolioItemTwo.quantity,
         currencyCode: 'USD',
+        portfolioItemId: portfolioItemTwo.id,
+        purchaseDate: portfolioItemTwo.purchaseDate,
+        purchasePrice: portfolioItemTwo.purchasePrice,
       },
     ])
   })

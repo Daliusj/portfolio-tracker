@@ -85,11 +85,14 @@ export function portfolioRepository(db: Database) {
         .innerJoin('exchange', 'exchange.shortName', 'asset.exchangeShortName')
         .innerJoin('currency', 'currency.code', 'exchange.currencyCode')
         .select([
-          'asset.id',
-          'asset.name',
-          'asset.price',
-          'asset.type',
+          'asset.id as assetId',
+          'asset.name as assetName',
+          'asset.price as assetPrice',
+          'asset.type as assetType',
           'portfolioItem.quantity',
+          'portfolioItem.id as portfolioItemId',
+          'portfolioItem.purchasePrice',
+          'portfolioItem.purchaseDate',
           'currency.code as currencyCode',
         ])
         .where('portfolio.id', '=', portfolioId)
@@ -107,11 +110,14 @@ export function portfolioRepository(db: Database) {
         .innerJoin('exchange', 'exchange.shortName', 'asset.exchangeShortName')
         .innerJoin('currency', 'currency.code', 'exchange.currencyCode')
         .select([
-          'asset.id',
-          'asset.name',
-          'asset.price',
-          'asset.type',
+          'asset.id as assetId',
+          'asset.name as assetName',
+          'asset.price as assetPrice',
+          'asset.type as assetType',
           'portfolioItem.quantity',
+          'portfolioItem.id as portfolioItemId',
+          'portfolioItem.purchasePrice',
+          'portfolioItem.purchaseDate',
           'currency.code as currencyCode',
         ])
         .where(({ and, eb }) =>
@@ -134,11 +140,14 @@ export function portfolioRepository(db: Database) {
         .innerJoin('exchange', 'exchange.shortName', 'asset.exchangeShortName')
         .innerJoin('currency', 'currency.code', 'exchange.currencyCode')
         .select([
-          'asset.id',
-          'asset.name',
-          'asset.price',
-          'asset.type',
+          'asset.id as assetId',
+          'asset.name as assetName',
+          'asset.price as assetPrice',
+          'asset.type as assetType',
           'portfolioItem.quantity',
+          'portfolioItem.id as portfolioItemId',
+          'portfolioItem.purchasePrice',
+          'portfolioItem.purchaseDate',
           'currency.code as currencyCode',
         ])
         .where(({ and, eb }) =>

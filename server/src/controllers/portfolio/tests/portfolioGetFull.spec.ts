@@ -54,28 +54,114 @@ it('should get a full assets data of portfolio with provided id', async () => {
   const portfolioDataReturned = await getFull({ id: portfolio.id })
   expect(portfolioDataReturned).toEqual([
     {
-      id: assetOne.id,
-      name: assetOne.name,
-      price: assetOne.price,
-      type: assetOne.type,
+      assetId: assetOne.id,
+      assetName: assetOne.name,
+      assetPrice: assetOne.price,
+      assetType: assetOne.type,
       quantity: portfolioItemOne.quantity,
       currencyCode: 'USD',
+      portfolioItemId: portfolioItemOne.id,
+      purchaseDate: portfolioItemOne.purchaseDate,
+      purchasePrice: portfolioItemOne.purchasePrice,
     },
     {
-      id: assetTwo.id,
-      name: assetTwo.name,
-      price: assetTwo.price,
-      type: assetTwo.type,
+      assetId: assetTwo.id,
+      assetName: assetTwo.name,
+      assetPrice: assetTwo.price,
+      assetType: assetTwo.type,
       quantity: portfolioItemTwo.quantity,
       currencyCode: 'USD',
+      portfolioItemId: portfolioItemTwo.id,
+      purchaseDate: portfolioItemTwo.purchaseDate,
+      purchasePrice: portfolioItemTwo.purchasePrice,
     },
     {
-      id: assetThree.id,
-      name: assetThree.name,
-      price: assetThree.price,
-      type: assetThree.type,
+      assetId: assetThree.id,
+      assetName: assetThree.name,
+      assetPrice: assetThree.price,
+      assetType: assetThree.type,
       quantity: portfolioItemThree.quantity,
       currencyCode: 'EUR',
+      portfolioItemId: portfolioItemThree.id,
+      purchaseDate: portfolioItemThree.purchaseDate,
+      purchasePrice: portfolioItemThree.purchasePrice,
+    },
+  ])
+})
+
+it('should get a full assets data grouped by assets name of portfolio with provided id', async () => {
+  const [assetOne, assetTwo] = await insertAll(db, 'asset', [
+    fakeAsset({ type: 'fund', price: 100, exchangeShortName: 'NYSE' }),
+    fakeAsset({
+      type: 'stock',
+      price: 250,
+      exchangeShortName: 'NASDAQ',
+      name: 'TestStock',
+    }),
+  ])
+  const [user] = await insertAll(db, 'user', fakeUser())
+  const [portfolio] = await insertAll(db, 'portfolio', [
+    fakePortfolio({ userId: user.id }),
+  ])
+  const [portfolioItemOne, portfolioItemTwo, portfolioItemThree] =
+    await insertAll(db, 'portfolioItem', [
+      fakePortfolioItem({
+        portfolioId: portfolio.id,
+        assetId: assetOne.id,
+        purchasePrice: 150,
+        quantity: 2,
+      }),
+      fakePortfolioItem({
+        portfolioId: portfolio.id,
+        assetId: assetTwo.id,
+        purchasePrice: 260,
+        quantity: 4,
+      }),
+      fakePortfolioItem({
+        portfolioId: portfolio.id,
+        assetId: assetTwo.id,
+        purchasePrice: 230,
+        quantity: 6,
+      }),
+    ])
+  const { getFull } = createCaller(authContext({ db }, user))
+  const portfolioDataReturned = await getFull({ id: portfolio.id, group: true })
+  expect(portfolioDataReturned).toEqual([
+    {
+      assetId: assetOne.id,
+      assetName: assetOne.name,
+      assetPrice: assetOne.price,
+      assetType: assetOne.type,
+      currencyCode: 'USD',
+      purchases: [
+        {
+          portfolioItemId: portfolioItemOne.id,
+          quantity: portfolioItemOne.quantity,
+          purchaseDate: portfolioItemOne.purchaseDate,
+          purchasePrice: portfolioItemOne.purchasePrice,
+        },
+      ],
+    },
+    {
+      assetId: assetTwo.id,
+      assetName: assetTwo.name,
+      assetPrice: assetTwo.price,
+      assetType: assetTwo.type,
+      currencyCode: 'USD',
+      purchases: [
+        {
+          portfolioItemId: portfolioItemThree.id,
+          quantity: portfolioItemThree.quantity,
+          purchaseDate: portfolioItemThree.purchaseDate,
+          purchasePrice: portfolioItemThree.purchasePrice,
+        },
+        {
+          portfolioItemId: portfolioItemTwo.id,
+          quantity: portfolioItemTwo.quantity,
+          purchaseDate: portfolioItemTwo.purchaseDate,
+          purchasePrice: portfolioItemTwo.purchasePrice,
+        },
+      ],
     },
   ])
 })
