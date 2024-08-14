@@ -5,11 +5,11 @@
 @tailwind utilities;
 
 .app {
-  @apply h-full flex-col bg-slate-300 p-4 text-white dark:bg-slate-800;
+  @apply h-screen flex-col bg-slate-300 p-4 text-white dark:bg-slate-800;
 }
 
 .sidebar {
-  @apply h-full;
+  @apply mb-6 h-full w-1/5;
 }
 
 .header {

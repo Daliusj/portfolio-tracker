@@ -2,6 +2,7 @@ import React, { createContext, ReactNode, useContext, useEffect, useState } from
 import { PortfolioItemPublic } from '@server/shared/types'
 import { trpc } from '@/trpc'
 import { usePortfolio } from './PortfolioContext'
+import { localDateToIsoString } from '@/utils/time'
 
 type PortfolioItemContext = {
   activePortfolioItem: PortfolioItemAdjusted | undefined
@@ -89,7 +90,7 @@ export const PortfolioItemProvider = ({ children }: PortfolioItemProviderProps) 
         id,
         assetId,
         portfolioId,
-        purchaseDate: purchaseDate.toISOString().split('T')[0],
+        purchaseDate: localDateToIsoString(purchaseDate),
         purchasePrice,
         quantity,
       },
@@ -123,11 +124,12 @@ export const PortfolioItemProvider = ({ children }: PortfolioItemProviderProps) 
     purchasePrice,
     quantity,
   }: PortfolioItemCreate) => {
+    const localDate = new Date(purchaseDate.getTime() - purchaseDate.getTimezoneOffset() * 60000)
     portfolioItemMutation.create.mutate(
       {
         assetId,
         portfolioId,
-        purchaseDate: purchaseDate.toISOString().split('T')[0],
+        purchaseDate: localDateToIsoString(purchaseDate),
         purchasePrice,
         quantity,
       },

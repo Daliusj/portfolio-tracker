@@ -7,8 +7,9 @@ type TableRowProps = {
   asset: AssetPublic
   handleClickRow: (asset: AssetPublic | undefined) => void
   isSelected: boolean
+  isDisabled?: boolean
 }
-export default function ({ asset, handleClickRow, isSelected }: TableRowProps) {
+export default function ({ asset, handleClickRow, isSelected, isDisabled }: TableRowProps) {
   return (
     <Table.Row
       onClick={() => !isSelected && handleClickRow(asset)}
@@ -16,7 +17,7 @@ export default function ({ asset, handleClickRow, isSelected }: TableRowProps) {
       key={useId()}
     >
       <Table.Cell className="font-small whitespace-no-wrap flex items-center text-gray-900 dark:text-white">
-        {isSelected && (
+        {isSelected && !isDisabled && (
           <Button
             onClick={() => isSelected && handleClickRow(undefined)}
             className="flex h-5 w-5 items-center justify-center p-0"

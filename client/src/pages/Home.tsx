@@ -11,14 +11,16 @@ export default function Home() {
     <PortfolioProvider>
       <PortfolioItemProvider>
         <PortfolioAssetsProvider>
-          <div>
-            <div className="flex justify-between">
-              <Sidebar></Sidebar>
-              <div>
+          <div className="flex h-full w-full space-x-56">
+            <Sidebar />
+            <div className="w-3/5 flex-col items-center justify-center">
+              <div className="mb-6 h-fit">
                 <ChartBox />
               </div>
+              <div className="mt-5">
+                <TableBox />
+              </div>
             </div>
-            <TableBox />
           </div>
         </PortfolioAssetsProvider>
       </PortfolioItemProvider>

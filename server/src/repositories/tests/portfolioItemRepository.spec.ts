@@ -32,7 +32,7 @@ describe('create', () => {
       ...portfolioItem,
       purchasePrice: `${portfolioItem.purchasePrice}`,
       quantity: `${portfolioItem.quantity}`,
-      purchaseDate: new Date(`${portfolioItem.purchaseDate} 12:00:00`),
+      purchaseDate: new Date(`${portfolioItem.purchaseDate}`),
     })
   })
 })

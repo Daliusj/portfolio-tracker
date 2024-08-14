@@ -31,7 +31,7 @@ export default function () {
   }
 
   return (
-    <div className="flex max-w-[320px]">
+    <div className="flex">
       <Dropdown color="dark" label={userPortfolios.activePortfolio?.name} dismissOnClick={true}>
         {userPortfolios.userPortfolios?.map((portfolio) => (
           <Dropdown.Item

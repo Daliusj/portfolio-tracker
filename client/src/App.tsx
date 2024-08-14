@@ -17,13 +17,15 @@ function App() {
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <div className={`${mode === 'dark' ? 'dark' : ''} app`}>
+          <div className={`${mode === 'dark' ? 'dark' : ''} app `}>
             <Header></Header>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-            </Routes>
+            <div className="h-5/6">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+              </Routes>
+            </div>
           </div>
         </AuthProvider>
       </QueryClientProvider>

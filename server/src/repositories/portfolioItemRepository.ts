@@ -14,7 +14,7 @@ export function portfolioItemRepository(db: Database) {
         .insertInto('portfolioItem')
         .values({
           ...portfolioItem,
-          purchaseDate: new Date(`${portfolioItem.purchaseDate} 12:00:00`),
+          purchaseDate: new Date(`${portfolioItem.purchaseDate}`),
         })
         .returning(portfolioItemKeysPublic)
         .executeTakeFirstOrThrow()

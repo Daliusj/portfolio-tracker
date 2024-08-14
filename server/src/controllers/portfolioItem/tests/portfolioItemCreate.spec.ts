@@ -48,7 +48,7 @@ it('should create a persisted portfolio item', async () => {
     quantity: '1',
     assetId: asset.id,
     portfolioId: portfolio.id,
-    purchaseDate: new Date(`2022-05-14 12:00:00`),
+    purchaseDate: new Date(`2022-05-14`),
     purchasePrice: '123',
   })
 

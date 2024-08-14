@@ -111,7 +111,7 @@ const CustomLineChart: React.FC = () => {
     },
   }
 
-  return <Line ref={chartRef} data={data} options={options} className="h-full" />
+  return <Line ref={chartRef} data={data} options={options} />
 }
 
 export default CustomLineChart

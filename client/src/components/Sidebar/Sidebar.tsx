@@ -8,7 +8,7 @@ export default function () {
   const [openAssetModal, setOpenAssetModal] = useState(false)
 
   return (
-    <div className="sidebar flex-col ">
+    <div className="sidebar w-full flex-col">
       <div className="flex">
         <Button className="bg-orange-600" onClick={() => setOpenAssetModal(true)}>
           Add Asset
@@ -16,7 +16,9 @@ export default function () {
 
         <PortfolioSelector />
       </div>
+
       <AssetForm openModal={openAssetModal} setOpenModal={setOpenAssetModal} mode="create" />
+
       <AssetsTree />
     </div>
   )
