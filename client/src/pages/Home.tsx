@@ -17,7 +17,7 @@ export default function Home() {
               <div className="mb-6 h-fit">
                 <ChartBox />
               </div>
-              <div className="mt-5">
+              <div className="mb-6 h-fit">
                 <TableBox />
               </div>
             </div>

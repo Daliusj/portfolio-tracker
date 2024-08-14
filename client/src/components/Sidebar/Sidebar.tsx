@@ -13,12 +13,9 @@ export default function () {
         <Button className="bg-orange-600" onClick={() => setOpenAssetModal(true)}>
           Add Asset
         </Button>
-
         <PortfolioSelector />
       </div>
-
       <AssetForm openModal={openAssetModal} setOpenModal={setOpenAssetModal} mode="create" />
-
       <AssetsTree />
     </div>
   )
