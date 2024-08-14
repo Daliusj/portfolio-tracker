@@ -20,7 +20,7 @@ const PortfolioAssetsContext = createContext<PortfolioAssetsContext>(defaultPort
 
 export const PortfolioAssetsProvider = ({ children }: PortfolioAssetsProviderProps) => {
   const { activePortfolio } = usePortfolio()
-  const { activePortfolioItem } = usePortfolioItem()
+  const { activePortfolioItem, userPortfolioItems } = usePortfolioItem()
 
   const { data, isLoading, error, refetch } = trpc.portfolio.getFull.useQuery(
     { id: activePortfolio?.id || 0, group: true },
@@ -31,7 +31,7 @@ export const PortfolioAssetsProvider = ({ children }: PortfolioAssetsProviderPro
 
   useEffect(() => {
     refetch()
-  }, [activePortfolioItem])
+  }, [activePortfolioItem, userPortfolioItems])
 
   if (isLoading) {
     return <div>Loading...</div>

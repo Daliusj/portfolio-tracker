@@ -124,7 +124,6 @@ export const PortfolioItemProvider = ({ children }: PortfolioItemProviderProps) 
     purchasePrice,
     quantity,
   }: PortfolioItemCreate) => {
-    const localDate = new Date(purchaseDate.getTime() - purchaseDate.getTimezoneOffset() * 60000)
     portfolioItemMutation.create.mutate(
       {
         assetId,

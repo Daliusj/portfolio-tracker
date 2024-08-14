@@ -126,6 +126,19 @@ export default function PortfolioForm({
       setPrice(Number(selectedPurchase?.purchasePrice))
       setDate(selectedPurchase?.purchaseDate)
     }
+    if ((selectedAsset && mode === 'create') || mode === 'createWithBase') {
+      setQuantity(1)
+      setPrice(Number(selectedAsset?.price))
+      setDate(new Date())
+    }
+  }, [selectedPurchase, selectedAsset])
+
+  useEffect(() => {
+    if (selectedPurchase) {
+      setQuantity(Number(selectedPurchase?.quantity))
+      setPrice(Number(selectedPurchase?.purchasePrice))
+      setDate(selectedPurchase?.purchaseDate)
+    }
   }, [selectedPurchase])
 
   return (
@@ -160,6 +173,7 @@ export default function PortfolioForm({
                   selectedPurchase={selectedPurchase}
                   setSelectedPurchase={setSelectedPurchase}
                   purchases={asset.purchases}
+                  setOpenAssetModal={setOpenModal}
                 />
               )}
               <div className="rounded-lg border border-solid border-gray-600">

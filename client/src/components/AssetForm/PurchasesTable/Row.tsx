@@ -12,6 +12,7 @@ type PurchaseTableRowProps = {
   handleClickRow: (purchase: Selectable<Purchase>) => void
   isSelected: boolean
   isDisabled?: boolean
+  setOpenAssetModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function ({
@@ -19,6 +20,7 @@ export default function ({
   handleClickRow,
   isSelected,
   isDisabled,
+  setOpenAssetModal,
 }: PurchaseTableRowProps) {
   const { remove } = usePortfolioItem()
   const [openConfirmationModal, setOpenConfirmationModal] = useState(false)
@@ -27,6 +29,7 @@ export default function ({
 
   const deletePurchase = () => {
     remove({ id: purchase.portfolioItemId })
+    setOpenAssetModal(false)
   }
 
   return (

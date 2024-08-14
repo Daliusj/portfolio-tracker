@@ -9,12 +9,14 @@ type PurchaseHistoryTableProps = {
   purchases: Selectable<Purchase>[] | undefined
   setSelectedPurchase: React.Dispatch<React.SetStateAction<Selectable<Purchase> | undefined>>
   selectedPurchase: Selectable<Purchase> | undefined
+  setOpenAssetModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function ({
   purchases,
   setSelectedPurchase,
   selectedPurchase,
+  setOpenAssetModal,
 }: PurchaseHistoryTableProps) {
   const handleClickRow = (purchase: Selectable<Purchase>) => {
     setSelectedPurchase(purchase)
@@ -32,6 +34,7 @@ export default function ({
                 purchase={purchase}
                 handleClickRow={handleClickRow}
                 isSelected={purchase.portfolioItemId === selectedPurchase?.portfolioItemId}
+                setOpenAssetModal={setOpenAssetModal}
               />
             ))}
         </Table.Body>
