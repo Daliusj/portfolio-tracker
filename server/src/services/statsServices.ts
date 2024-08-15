@@ -57,7 +57,7 @@ export default (db: Database) => {
             percentageChange: (
               (valueChange / totalPurchaseValue) *
               100
-            ).toFixed(1),
+            ).toFixed(2),
           }
         })
       )

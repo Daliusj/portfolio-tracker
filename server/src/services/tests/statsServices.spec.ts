@@ -87,7 +87,7 @@ describe('getPortfolioStats', () => {
         percentageChange: (
           ((Number(assetOne.price) * 2 - 150) / 150) *
           100
-        ).toFixed(1),
+        ).toFixed(2),
       },
       {
         assetId: assetTwo.id,
@@ -114,7 +114,7 @@ describe('getPortfolioStats', () => {
         percentageChange: (
           ((Number(assetTwo.price) * 4 - 500) / 500) *
           100
-        ).toFixed(1),
+        ).toFixed(2),
       },
       {
         assetId: assetThree.id,
@@ -141,7 +141,7 @@ describe('getPortfolioStats', () => {
         percentageChange: (
           ((Number(assetThree.price) * 6 - 1200) / 1200) *
           100
-        ).toFixed(1),
+        ).toFixed(2),
       },
     ]
 

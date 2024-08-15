@@ -91,7 +91,7 @@ it('should get portfolio stats', async () => {
       percentageChange: (
         ((Number(assetOne.price) * 2 - 150) / 150) *
         100
-      ).toFixed(1),
+      ).toFixed(2),
     },
     {
       assetId: assetTwo.id,
@@ -118,7 +118,7 @@ it('should get portfolio stats', async () => {
       percentageChange: (
         ((Number(assetTwo.price) * 4 - 500) / 500) *
         100
-      ).toFixed(1),
+      ).toFixed(2),
     },
     {
       assetId: assetThree.id,
@@ -145,7 +145,7 @@ it('should get portfolio stats', async () => {
       percentageChange: (
         ((Number(assetThree.price) * 6 - 1200) / 1200) *
         100
-      ).toFixed(1),
+      ).toFixed(2),
     },
   ]
 
