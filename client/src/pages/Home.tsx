@@ -8,7 +8,7 @@ import TableBox from '@/components/TableBox/TableBox'
 import { PortfolioStatsProvider } from '@/context/StatsContex'
 import PortfolioProfitLoss from '@/components/PortfolioProfitLoss'
 
-export default function Home() {
+export default function () {
   return (
     <PortfolioProvider>
       <PortfolioItemProvider>

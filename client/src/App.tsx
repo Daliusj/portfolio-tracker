@@ -1,5 +1,5 @@
 import React from 'react'
-import { Routes, Route, redirect } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import Header from './components/Header/Header'
 import { useThemeMode } from 'flowbite-react'
@@ -8,6 +8,7 @@ import Signup from './pages/Signup'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { trpc, trpcClient } from './trpc'
 import { AuthProvider } from './context/AuthContext'
+import PrivateRouteGuard from './routes/PrivateRouteGuard'
 
 function App() {
   const { mode } = useThemeMode()
@@ -21,7 +22,9 @@ function App() {
             <Header></Header>
             <div className="h-5/6">
               <Routes>
-                <Route path="/" element={<Home />} />
+                <Route element={<PrivateRouteGuard />}>
+                  <Route path="/" element={<Home />} />
+                </Route>
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
               </Routes>
