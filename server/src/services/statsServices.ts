@@ -58,6 +58,7 @@ export default (db: Database) => {
               (valueChange / totalPurchaseValue) *
               100
             ).toFixed(2),
+            assetCurrencyCode: asset.currencyCode,
           }
         })
       )

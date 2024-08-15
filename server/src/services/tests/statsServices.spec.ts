@@ -88,6 +88,7 @@ describe('getPortfolioStats', () => {
           ((Number(assetOne.price) * 2 - 150) / 150) *
           100
         ).toFixed(2),
+        assetCurrencyCode: 'USD',
       },
       {
         assetId: assetTwo.id,
@@ -115,6 +116,7 @@ describe('getPortfolioStats', () => {
           ((Number(assetTwo.price) * 4 - 500) / 500) *
           100
         ).toFixed(2),
+        assetCurrencyCode: 'USD',
       },
       {
         assetId: assetThree.id,
@@ -142,6 +144,7 @@ describe('getPortfolioStats', () => {
           ((Number(assetThree.price) * 6 - 1200) / 1200) *
           100
         ).toFixed(2),
+        assetCurrencyCode: 'EUR',
       },
     ]
 

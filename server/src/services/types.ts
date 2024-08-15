@@ -9,4 +9,5 @@ export type PortfolioStatsPublic = {
   valueInBaseCurrencie: string
   valueChange: string
   percentageChange: string
+  assetCurrencyCode: string
 }
