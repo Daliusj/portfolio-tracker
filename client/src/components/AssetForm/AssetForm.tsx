@@ -229,7 +229,7 @@ export default function PortfolioForm({
                 <p className="h-8 text-sm text-red-600">
                   {!quantity && 'Enter purchased asset quantity'}
                 </p>
-                <legend className="mt-4">Purchase Price</legend>
+                <legend className="mt-4">{`Purchase Price `}</legend>
                 <TextInput
                   value={price !== undefined && !isNaN(price) ? price : ''}
                   type="number"

@@ -63,9 +63,10 @@ describe('getPortfolioStats', () => {
 
     const expectedStats = [
       {
+        assetId: assetOne.id,
         name: assetOne.name,
-        totalQuantity: 2,
-        avgBuyPrice: Number((150 / 2).toFixed(2)),
+        totalQuantity: (2).toFixed(3),
+        avgBuyPrice: (150 / 2).toFixed(2),
         allocation: (
           ((Number(assetOne.price) * 2 * Number(rateOne.exchangeRate)) /
             Number(
@@ -75,23 +76,24 @@ describe('getPortfolioStats', () => {
             )) *
           100
         ).toFixed(2),
-        price: assetOne.price,
-        value: Number(assetOne.price) * 2,
+        price: Number(assetOne.price).toFixed(2),
+        value: (Number(assetOne.price) * 2).toFixed(2),
         valueInBaseCurrencie: (
           Number(assetOne.price) *
           2 *
           Number(rateOne.exchangeRate)
         ).toFixed(2),
-        valueChange: Number(assetOne.price) * 2 - 150,
+        valueChange: (Number(assetOne.price) * 2 - 150).toFixed(2),
         percentageChange: (
           ((Number(assetOne.price) * 2 - 150) / 150) *
           100
         ).toFixed(1),
       },
       {
+        assetId: assetTwo.id,
         name: assetTwo.name,
-        totalQuantity: 4,
-        avgBuyPrice: 500 / 4,
+        totalQuantity: (4).toFixed(3),
+        avgBuyPrice: (500 / 4).toFixed(2),
         allocation: (
           ((Number(assetTwo.price) * 4 * Number(rateOne.exchangeRate)) /
             Number(
@@ -101,23 +103,24 @@ describe('getPortfolioStats', () => {
             )) *
           100
         ).toFixed(2),
-        price: assetTwo.price,
-        value: Number(assetTwo.price) * 4,
+        price: Number(assetTwo.price).toFixed(2),
+        value: (Number(assetTwo.price) * 4).toFixed(2),
         valueInBaseCurrencie: (
           Number(assetTwo.price) *
           4 *
           Number(rateOne.exchangeRate)
         ).toFixed(2),
-        valueChange: Number(assetTwo.price) * 4 - 500,
+        valueChange: (Number(assetTwo.price) * 4 - 500).toFixed(2),
         percentageChange: (
           ((Number(assetTwo.price) * 4 - 500) / 500) *
           100
         ).toFixed(1),
       },
       {
+        assetId: assetThree.id,
         name: assetThree.name,
-        totalQuantity: 6,
-        avgBuyPrice: 1200 / 6,
+        totalQuantity: (6).toFixed(3),
+        avgBuyPrice: (1200 / 6).toFixed(2),
         allocation: (
           ((Number(assetThree.price) * 6 * Number(rateTwo.exchangeRate)) /
             Number(
@@ -127,14 +130,14 @@ describe('getPortfolioStats', () => {
             )) *
           100
         ).toFixed(2),
-        price: assetThree.price,
-        value: Number(assetThree.price) * 6,
+        price: Number(assetThree.price).toFixed(2),
+        value: (Number(assetThree.price) * 6).toFixed(2),
         valueInBaseCurrencie: (
           Number(assetThree.price) *
           6 *
           Number(rateTwo.exchangeRate)
         ).toFixed(2),
-        valueChange: Number(assetThree.price) * 6 - 1200,
+        valueChange: (Number(assetThree.price) * 6 - 1200).toFixed(2),
         percentageChange: (
           ((Number(assetThree.price) * 6 - 1200) / 1200) *
           100

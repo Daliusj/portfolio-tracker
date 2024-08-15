@@ -14,9 +14,9 @@ export default function Home() {
           <div className="flex h-full w-full space-x-56">
             <Sidebar />
             <div className="w-3/5 flex-col items-center justify-center">
-              <div className="mb-6 h-fit">
+              {/* <div className="mb-6 h-fit">
                 <ChartBox />
-              </div>
+              </div> */}
               <div className="mb-6 h-fit">
                 <TableBox />
               </div>
