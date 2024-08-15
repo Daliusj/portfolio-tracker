@@ -1,4 +1,4 @@
-export type PortfolioStatsPublic = {
+export type AssetStatsPublic = {
   assetId: number
   name: string
   totalQuantity: string
@@ -10,4 +10,10 @@ export type PortfolioStatsPublic = {
   valueChange: string
   percentageChange: string
   assetCurrencyCode: string
+}
+
+export type PortfolioStatsPublic = {
+  portfolioId: number
+  valueChange: string
+  percentageChange: string
 }

@@ -12,7 +12,7 @@ import statsServices from '../statsServices'
 const db = await wrapInRollbacks(createTestDatabase())
 const services = statsServices(db)
 
-describe('getPortfolioStats', () => {
+describe('getAssetsStats', () => {
   it('should return correct portfolio stats', async () => {
     const [rateOne, rateTwo] = await insertAll(db, 'currencyExchangeRate', [
       {
@@ -59,7 +59,7 @@ describe('getPortfolioStats', () => {
       }),
     ])
 
-    const result = await services.getPortfolioStats(portfolio.id)
+    const result = await services.getAssetsStats(portfolio.id)
 
     const expectedStats = [
       {
@@ -150,5 +150,88 @@ describe('getPortfolioStats', () => {
 
     const resolvedResult = await Promise.all(result)
     expect(resolvedResult).toEqual(expectedStats)
+  })
+})
+
+describe('getPortfolioStats', () => {
+  it('should return correct portfolio stats', async () => {
+    const [rateOne, rateTwo] = await insertAll(db, 'currencyExchangeRate', [
+      {
+        currencyFrom: 'EUR',
+        currencyTo: 'USD',
+        exchangeRate: 2,
+      },
+      {
+        currencyFrom: 'EUR',
+        currencyTo: 'EUR',
+        exchangeRate: 1,
+      },
+    ])
+
+    const [assetOne, assetTwo, assetThree] = await insertAll(db, 'asset', [
+      fakeAsset({
+        type: 'fund',
+        price: '100',
+        exchangeShortName: 'NYSE',
+      }),
+      fakeAsset({
+        type: 'stock',
+        price: '200',
+        exchangeShortName: 'NASDAQ',
+      }),
+      fakeAsset({
+        type: 'stock',
+        price: '300',
+        exchangeShortName: 'Euronext',
+      }),
+    ])
+
+    const [user] = await insertAll(db, 'user', fakeUser())
+    const [portfolio] = await insertAll(db, 'portfolio', [
+      fakePortfolio({ userId: user.id }),
+    ])
+
+    await insertAll(db, 'portfolioItem', [
+      fakePortfolioItem({
+        portfolioId: portfolio.id,
+        assetId: assetOne.id,
+        purchasePrice: '150',
+        quantity: '2',
+      }),
+      fakePortfolioItem({
+        portfolioId: portfolio.id,
+        assetId: assetTwo.id,
+        purchasePrice: '500',
+        quantity: '4',
+      }),
+      fakePortfolioItem({
+        portfolioId: portfolio.id,
+        assetId: assetThree.id,
+        purchasePrice: '1200',
+        quantity: '6',
+      }),
+    ])
+
+    const totalPurchaseValue = 150 + 500 + 1200
+
+    const totalPortfolioValue =
+      (Number(assetOne.price) * 2) / Number(rateOne.exchangeRate) +
+      (Number(assetTwo.price) * 4) / Number(rateOne.exchangeRate) +
+      (Number(assetThree.price) * 6) / Number(rateTwo.exchangeRate)
+
+    const valueChange = totalPortfolioValue - totalPurchaseValue
+    const expectedPercentageChange = (
+      (valueChange / totalPurchaseValue) *
+      100
+    ).toFixed(2)
+
+    const expectedStats = {
+      portfolioId: portfolio.id,
+      valueChange: valueChange.toFixed(2),
+      percentageChange: expectedPercentageChange,
+    }
+
+    const result = await services.getPortfolioStats(portfolio.id)
+    expect(result).toEqual(expectedStats)
   })
 })

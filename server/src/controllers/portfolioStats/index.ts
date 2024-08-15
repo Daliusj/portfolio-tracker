@@ -1,6 +1,8 @@
 import { router } from '@server/trpc'
-import get from './get'
+import getAssetsStats from './getAssetsStats'
+import getPortfolioStats from './getPortfolioStats'
 
 export default router({
-  get,
+  getAssetsStats,
+  getPortfolioStats,
 })

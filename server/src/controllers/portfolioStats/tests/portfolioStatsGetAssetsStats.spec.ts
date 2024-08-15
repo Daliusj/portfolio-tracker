@@ -14,7 +14,7 @@ import portfolioValueRouter from '..'
 const createCaller = createCallerFactory(portfolioValueRouter)
 const db = await wrapInRollbacks(createTestDatabase())
 
-it('should get portfolio stats', async () => {
+it('should get portfolio assets stats', async () => {
   const [rateOne, rateTwo] = await insertAll(db, 'currencyExchangeRate', [
     {
       currencyFrom: 'EUR',
@@ -36,7 +36,7 @@ it('should get portfolio stats', async () => {
 
   const [user] = await insertAll(db, 'user', fakeUser())
 
-  const { get } = createCaller(authContext({ db }, user))
+  const { getAssetsStats } = createCaller(authContext({ db }, user))
 
   const [portfolio] = await insertAll(db, 'portfolio', [
     fakePortfolio({ userId: user.id }),
@@ -63,7 +63,7 @@ it('should get portfolio stats', async () => {
     }),
   ])
 
-  const returnedValue = await get({ id: portfolio.id })
+  const returnedValue = await getAssetsStats({ id: portfolio.id })
 
   const expectedStats = [
     {
@@ -152,6 +152,5 @@ it('should get portfolio stats', async () => {
     },
   ]
 
-  const resolvedResult = await Promise.all(returnedValue)
-  expect(resolvedResult).toEqual(expectedStats)
+  expect(returnedValue).toEqual(expectedStats)
 })

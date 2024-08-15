@@ -2,17 +2,16 @@ import type { Database } from '@server/database'
 import { groupAssets } from '@server/utils/assets'
 import { portfolioRepository } from '../repositories/portfolioRepository'
 import portfolioValueServices from './portfolioValueServices'
-import type { PortfolioStatsPublic } from './types'
+import type { AssetStatsPublic } from './types'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default (db: Database) => {
   const portfolioRepo = portfolioRepository(db)
   const valueServices = portfolioValueServices(db, {} as any)
 
   return {
-    getPortfolioStats: async (
+    getAssetsStats: async (
       portfolioId: number
-    ): Promise<PortfolioStatsPublic[]> => {
+    ): Promise<AssetStatsPublic[]> => {
       const portfolioAssets = await portfolioRepo.findFull(portfolioId)
       const groupedAssets = groupAssets(portfolioAssets)
       const totalPortfolioValue = await valueServices.getTotalValue(portfolioId)
@@ -62,6 +61,29 @@ export default (db: Database) => {
           }
         })
       )
+    },
+
+    getPortfolioStats: async (portfolioId: number) => {
+      const portfolioAssets = await portfolioRepo.findFull(portfolioId)
+      const totalPortfolioValue = await valueServices.getTotalValue(portfolioId)
+      const groupedAssets = groupAssets(portfolioAssets)
+
+      const totalPurchaseValue = groupedAssets
+        .map((asset) =>
+          asset.purchases.reduce(
+            (acc, purchase) => acc + Number(purchase.purchasePrice),
+            0
+          )
+        )
+        .reduce((acc, purchase) => acc + purchase)
+
+      const valueChange = Number(totalPortfolioValue) - totalPurchaseValue
+
+      return {
+        portfolioId,
+        valueChange: valueChange.toFixed(2),
+        percentageChange: ((valueChange / totalPurchaseValue) * 100).toFixed(2),
+      }
     },
   }
 }
