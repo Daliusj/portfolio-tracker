@@ -10,6 +10,7 @@ export default function () {
       <Table.HeadCell>Allocation</Table.HeadCell>
       <Table.HeadCell>Price</Table.HeadCell>
       <Table.HeadCell>Total</Table.HeadCell>
+      <Table.HeadCell>P/L</Table.HeadCell>
     </Table.Head>
   )
 }
