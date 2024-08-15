@@ -1,7 +1,9 @@
 import { Button, Table } from 'flowbite-react'
-import React, { useId } from 'react'
+import React, { useEffect, useId, useState } from 'react'
 import { AssetPublic } from '@server/shared/types'
 import { HiXCircle } from 'react-icons/hi'
+import { trpc } from '@/trpc'
+import getSymbolFromCurrency from 'currency-symbol-map'
 
 type TableRowProps = {
   asset: AssetPublic
@@ -10,6 +12,16 @@ type TableRowProps = {
   isDisabled?: boolean
 }
 export default function ({ asset, handleClickRow, isSelected, isDisabled }: TableRowProps) {
+  const [price, setPrice] = useState('')
+
+  const currencyCode = trpc.exchange.getByShortName.useQuery({ shortName: asset.exchangeShortName })
+
+  useEffect(() => {
+    setPrice(
+      `${currencyCode.data && getSymbolFromCurrency(currencyCode.data?.currencyCode)}${Number(asset.price).toFixed(2)}`
+    )
+  }, [currencyCode])
+
   return (
     <Table.Row
       onClick={() => !isSelected && handleClickRow(asset)}
@@ -28,7 +40,7 @@ export default function ({ asset, handleClickRow, isSelected, isDisabled }: Tabl
         {`${asset.name}(${asset.symbol})`}
       </Table.Cell>
       <Table.Cell>{asset.type}</Table.Cell>
-      <Table.Cell>{Number(asset.price).toFixed(2)}</Table.Cell>
+      <Table.Cell>{price}</Table.Cell>
       <Table.Cell>{`${asset.exchange}(${asset.exchangeShortName})`}</Table.Cell>
     </Table.Row>
   )

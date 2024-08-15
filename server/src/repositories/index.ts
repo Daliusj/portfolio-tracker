@@ -3,6 +3,7 @@ import { userRepository } from './userRepository'
 import { assetRepository } from './assetRepository'
 import { portfolioRepository } from './portfolioRepository'
 import { portfolioItemRepository } from './portfolioItemRepository'
+import { exchangeRepository } from './exchangeRepository'
 
 export type RepositoryFactory = <T>(db: Database) => T
 
@@ -11,6 +12,7 @@ const repositories = {
   userRepository,
   portfolioRepository,
   portfolioItemRepository,
+  exchangeRepository,
 }
 
 export type RepositoriesFactories = typeof repositories

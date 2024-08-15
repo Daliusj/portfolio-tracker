@@ -11,6 +11,7 @@ import { Selectable } from 'kysely'
 import PurchaseTable from './PurchasesTable/PurchasesTable'
 import { trpc } from '@/trpc'
 import { localDateToIsoString } from '@/utils/time'
+import getSymbolFromCurrency from 'currency-symbol-map'
 
 type PortfolioFormProps = {
   openModal: boolean
@@ -39,7 +40,13 @@ export default function PortfolioForm({
   const [selectedPurchase, setSelectedPurchase] = useState<Selectable<Purchase> | undefined>(
     undefined
   )
+  const [currencySymbol, setCurrencySymbol] = useState('')
   const { create, update } = usePortfolioItem()
+
+  const currencyCode = trpc.exchange.getByShortName.useQuery(
+    { shortName: selectedAsset?.exchangeShortName || '' },
+    { enabled: false }
+  )
 
   const clearInputs = () => {
     setSelectedAsset(undefined)
@@ -119,6 +126,14 @@ export default function PortfolioForm({
       }
     }
   }, [openModal, baseAsset])
+
+  useEffect(() => {
+    selectedAsset && currencyCode.refetch()
+    if (currencyCode?.data?.currencyCode) {
+      const symbol = getSymbolFromCurrency(currencyCode.data.currencyCode)
+      if (symbol) setCurrencySymbol(symbol)
+    }
+  }, [currencyCode?.data?.currencyCode])
 
   useEffect(() => {
     if (selectedPurchase) {
@@ -229,7 +244,7 @@ export default function PortfolioForm({
                 <p className="h-8 text-sm text-red-600">
                   {!quantity && 'Enter purchased asset quantity'}
                 </p>
-                <legend className="mt-4">{`Purchase Price `}</legend>
+                <legend className="mt-4">{`Purchase Price, ${currencySymbol} `}</legend>
                 <TextInput
                   value={price !== undefined && !isNaN(price) ? price : ''}
                   type="number"
