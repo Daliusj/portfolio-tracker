@@ -9,7 +9,7 @@ export default function () {
 
   return (
     <div className="sidebar w-full flex-col">
-      <div className="flex">
+      <div className="flex w-80">
         <Button className="bg-orange-600" onClick={() => setOpenAssetModal(true)}>
           Add Asset
         </Button>

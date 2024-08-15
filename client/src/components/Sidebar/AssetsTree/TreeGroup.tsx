@@ -4,6 +4,8 @@ import React from 'react'
 import { Sidebar as SidebarFlowbite } from 'flowbite-react'
 import { HiTrendingUp } from 'react-icons/hi'
 import DropdownMenu from './DropdownMenu'
+import ProfitLoss from '@/components/ProfitLoss'
+import { useStats } from '@/context/StatsContex'
 
 type TreeGroupProps = {
   data: FullPortfolioGroupedPublic[]
@@ -12,6 +14,7 @@ type TreeGroupProps = {
 
 export default function ({ data, type }: TreeGroupProps) {
   const { setActivePortfolioItem } = usePortfolioItem()
+  const portfolioStats = useStats()
 
   const filterAssetType = (assets: FullPortfolioGroupedPublic[], type: string) =>
     assets.filter((asset) => asset.assetType === type)
@@ -19,7 +22,7 @@ export default function ({ data, type }: TreeGroupProps) {
   return (
     <SidebarFlowbite.ItemGroup>
       <div className="flex justify-between">
-        <SidebarFlowbite.Item icon={HiTrendingUp} label="+5.78%" labelColor="green">
+        <SidebarFlowbite.Item icon={HiTrendingUp} labelColor="green">
           {`${type.toUpperCase()}S`}
         </SidebarFlowbite.Item>
         <div className="w-12 "></div>
@@ -34,7 +37,13 @@ export default function ({ data, type }: TreeGroupProps) {
             <div className="flex w-full max-w-xs items-center justify-between">
               <p className="whitespace-normal break-words">{asset.assetName}</p>
               <div className="flex">
-                <p className="ml-4 text-red-500">-1.23</p>
+                {portfolioStats.data &&
+                  portfolioStats.data.find((stats) => stats.assetId === asset.assetId) && (
+                    <ProfitLoss
+                      asset={portfolioStats.data.find((stats) => stats.assetId === asset.assetId)!}
+                      full={false}
+                    />
+                  )}
                 <DropdownMenu asset={asset} />
               </div>
             </div>

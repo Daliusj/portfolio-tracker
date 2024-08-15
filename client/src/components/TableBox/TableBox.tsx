@@ -2,13 +2,10 @@ import { Table } from 'flowbite-react'
 import React from 'react'
 import TableRow from './Row'
 import TableHead from './Head'
-import { usePortfolio } from '@/context/PortfolioContext'
-import { trpc } from '@/trpc'
+import { useStats } from '@/context/StatsContex'
 
 export default function () {
-  const { activePortfolio } = usePortfolio()
-  const assetStats =
-    activePortfolio && trpc.portfolioStats.get.useQuery({ id: activePortfolio?.id })
+  const assetStats = useStats()
 
   return (
     <div className="overflow-x-auto">

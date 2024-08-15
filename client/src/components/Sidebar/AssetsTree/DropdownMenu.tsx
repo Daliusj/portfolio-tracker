@@ -23,12 +23,7 @@ export default function ({ asset }: DropdownMenuProps) {
 
   return (
     <div>
-      <Dropdown
-        placement="right"
-        className="items-center"
-        label={<HiAdjustments />}
-        arrowIcon={false}
-      >
+      <Dropdown className="items-center" label={<HiAdjustments />} arrowIcon={false}>
         <Dropdown.Item onClick={() => handleAddButton()}>Add</Dropdown.Item>
         <Dropdown.Item onClick={() => handleEditButton()}>Edit</Dropdown.Item>
       </Dropdown>
