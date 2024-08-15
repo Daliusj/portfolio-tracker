@@ -72,19 +72,19 @@ it('should get portfolio stats', async () => {
       totalQuantity: (2).toFixed(3),
       avgBuyPrice: (150 / 2).toFixed(2),
       allocation: (
-        ((Number(assetOne.price) * 2 * Number(rateOne.exchangeRate)) /
+        ((Number(assetOne.price) * 2) /
+          Number(rateOne.exchangeRate) /
           Number(
-            Number(assetOne.price) * 2 * Number(rateOne.exchangeRate) +
-              Number(assetTwo.price) * 4 * Number(rateOne.exchangeRate) +
-              Number(assetThree.price) * 6 * Number(rateTwo.exchangeRate)
+            (Number(assetOne.price) * 2) / Number(rateOne.exchangeRate) +
+              (Number(assetTwo.price) * 4) / Number(rateOne.exchangeRate) +
+              (Number(assetThree.price) * 6) / Number(rateTwo.exchangeRate)
           )) *
         100
       ).toFixed(2),
       price: Number(assetOne.price).toFixed(2),
       value: (Number(assetOne.price) * 2).toFixed(2),
       valueInBaseCurrencie: (
-        Number(assetOne.price) *
-        2 *
+        (Number(assetOne.price) * 2) /
         Number(rateOne.exchangeRate)
       ).toFixed(2),
       valueChange: (Number(assetOne.price) * 2 - 150).toFixed(2),
@@ -99,19 +99,19 @@ it('should get portfolio stats', async () => {
       totalQuantity: (4).toFixed(3),
       avgBuyPrice: (500 / 4).toFixed(2),
       allocation: (
-        ((Number(assetTwo.price) * 4 * Number(rateOne.exchangeRate)) /
+        ((Number(assetTwo.price) * 4) /
+          Number(rateOne.exchangeRate) /
           Number(
-            Number(assetOne.price) * 2 * Number(rateOne.exchangeRate) +
-              Number(assetTwo.price) * 4 * Number(rateOne.exchangeRate) +
-              Number(assetThree.price) * 6 * Number(rateTwo.exchangeRate)
+            (Number(assetOne.price) * 2) / Number(rateOne.exchangeRate) +
+              (Number(assetTwo.price) * 4) / Number(rateOne.exchangeRate) +
+              (Number(assetThree.price) * 6) / Number(rateTwo.exchangeRate)
           )) *
         100
       ).toFixed(2),
       price: Number(assetTwo.price).toFixed(2),
       value: (Number(assetTwo.price) * 4).toFixed(2),
       valueInBaseCurrencie: (
-        Number(assetTwo.price) *
-        4 *
+        (Number(assetTwo.price) * 4) /
         Number(rateOne.exchangeRate)
       ).toFixed(2),
       valueChange: (Number(assetTwo.price) * 4 - 500).toFixed(2),
@@ -126,19 +126,19 @@ it('should get portfolio stats', async () => {
       totalQuantity: (6).toFixed(3),
       avgBuyPrice: (1200 / 6).toFixed(2),
       allocation: (
-        ((Number(assetThree.price) * 6 * Number(rateTwo.exchangeRate)) /
+        ((Number(assetThree.price) * 6) /
+          Number(rateTwo.exchangeRate) /
           Number(
-            Number(assetOne.price) * 2 * Number(rateOne.exchangeRate) +
-              Number(assetTwo.price) * 4 * Number(rateOne.exchangeRate) +
-              Number(assetThree.price) * 6 * Number(rateTwo.exchangeRate)
+            (Number(assetOne.price) * 2) / Number(rateOne.exchangeRate) +
+              (Number(assetTwo.price) * 4) / Number(rateOne.exchangeRate) +
+              (Number(assetThree.price) * 6) / Number(rateTwo.exchangeRate)
           )) *
         100
       ).toFixed(2),
       price: Number(assetThree.price).toFixed(2),
       value: (Number(assetThree.price) * 6).toFixed(2),
       valueInBaseCurrencie: (
-        Number(assetThree.price) *
-        6 *
+        (Number(assetThree.price) * 6) /
         Number(rateTwo.exchangeRate)
       ).toFixed(2),
       valueChange: (Number(assetThree.price) * 6 - 1200).toFixed(2),

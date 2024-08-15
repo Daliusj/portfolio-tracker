@@ -23,8 +23,7 @@ export default (db: Database, fmpApi: Fmp) => {
       })
 
       const value =
-        Number(asset.assetPrice) *
-        Number(asset.quantity) *
+        (Number(asset.assetPrice) * Number(asset.quantity)) /
         Number(exchangeData?.exchangeRate)
       return value
     })

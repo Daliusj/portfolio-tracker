@@ -1,4 +1,5 @@
 export type PortfolioStatsPublic = {
+  assetId: number
   name: string
   totalQuantity: string
   avgBuyPrice: string

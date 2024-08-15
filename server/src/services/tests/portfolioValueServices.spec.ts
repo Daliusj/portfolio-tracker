@@ -61,14 +61,11 @@ describe('getTotalValue', () => {
 
     expect(value).toEqual(
       (
-        Number(portfolioItemOne.quantity) *
-          Number(assetOne.price) *
+        (Number(portfolioItemOne.quantity) * Number(assetOne.price)) /
           Number(rateOne.exchangeRate) +
-        Number(portfolioItemTwo.quantity) *
-          Number(assetTwo.price) *
+        (Number(portfolioItemTwo.quantity) * Number(assetTwo.price)) /
           Number(rateOne.exchangeRate) +
-        Number(portfolioItemThree.quantity) *
-          Number(assetThree.price) *
+        (Number(portfolioItemThree.quantity) * Number(assetThree.price)) /
           Number(rateTwo.exchangeRate)
       ).toFixed(2)
     )
@@ -126,11 +123,9 @@ describe('getAssetsTypeValue', () => {
 
     expect(value).toEqual(
       (
-        Number(portfolioItemTwo.quantity) *
-          Number(assetTwo.price) *
+        (Number(portfolioItemTwo.quantity) * Number(assetTwo.price)) /
           Number(rateOne.exchangeRate) +
-        Number(portfolioItemThree.quantity) *
-          Number(assetThree.price) *
+        (Number(portfolioItemThree.quantity) * Number(assetThree.price)) /
           Number(rateTwo.exchangeRate)
       ).toFixed(2)
     )
@@ -180,8 +175,7 @@ describe('getAssetValue', () => {
 
     expect(value).toEqual(
       (
-        Number(portfolioItemTwo.quantity) *
-        Number(assetTwo.price) *
+        (Number(portfolioItemTwo.quantity) * Number(assetTwo.price)) /
         Number(rateOne.exchangeRate)
       ).toFixed(2)
     )
