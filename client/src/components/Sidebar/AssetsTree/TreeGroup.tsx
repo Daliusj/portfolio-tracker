@@ -14,7 +14,7 @@ type TreeGroupProps = {
 
 export default function ({ data, type }: TreeGroupProps) {
   const { setActivePortfolioItem } = usePortfolioItem()
-  const portfolioStats = useStats()
+  const { assetsStats } = useStats()
 
   const filterAssetType = (assets: FullPortfolioGroupedPublic[], type: string) =>
     assets.filter((asset) => asset.assetType === type)
@@ -37,13 +37,13 @@ export default function ({ data, type }: TreeGroupProps) {
             <div className="flex w-full max-w-xs items-center justify-between">
               <p className="whitespace-normal break-words">{asset.assetName}</p>
               <div className="flex">
-                {portfolioStats.data &&
-                  portfolioStats.data.find((stats) => stats.assetId === asset.assetId) && (
-                    <ProfitLoss
-                      asset={portfolioStats.data.find((stats) => stats.assetId === asset.assetId)!}
-                      full={false}
-                    />
-                  )}
+                {assetsStats && assetsStats.find((stats) => stats.assetId === asset.assetId) && (
+                  <ProfitLoss
+                    asset={assetsStats.find((stats) => stats.assetId === asset.assetId)!}
+                    full={false}
+                    flat={false}
+                  />
+                )}
                 <DropdownMenu asset={asset} />
               </div>
             </div>

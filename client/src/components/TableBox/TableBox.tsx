@@ -5,15 +5,15 @@ import TableHead from './Head'
 import { useStats } from '@/context/StatsContex'
 
 export default function () {
-  const assetStats = useStats()
+  const { assetsStats } = useStats()
 
   return (
     <div className="overflow-x-auto">
       <Table hoverable>
         <TableHead />
         <Table.Body className="divide-y overflow-y-auto">
-          {assetStats?.data &&
-            assetStats.data.map((asset) => (
+          {assetsStats &&
+            assetsStats.map((asset) => (
               <TableRow key={`${asset.assetId}-table-box`} asset={asset} />
             ))}
         </Table.Body>

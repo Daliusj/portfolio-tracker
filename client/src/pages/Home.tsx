@@ -6,6 +6,7 @@ import { PortfolioAssetsProvider } from '@/context/portfolioAssets'
 import { PortfolioItemProvider } from '@/context/PortfolioItemContext'
 import TableBox from '@/components/TableBox/TableBox'
 import { PortfolioStatsProvider } from '@/context/StatsContex'
+import PortfolioProfitLoss from '@/components/PortfolioProfitLoss'
 
 export default function Home() {
   return (
@@ -16,7 +17,8 @@ export default function Home() {
             <div className="flex h-full">
               <Sidebar />
 
-              <div className="flex w-full flex-col items-center">
+              <div className="flex flex-col items-center space-x-[80px]">
+                <PortfolioProfitLoss />
                 {/* <div className="mb-6 h-fit">
                 <ChartBox />
               </div> */}

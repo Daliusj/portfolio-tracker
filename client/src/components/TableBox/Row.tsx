@@ -1,12 +1,12 @@
 import { Table } from 'flowbite-react'
 import React, { useId } from 'react'
-import { PortfolioStatsPublic } from '@server/shared/types'
+import { AssetStatsPublic } from '@server/shared/types'
 import getSymbolFromCurrency from 'currency-symbol-map'
 import { usePortfolio } from '@/context/PortfolioContext'
 import ProfitLoss from '../ProfitLoss'
 
 type TableRowProps = {
-  asset: PortfolioStatsPublic
+  asset: AssetStatsPublic
 }
 export default function ({ asset }: TableRowProps) {
   const cellStyles = 'font-small whitespace-no-wrap items-center text-gray-900 dark:text-white'
@@ -32,7 +32,7 @@ export default function ({ asset }: TableRowProps) {
         )}
       </Table.Cell>
       <Table.Cell className={cellStyles}>
-        <ProfitLoss asset={asset} full={true} />
+        <ProfitLoss asset={asset} full={true} flat={false} />
       </Table.Cell>
     </Table.Row>
   )
