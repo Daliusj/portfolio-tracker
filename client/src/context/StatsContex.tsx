@@ -2,7 +2,6 @@ import React, { ReactNode, createContext, useContext, useEffect } from 'react'
 import { AssetStatsPublic, PortfolioStatsPublic } from '@server/shared/types'
 import { trpc } from '@/trpc'
 import { usePortfolio } from './PortfolioContext'
-import portfolio from '@server/controllers/portfolio'
 import { usePortfolioAssets } from './portfolioAssets'
 
 type PortfolioStatsContext = {
@@ -40,8 +39,10 @@ export const PortfolioStatsProvider = ({ children }: PortfolioStatsProviderProps
   )
 
   useEffect(() => {
-    assetsStatsQuery.refetch()
-    portfolioStatsQuery.refetch()
+    if (activePortfolio) {
+      assetsStatsQuery.refetch()
+      portfolioStatsQuery.refetch()
+    }
   }, [activePortfolio, portfolioAssets])
 
   if (assetsStatsQuery.isLoading || portfolioStatsQuery.isLoading) {

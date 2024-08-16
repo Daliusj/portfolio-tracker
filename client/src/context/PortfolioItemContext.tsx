@@ -65,11 +65,11 @@ export const PortfolioItemProvider = ({ children }: PortfolioItemProviderProps) 
   )
 
   const [hasLoaded, setHasLoaded] = useState(false)
-  const userPortfolios = usePortfolio()
+  const { activePortfolio } = usePortfolio()
 
-  const portfolioItemQuery =
-    userPortfolios.activePortfolio?.id &&
-    trpc.portfolioItem.get.useQuery({ portfolioId: userPortfolios.activePortfolio?.id })
+  const portfolioItemQuery = trpc.portfolioItem.get.useQuery({
+    portfolioId: activePortfolio?.id || 0,
+  })
 
   const portfolioItemMutation = {
     create: trpc.portfolioItem.create.useMutation(),
@@ -183,11 +183,9 @@ export const PortfolioItemProvider = ({ children }: PortfolioItemProviderProps) 
       setHasLoaded(true)
     }
   }, [portfolioItemQuery, hasLoaded])
-
   if (!hasLoaded) {
     return <div>Loading...</div>
   }
-
   return (
     <PortfolioItemContext.Provider
       value={{

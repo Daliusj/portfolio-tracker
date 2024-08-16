@@ -1,19 +1,25 @@
+import { useState } from 'react'
 import { withError } from './error'
-import { ref, type Ref } from 'vue'
 
 /**
- * A composable function that wraps a function with error handling logic.
+ * A custom hook that wraps a function with error handling logic.
  *
  * @param {T} fn - The original function to wrap with error handling logic.
- * @returns {[T, Ref<string>]} - A tuple containing the wrapped function and
- * a `Ref` object that holds an error message string.
+ * @returns {[T, string, React.Dispatch<React.SetStateAction<string>>]} - A tuple containing the wrapped function,
+ * the error message string, and the setter function for the error message.
  */
 export default function useErrorMessage<
   Args extends unknown[],
   Return,
-  T extends (...args: Args) => Return,
->(fn: T): [T, Ref<string>] {
-  const errorMessage = ref('')
+  T extends (...args: Args) => Promise<Return>,
+>(
+  fn: T
+): [
+  (...args: Args) => Promise<Return | undefined>,
+  string,
+  React.Dispatch<React.SetStateAction<string>>,
+] {
+  const [errorMessage, setErrorMessage] = useState<string>('')
 
-  return [withError(errorMessage, fn), errorMessage]
+  return [withError(setErrorMessage, fn), errorMessage, setErrorMessage]
 }

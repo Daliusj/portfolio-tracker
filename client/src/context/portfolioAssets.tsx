@@ -30,7 +30,7 @@ export const PortfolioAssetsProvider = ({ children }: PortfolioAssetsProviderPro
   )
 
   useEffect(() => {
-    refetch()
+    activePortfolio && refetch()
   }, [activePortfolioItem, userPortfolioItems])
 
   if (isLoading) {

@@ -1,14 +1,14 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
-import Home from './pages/Home'
 import Header from './components/Header/Header'
 import { useThemeMode } from 'flowbite-react'
-import Login from './pages/Login'
-import Signup from './pages/Signup'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { trpc, trpcClient } from './trpc'
 import { AuthProvider } from './context/AuthContext'
 import PrivateRouteGuard from './routes/PrivateRouteGuard'
+import AuthPage from './pages/AuthPage'
+import Home from './pages/Home'
+import CreatePortfolio from './components/CreatePortfolio'
 
 function App() {
   const { mode } = useThemeMode()
@@ -24,9 +24,10 @@ function App() {
               <Routes>
                 <Route element={<PrivateRouteGuard />}>
                   <Route path="/" element={<Home />} />
+                  <Route path="/create-portfolio" element={<CreatePortfolio />} />
                 </Route>
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
+                <Route path="/login" element={<AuthPage mode="login" />} />
+                <Route path="/signup" element={<AuthPage mode="signup" />} />
               </Routes>
             </div>
           </div>

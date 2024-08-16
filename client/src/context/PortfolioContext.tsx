@@ -3,12 +3,13 @@ import { BaseCurrency, PortfolioPublic } from '@server/shared/types'
 import { trpc } from '@/trpc'
 
 type PortfolioContext = {
-  userPortfolios: PortfolioPublic[] | undefined
+  userPortfolios: PortfolioPublic[] | []
   activePortfolio: PortfolioPublic | undefined
   setActivePortfolio: React.Dispatch<React.SetStateAction<PortfolioPublic | undefined>>
   update: ({ id, name, currencySymbol }: PortfolioUpdate) => void
   create: ({ name, currencySymbol }: PortfolioCreate) => void
   remove: (id: PortfolioRemove) => void
+  hasLoaded: boolean
 }
 
 type PortfolioPublicWithCurrency = Omit<PortfolioPublic, 'currencySymbol'> & {
@@ -23,19 +24,20 @@ type PortfolioProviderProps = {
 }
 
 const defaultPortfolioContext: PortfolioContext = {
-  userPortfolios: undefined,
+  userPortfolios: [],
   activePortfolio: undefined,
   setActivePortfolio: () => {},
   update: () => {},
   create: () => {},
   remove: () => {},
+  hasLoaded: false,
 }
 
 const PortfolioContext = createContext<PortfolioContext>(defaultPortfolioContext)
 
 export const PortfolioProvider = ({ children }: PortfolioProviderProps) => {
   const [activePortfolio, setActivePortfolio] = useState<PortfolioPublic | undefined>(undefined)
-  const [userPortfolios, setUserPortfolios] = useState<PortfolioPublic[] | undefined>(undefined)
+  const [userPortfolios, setUserPortfolios] = useState<PortfolioPublic[] | []>([])
   const [hasLoaded, setHasLoaded] = useState(false)
 
   const portfoliosQuery = trpc.portfolio.get.useQuery()
@@ -80,11 +82,11 @@ export const PortfolioProvider = ({ children }: PortfolioProviderProps) => {
       },
       {
         onSuccess: (newPortfolio) => {
+          portfoliosQuery.refetch()
           setUserPortfolios((prevPortfolios) =>
             prevPortfolios ? [...prevPortfolios, newPortfolio] : [newPortfolio]
           )
           setActivePortfolio(newPortfolio)
-          portfoliosQuery.refetch()
         },
         onError: (error) => {
           console.error('Profile create failed', error)
@@ -112,12 +114,15 @@ export const PortfolioProvider = ({ children }: PortfolioProviderProps) => {
   }
 
   useEffect(() => {
-    if (portfoliosQuery.isSuccess && !hasLoaded) {
-      setUserPortfolios(portfoliosQuery.data.sort((a, b) => a.id - b.id))
-      setActivePortfolio(portfoliosQuery.data[0])
+    if (portfoliosQuery.isSuccess) {
+      const sortedPortfolios = portfoliosQuery.data.sort((a, b) => a.id - b.id)
+      setUserPortfolios(sortedPortfolios)
+      setActivePortfolio(sortedPortfolios[0])
       setHasLoaded(true)
     }
   }, [portfoliosQuery.data, portfoliosQuery.isSuccess, hasLoaded])
+
+  useEffect(() => {}, [userPortfolios, activePortfolio])
 
   if (!hasLoaded) {
     return <div>Loading...</div>
@@ -125,7 +130,15 @@ export const PortfolioProvider = ({ children }: PortfolioProviderProps) => {
 
   return (
     <PortfolioContext.Provider
-      value={{ userPortfolios, activePortfolio, setActivePortfolio, update, create, remove }}
+      value={{
+        userPortfolios,
+        activePortfolio,
+        setActivePortfolio,
+        update,
+        create,
+        remove,
+        hasLoaded,
+      }}
     >
       {children}
     </PortfolioContext.Provider>
