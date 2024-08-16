@@ -61,31 +61,29 @@ describe('delete', () => {
     expect(portfoliosOnDb).toEqual([])
   })
 
-  it.todo(
-    'should delete portfolio and referenced portfolio items',
-    async () => {
-      const [user] = await insertAll(db, 'user', fakeUser({}))
-      const [portfolio] = await insertAll(
-        db,
-        'portfolio',
-        fakePortfolio({ userId: user.id })
-      )
-      await insertAll(
-        db,
-        'portfolioItem',
-        fakePortfolioItem({ portfolioId: portfolio.id })
-      )
-      const deletedPortfolio = await repository.remove(portfolio.id, user.id)
+  it('should delete portfolio and constrained portfolio items', async () => {
+    const [user] = await insertAll(db, 'user', fakeUser({}))
+    const [portfolio] = await insertAll(
+      db,
+      'portfolio',
+      fakePortfolio({ userId: user.id })
+    )
+    const [asset] = await insertAll(db, 'asset', fakeAsset({}))
+    await insertAll(
+      db,
+      'portfolioItem',
+      fakePortfolioItem({ portfolioId: portfolio.id, assetId: asset.id })
+    )
+    const deletedPortfolio = await repository.remove(portfolio.id, user.id)
 
-      expect(deletedPortfolio).toEqual(portfolio)
+    expect(deletedPortfolio).toEqual(portfolio)
 
-      const portfoliosOnDb = await selectAll(db, 'portfolio')
-      expect(portfoliosOnDb).toEqual([])
+    const portfoliosOnDb = await selectAll(db, 'portfolio')
+    expect(portfoliosOnDb).toEqual([])
 
-      const portfolioItemsOnDb = await selectAll(db, 'portfolioItem')
-      expect(portfolioItemsOnDb).toEqual([])
-    }
-  )
+    const portfolioItemsOnDb = await selectAll(db, 'portfolioItem')
+    expect(portfolioItemsOnDb).toEqual([])
+  })
 })
 
 describe('findByUserId', () => {
