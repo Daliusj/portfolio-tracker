@@ -22,7 +22,7 @@ export const PortfolioAssetsProvider = ({ children }: PortfolioAssetsProviderPro
   const { activePortfolio } = usePortfolio()
   const { activePortfolioItem, userPortfolioItems } = usePortfolioItem()
 
-  const { data, isLoading, error, refetch } = trpc.portfolio.getFull.useQuery(
+  const { data, isLoading, refetch } = trpc.portfolio.getFull.useQuery(
     { id: activePortfolio?.id || 0, group: true },
     {
       enabled: !!activePortfolio,

@@ -12,10 +12,6 @@
   @apply mb-6 h-full w-1/5;
 }
 
-.header {
-  @apply mb-10;
-}
-
 .custom-button-group button {
   border-radius: 0 !important;
 }

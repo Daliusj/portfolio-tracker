@@ -8,6 +8,7 @@ import {
   storeAccessToken,
 } from '../utils/auth'
 import { useNavigate } from 'react-router-dom'
+import { useMessage } from './MessageContext'
 
 type AuthContextType = {
   authUserId: number | null
@@ -39,6 +40,7 @@ const AuthContext = createContext<AuthContextType>(defaultAuthContext)
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [authToken, setAuthToken] = useState(getStoredAccessToken(localStorage))
+  const { setMessage } = useMessage()
 
   useEffect(() => {
     if (authToken) {
@@ -58,9 +60,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         const { accessToken } = data
         setAuthToken(accessToken)
         navigate('/')
-      },
-      onError: (error) => {
-        console.error('Login failed', error)
+        setMessage('success', 'You have logged in successfully')
       },
     })
   }
@@ -74,10 +74,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const signup = async (userSignup: { email: string; userName: string; password: string }) => {
     signupMutation.mutate(userSignup, {
       onSuccess: () => {
+        setMessage('success', 'You have successfully signed up! You can now log in.')
         navigate('/login')
-      },
-      onError: (error) => {
-        console.error('Signup failed', error)
       },
     })
   }

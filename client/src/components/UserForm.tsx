@@ -19,18 +19,12 @@ export function UserForm({ type }: UserFormProps) {
 
   const submitLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    try {
-      await login({ email, password })
-    } catch {}
+    await login({ email, password })
   }
 
   const submitSignup = async (e: React.FormEvent) => {
     e.preventDefault()
-    try {
-      await signup({ email, userName, password })
-    } catch (err) {
-      console.log(err)
-    }
+    await signup({ email, userName, password })
   }
   return (
     <form className="flex max-w-md flex-col gap-4">

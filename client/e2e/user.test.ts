@@ -13,7 +13,7 @@ const user = fakeUser()
 // login tests one after the other because we want to make sure
 // that the signup + login flow works.
 test.describe.serial('signup and login sequence', () => {
-  const URL_LOGGED_IN = '/dashboard/write-article'
+  const URL_LOGGED_IN = '/'
 
   test('visitor can signup', async ({ page }) => {
     // Given (ARRANGE)

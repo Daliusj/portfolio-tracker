@@ -9,7 +9,7 @@ export default function () {
   const { isLoggedIn, logout } = useAuth()
 
   return (
-    <div className="header flex h-10 justify-between">
+    <div className="header mb-0 flex h-10 justify-between">
       <img src={logoPng} />
       <div className="flex justify-between">
         <Button>
