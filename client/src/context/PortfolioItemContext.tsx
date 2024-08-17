@@ -172,7 +172,7 @@ export const PortfolioItemProvider = ({ children }: PortfolioItemProviderProps) 
   }
 
   useEffect(() => {
-    if (portfolioItemQuery && portfolioItemQuery.isSuccess && !hasLoaded) {
+    if (activePortfolio && portfolioItemQuery && portfolioItemQuery.isSuccess && !hasLoaded) {
       const adjustedItems: PortfolioItemAdjusted[] = portfolioItemQuery.data.map((item) => ({
         ...item,
         purchasePrice: Number(item.purchasePrice),
@@ -183,6 +183,7 @@ export const PortfolioItemProvider = ({ children }: PortfolioItemProviderProps) 
       setHasLoaded(true)
     }
   }, [portfolioItemQuery, hasLoaded])
+
   if (!hasLoaded) {
     return <div>Loading...</div>
   }

@@ -41,9 +41,7 @@ export default (db: Database, fmpApi: Fmp) => {
           const value = await calculateValue(portfolio, portfolioAssets)
           return value
         }
-        throw new Error(
-          `No assets found for portfolioId ${portfolioId} or currency symbol is missing.`
-        )
+        return '0'
       } catch (err) {
         throw new Error(
           `Error calculating portfolio value: ${
@@ -65,9 +63,7 @@ export default (db: Database, fmpApi: Fmp) => {
           const value = await calculateValue(portfolio, portfolioAssets)
           return value
         }
-        throw new Error(
-          `No assets found for portfolioId ${portfolioId} or currency symbol is missing.`
-        )
+        return '0'
       } catch (err) {
         throw new Error(
           `Error calculating portfolio value: ${
@@ -88,9 +84,7 @@ export default (db: Database, fmpApi: Fmp) => {
           const value = await calculateValue(portfolio, portfolioAsset)
           return value
         }
-        throw new Error(
-          `No assets found for portfolioId ${portfolioId} or currency symbol is missing.`
-        )
+        return '0'
       } catch (err) {
         throw new Error(
           `Error calculating portfolio value: ${

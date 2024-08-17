@@ -3,6 +3,7 @@ import { AssetStatsPublic, PortfolioStatsPublic } from '@server/shared/types'
 import { trpc } from '@/trpc'
 import { usePortfolio } from './PortfolioContext'
 import { usePortfolioAssets } from './portfolioAssets'
+import { usePortfolioItem } from './PortfolioItemContext'
 
 type PortfolioStatsContext = {
   assetsStats: AssetStatsPublic[] | undefined
@@ -23,18 +24,19 @@ const PortfolioStatsContext = createContext<PortfolioStatsContext>(defaultPortfo
 export const PortfolioStatsProvider = ({ children }: PortfolioStatsProviderProps) => {
   const { activePortfolio } = usePortfolio()
   const { data: portfolioAssets } = usePortfolioAssets()
+  const { userPortfolioItems } = usePortfolioItem()
 
   const assetsStatsQuery = trpc.portfolioStats.getAssetsStats.useQuery(
     { id: activePortfolio?.id || 0 },
     {
-      enabled: !!activePortfolio,
+      enabled: !!activePortfolio && !!portfolioAssets,
     }
   )
 
   const portfolioStatsQuery = trpc.portfolioStats.getPortfolioStats.useQuery(
     { id: activePortfolio?.id || 0 },
     {
-      enabled: !!activePortfolio,
+      enabled: !!activePortfolio && !!portfolioAssets,
     }
   )
 
@@ -43,7 +45,7 @@ export const PortfolioStatsProvider = ({ children }: PortfolioStatsProviderProps
       assetsStatsQuery.refetch()
       portfolioStatsQuery.refetch()
     }
-  }, [activePortfolio, portfolioAssets])
+  }, [activePortfolio, portfolioAssets, userPortfolioItems])
 
   if (assetsStatsQuery.isLoading || portfolioStatsQuery.isLoading) {
     return <div>Loading...</div>

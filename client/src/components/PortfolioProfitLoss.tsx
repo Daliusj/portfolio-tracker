@@ -1,6 +1,6 @@
 import { usePortfolio } from '@/context/PortfolioContext'
 import { trpc } from '@/trpc'
-import React, { useState } from 'react'
+import React from 'react'
 import getSymbolFromCurrency from 'currency-symbol-map'
 import ProfitLoss from './ProfitLoss'
 import { useStats } from '@/context/StatsContex'
@@ -11,6 +11,7 @@ export default function () {
   const portfolioTotalValue =
     activePortfolio &&
     trpc.portfolioValue.getTotalValue.useQuery({ portfolioId: activePortfolio?.id })
+
   return (
     <div className="mb-12 ml-80 w-full flex-col">
       <div>Portfolio Balance</div>
