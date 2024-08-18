@@ -237,6 +237,7 @@ export default function PortfolioForm({
                 <TextInput
                   value={quantity !== undefined && !isNaN(quantity) ? quantity : ''}
                   type="number"
+                  min={0}
                   onChange={(event) => setQuantity(event.target.valueAsNumber)}
                   placeholder="Enter quantity"
                   required
@@ -249,6 +250,7 @@ export default function PortfolioForm({
                   value={price !== undefined && !isNaN(price) ? price : ''}
                   type="number"
                   placeholder="Enter price"
+                  min={0}
                   onChange={(event) => setPrice(event.target.valueAsNumber)}
                   required
                 />

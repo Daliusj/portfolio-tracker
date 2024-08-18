@@ -7,66 +7,23 @@ import { apiBase } from '@/config'
 import { getStoredAccessToken } from '@/utils/auth'
 import { httpBatchLink, TRPCClientError } from '@trpc/client'
 import SuperJSON from 'superjson'
+import { TRPCError } from '@trpc/server'
 
-interface IError {
-  code: string
-  message: string
-  issues?: IValidationError[]
-}
-interface IValidationError {
-  validation?: string
-  code: string
-  message: string
-  path?: string[]
-}
+type validationError = { message: string }
 
 const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const { setMessage } = useMessage()
 
-  const handleTRPCError = (error: TRPCClientError<any>) => {
-    if (error.data?.zodError && typeof error.data.zodError === 'string') {
-      try {
-        const zodError = JSON.parse(error.data.zodError)
-        if (zodError && zodError.errors) {
-          const errorMessages = zodError.errors
-            .map((issue: any) => {
-              switch (issue.path?.[0]) {
-                case 'email':
-                  return 'Invalid email address provided.'
-                case 'password':
-                  return 'Password must be at least 8 characters long.'
-                default:
-                  return issue.message || 'An unknown validation error occurred.'
-              }
-            })
-            .join(' ')
-
-          setMessage('error', errorMessages)
-          return
-        }
-      } catch (e) {
-        setMessage('error', error.data.zodError)
-        return
-      }
+  const handleError = (error: unknown) => {
+    if (error instanceof Error) {
+      setMessage('error', [error.message])
     }
 
-    if (error.data?.issues && error.data.issues.length > 0) {
-      const errorMessages = error.data.issues
-        .map((issue) => {
-          switch (issue.path?.[0]) {
-            case 'email':
-              return 'Invalid email address provided.'
-            case 'password':
-              return 'Password must be at least 8 characters long.'
-            default:
-              return issue.message || 'An unknown error occurred.'
-          }
-        })
-        .join(' ')
-
-      setMessage('error', errorMessages)
-    } else {
-      setMessage('error', error.message || DEFAULT_SERVER_ERROR)
+    if (!(error instanceof TRPCError)) {
+      const trpcError = error as TRPCClientError<any>
+      const validationError = JSON.parse(trpcError.message)
+      const validationErrorMessages = validationError.map((error: validationError) => error.message)
+      setMessage('error', validationErrorMessages)
     }
   }
 
@@ -76,12 +33,12 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
         defaultOptions: {
           mutations: {
             onError: (error) => {
-              handleTRPCError(error as TRPCClientError<any>)
+              handleError(error)
             },
           },
           queries: {
             onError: (error) => {
-              handleTRPCError(error as TRPCClientError<any>)
+              handleError(error)
             },
           },
         },

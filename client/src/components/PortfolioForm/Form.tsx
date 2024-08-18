@@ -17,15 +17,17 @@ export default function ({ setOpenModal, mode, first }: PortfolioFormProps) {
   const [currencySymbol, setCurrencySymbol] = useState<BaseCurrency>('USD')
 
   const handleSubmit = () => {
-    mode === 'edit' && userPortfolio.activePortfolio
-      ? userPortfolio.update({
-          id: userPortfolio.activePortfolio?.id,
-          name: portfolioName,
-          currencySymbol,
-        })
-      : userPortfolio.create({ name: portfolioName, currencySymbol })
+    if (portfolioName) {
+      mode === 'edit' && userPortfolio.activePortfolio
+        ? userPortfolio.update({
+            id: userPortfolio.activePortfolio?.id,
+            name: portfolioName,
+            currencySymbol,
+          })
+        : userPortfolio.create({ name: portfolioName, currencySymbol })
 
-    setOpenModal && setOpenModal(false)
+      setOpenModal && setOpenModal(false)
+    }
   }
 
   useEffect(() => {
@@ -69,6 +71,9 @@ export default function ({ setOpenModal, mode, first }: PortfolioFormProps) {
             onChange={(event) => setPortfolioName(event.target.value)}
             required
           />
+          <p className="mt-2 h-8 text-sm text-red-600">
+            {!portfolioName && 'Enter Portfolio Name'}
+          </p>
         </div>
 
         <fieldset className="flex max-w-md flex-col gap-4 text-gray-900 dark:text-white">

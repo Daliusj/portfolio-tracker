@@ -1,5 +1,5 @@
 import { useAuth } from '@/context/AuthContext'
-import { Label, TextInput, Checkbox, Button } from 'flowbite-react'
+import { Label, TextInput, Button } from 'flowbite-react'
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -19,15 +19,16 @@ export function UserForm({ type }: UserFormProps) {
 
   const submitLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    await login({ email, password })
+    if (email && password) await login({ email, password })
   }
 
   const submitSignup = async (e: React.FormEvent) => {
     e.preventDefault()
-    await signup({ email, userName, password })
+    if (email && password && password === repeatPassword && userName)
+      await signup({ email, userName, password })
   }
   return (
-    <form className="flex max-w-md flex-col gap-4">
+    <form className="flex max-w-md flex-col">
       <div>
         <div className="mb-2 block">
           <Label htmlFor="email2" value="Your email" />
@@ -40,6 +41,7 @@ export function UserForm({ type }: UserFormProps) {
           shadow
           onChange={(e) => setEmail(e.target.value)}
         />
+        <p className="mt-2 h-8 text-sm text-red-600">{!email && 'Enter your Email'}</p>
       </div>
       <div>
         <div className="mb-2 block">
@@ -52,6 +54,7 @@ export function UserForm({ type }: UserFormProps) {
           shadow
           onChange={(e) => setPassword(e.target.value)}
         />
+        <p className="mt-2 h-8 text-sm text-red-600">{!password && 'Enter your Password'}</p>
       </div>
       {type === 'signup' && (
         <div>
@@ -66,6 +69,10 @@ export function UserForm({ type }: UserFormProps) {
               shadow
               onChange={(e) => setRepeatPassword(e.target.value)}
             />
+            <p className="mt-2 h-8 text-sm text-red-600">
+              {!repeatPassword && 'Repeat your Password'}
+              {repeatPassword && repeatPassword !== password && 'Your password does not match'}
+            </p>
 
             <div className="mb-2 block">
               <Label htmlFor="user-name" value="User name" />
@@ -77,21 +84,26 @@ export function UserForm({ type }: UserFormProps) {
               shadow
               onChange={(e) => setUserName(e.target.value)}
             />
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox id="agree" />
-            <Label htmlFor="agree" className="flex">
-              I agree with the&nbsp;
-              <Link className="text-cyan-600 hover:underline dark:text-cyan-500" to={''}>
-                terms and conditions
-              </Link>
-            </Label>
+            <p className="mt-2 h-8 text-sm text-red-600">{!userName && 'Enter your User Name'}</p>
           </div>
         </div>
       )}
-      <Button onClick={type === 'login' ? submitLogin : submitSignup} type="submit">
+      <Button
+        className="my-6 bg-orange-600"
+        onClick={type === 'login' ? submitLogin : submitSignup}
+        type="submit"
+      >
         {type === 'login' ? SUBMIT_BUTTON_LABEL.login : SUBMIT_BUTTON_LABEL.signup}
       </Button>
+      <div className="flex justify-between text-sm font-medium text-gray-500 dark:text-gray-300">
+        {type === 'login' ? 'Not registered?' : 'Have an account?'}
+        <Link
+          className="text-cyan-700 hover:underline dark:text-cyan-500"
+          to={type === 'login' ? '/signup' : '/login'}
+        >
+          {type === 'login' ? 'Create account' : 'Login'}
+        </Link>
+      </div>
     </form>
   )
 }

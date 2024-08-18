@@ -3,12 +3,12 @@ import React, { createContext, useState, useEffect, useContext, ReactNode } from
 type MessageType = 'success' | 'warning' | 'error' | ''
 interface Message {
   type: MessageType
-  text: string
+  text: string[]
 }
 
 type MessageContextType = {
   message: Message
-  setMessage: (type: MessageType, text: string) => void
+  setMessage: (type: MessageType, text: string[]) => void
   clearMessage: () => void
 }
 
@@ -17,7 +17,7 @@ type MessageProviderProps = {
 }
 
 const defaultMessageContext: MessageContextType = {
-  message: { type: '', text: '' },
+  message: { type: '', text: [''] },
   setMessage: () => {
     throw new Error('setMessage function not initialized')
   },
@@ -29,10 +29,10 @@ const defaultMessageContext: MessageContextType = {
 const MessageContext = createContext<MessageContextType>(defaultMessageContext)
 
 export const MessageProvider = ({ children }: MessageProviderProps) => {
-  const [message, setMessageState] = useState<Message>({ type: '', text: '' })
+  const [message, setMessageState] = useState<Message>({ type: '', text: [''] })
   let timerRef: number | null = null
 
-  const setMessage = (type: MessageType, text: string) => {
+  const setMessage = (type: MessageType, text: string[]) => {
     let timeout = 0
 
     switch (type) {
@@ -61,7 +61,7 @@ export const MessageProvider = ({ children }: MessageProviderProps) => {
   }
 
   const clearMessage = () => {
-    setMessageState({ type: '', text: '' })
+    setMessageState({ type: '', text: [''] })
     if (timerRef) {
       clearTimeout(timerRef)
       timerRef = null

@@ -6,12 +6,10 @@ import SuperJSON from 'superjson'
 import { ZodError } from 'zod'
 import { fromZodError } from 'zod-validation-error'
 import type { Repositories } from '@server/repositories'
-import type { Services } from '@server/services'
-import type { Fmp } from '@server/utils/externalApi/fmpApi'
 
 export type Context = {
   db: Database
-  fmp: Fmp
+
   // Express types. These are optional as
   // vast majority of requests do not need them.
   // Then it is a bit easier to test procedures.
@@ -23,7 +21,6 @@ export type Context = {
 
   // For providing repos in a slightly easier to test way
   repos?: Partial<Repositories>
-  services?: Partial<Services>
 }
 
 export type ContextMinimal = Pick<Context, 'db'>

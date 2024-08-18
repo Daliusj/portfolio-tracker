@@ -28,7 +28,7 @@ export default publicProcedure
     if (!user) {
       throw new TRPCError({
         code: 'UNAUTHORIZED',
-        message: 'We could not find an account with this email address',
+        message: 'Email address or password incorrect',
       })
     }
 
@@ -37,11 +37,10 @@ export default publicProcedure
     if (!passwordMatch) {
       throw new TRPCError({
         code: 'UNAUTHORIZED',
-        message: 'Incorrect password. Please try again.',
+        message: 'Email address or password incorrect',
       })
     }
 
-    // What we will include in the token.
     const payload = prepareTokenPayload(user)
 
     const accessToken = jsonwebtoken.sign(payload, tokenKey, {

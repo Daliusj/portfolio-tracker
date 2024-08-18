@@ -23,7 +23,7 @@ function App() {
             <div className="mb-10 flex w-full justify-center">
               <MessageBar />
             </div>
-            <div className="h-5/6">
+            <div className="h-fit">
               <Routes>
                 <Route element={<PrivateRouteGuard />}>
                   <Route path="/" element={<Home />} />

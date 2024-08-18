@@ -1,6 +1,7 @@
 import React, { ReactNode, createContext, useContext, useEffect, useState } from 'react'
 import { BaseCurrency, PortfolioPublic } from '@server/shared/types'
 import { trpc } from '@/trpc'
+import { useMessage } from './MessageContext'
 
 type PortfolioContext = {
   userPortfolios: PortfolioPublic[] | []
@@ -39,6 +40,7 @@ export const PortfolioProvider = ({ children }: PortfolioProviderProps) => {
   const [activePortfolio, setActivePortfolio] = useState<PortfolioPublic | undefined>(undefined)
   const [userPortfolios, setUserPortfolios] = useState<PortfolioPublic[] | []>([])
   const [hasLoaded, setHasLoaded] = useState(false)
+  const { setMessage } = useMessage()
 
   const portfoliosQuery = trpc.portfolio.get.useQuery()
 
@@ -66,9 +68,7 @@ export const PortfolioProvider = ({ children }: PortfolioProviderProps) => {
             setActivePortfolio((prev) => (prev ? { ...prev, name, currencySymbol } : prev))
           }
           portfoliosQuery.refetch()
-        },
-        onError: (error) => {
-          console.error('Profile update', error)
+          setMessage('success', ['Portfolio updated successfully'])
         },
       }
     )
@@ -87,9 +87,7 @@ export const PortfolioProvider = ({ children }: PortfolioProviderProps) => {
             prevPortfolios ? [...prevPortfolios, newPortfolio] : [newPortfolio]
           )
           setActivePortfolio(newPortfolio)
-        },
-        onError: (error) => {
-          console.error('Profile create failed', error)
+          setMessage('success', ['Portfolio created successfully'])
         },
       }
     )
@@ -106,9 +104,7 @@ export const PortfolioProvider = ({ children }: PortfolioProviderProps) => {
           setActivePortfolio(userPortfolios?.[0])
         }
         portfoliosQuery.refetch()
-      },
-      onError: (error) => {
-        console.error('Profile remove failed', error)
+        setMessage('success', ['Portfolio removed successfully'])
       },
     })
   }

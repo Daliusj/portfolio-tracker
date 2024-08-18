@@ -60,13 +60,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         const { accessToken } = data
         setAuthToken(accessToken)
         navigate('/')
-        setMessage('success', 'You have logged in successfully')
+        setMessage('success', ['You have logged in successfully'])
       },
     })
   }
 
   const logout = () => {
     setAuthToken(null)
+    setMessage('success', ['You have logged out.'])
   }
 
   const signupMutation = trpc.user.signup.useMutation()
@@ -74,7 +75,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const signup = async (userSignup: { email: string; userName: string; password: string }) => {
     signupMutation.mutate(userSignup, {
       onSuccess: () => {
-        setMessage('success', 'You have successfully signed up! You can now log in.')
+        setMessage('success', ['You have successfully signed up! You can now log in.'])
         navigate('/login')
       },
     })

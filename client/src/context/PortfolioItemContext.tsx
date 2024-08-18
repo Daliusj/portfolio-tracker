@@ -3,6 +3,7 @@ import { PortfolioItemPublic } from '@server/shared/types'
 import { trpc } from '@/trpc'
 import { usePortfolio } from './PortfolioContext'
 import { localDateToIsoString } from '@/utils/time'
+import { useMessage } from './MessageContext'
 
 type PortfolioItemContext = {
   activePortfolioItem: PortfolioItemAdjusted | undefined
@@ -63,9 +64,9 @@ export const PortfolioItemProvider = ({ children }: PortfolioItemProviderProps) 
   const [userPortfolioItems, setUserPortfolioItems] = useState<PortfolioItemAdjusted[] | undefined>(
     undefined
   )
-
   const [hasLoaded, setHasLoaded] = useState(false)
   const { activePortfolio } = usePortfolio()
+  const { setMessage } = useMessage()
 
   const portfolioItemQuery = trpc.portfolioItem.get.useQuery({
     portfolioId: activePortfolio?.id || 0,
@@ -109,9 +110,7 @@ export const PortfolioItemProvider = ({ children }: PortfolioItemProviderProps) 
             )
           }
           portfolioItemQuery && portfolioItemQuery.refetch()
-        },
-        onError: (error) => {
-          console.error('Portfolio item update', error)
+          setMessage('success', ['Asset updated successfully'])
         },
       }
     )
@@ -145,9 +144,7 @@ export const PortfolioItemProvider = ({ children }: PortfolioItemProviderProps) 
           )
           setActivePortfolioItem(adjustedItem)
           portfolioItemQuery && portfolioItemQuery.refetch()
-        },
-        onError: (error) => {
-          console.error('Portfolio item create failed', error)
+          setMessage('success', ['Asset created successfully'])
         },
       }
     )
@@ -164,9 +161,7 @@ export const PortfolioItemProvider = ({ children }: PortfolioItemProviderProps) 
           setActivePortfolioItem(userPortfolioItems?.[0])
         }
         portfolioItemQuery && portfolioItemQuery.refetch()
-      },
-      onError: (error) => {
-        console.error('Portfolio item remove failed', error)
+        setMessage('success', ['Asset removed successfully'])
       },
     })
   }
