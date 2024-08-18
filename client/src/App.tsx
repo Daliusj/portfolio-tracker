@@ -20,10 +20,10 @@ function App() {
         <AuthProvider>
           <div className={`${mode === 'dark' ? 'dark' : ''} app `}>
             <Header></Header>
-            <div className="mb-10 flex w-full justify-center">
+            <div className="mb-10 flex  min-h-14 w-full justify-center">
               <MessageBar />
             </div>
-            <div className="h-fit">
+            <div className="h-max">
               <Routes>
                 <Route element={<PrivateRouteGuard />}>
                   <Route path="/" element={<Home />} />
