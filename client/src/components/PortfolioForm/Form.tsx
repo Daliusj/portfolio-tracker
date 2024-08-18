@@ -11,7 +11,7 @@ type PortfolioFormProps = {
   first?: boolean
 }
 
-export default function ({ setOpenModal, mode, first }: PortfolioFormProps) {
+export default function Form({ setOpenModal, mode, first }: PortfolioFormProps) {
   const userPortfolio = usePortfolio()
   const [portfolioName, setPortfolioName] = useState('')
   const [currencySymbol, setCurrencySymbol] = useState<BaseCurrency>('USD')
@@ -49,7 +49,7 @@ export default function ({ setOpenModal, mode, first }: PortfolioFormProps) {
     if (mode === 'new' && !first)
       return (
         <p>
-          You don't have a portfolio! <br />
+          You do not have a portfolio! <br />
           Create one to start
         </p>
       )

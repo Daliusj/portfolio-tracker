@@ -13,7 +13,7 @@ type AssetSearchProps = {
   setSelectedAsset: React.Dispatch<React.SetStateAction<AssetPublic | undefined>>
 }
 
-export default function ({
+export default function AssetSelector({
   searchQuery,
   setSearchQuery,
   selectedAsset,

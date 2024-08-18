@@ -11,7 +11,7 @@ type PortfolioFormProps = {
   first?: boolean
 }
 
-export default function ({
+export default function PortfolioForm({
   openModal,
   setOpenModal,
   mode,

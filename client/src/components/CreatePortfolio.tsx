@@ -2,7 +2,7 @@ import PortfolioForm from '@/components/PortfolioForm/PortfolioForm'
 import { usePortfolio } from '@/context/PortfolioContext'
 import React from 'react'
 
-export default function () {
+export default function createPortfolio() {
   const { activePortfolio } = usePortfolio()
   return (
     <div className="flex justify-center">

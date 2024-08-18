@@ -188,7 +188,7 @@ describe('getPortfolioStats', () => {
 
     const [user] = await insertAll(db, 'user', fakeUser())
     const [portfolio] = await insertAll(db, 'portfolio', [
-      fakePortfolio({ userId: user.id }),
+      fakePortfolio({ userId: user.id, currencySymbol: 'EUR' }),
     ])
 
     await insertAll(db, 'portfolioItem', [
@@ -212,7 +212,10 @@ describe('getPortfolioStats', () => {
       }),
     ])
 
-    const totalPurchaseValue = 150 + 500 + 1200
+    const totalPurchaseValue =
+      150 / Number(rateOne.exchangeRate) +
+      500 / Number(rateOne.exchangeRate) +
+      1200 / Number(rateTwo.exchangeRate)
 
     const totalPortfolioValue =
       (Number(assetOne.price) * 2) / Number(rateOne.exchangeRate) +
@@ -220,6 +223,7 @@ describe('getPortfolioStats', () => {
       (Number(assetThree.price) * 6) / Number(rateTwo.exchangeRate)
 
     const valueChange = totalPortfolioValue - totalPurchaseValue
+
     const expectedPercentageChange = (
       (valueChange / totalPurchaseValue) *
       100
@@ -227,6 +231,7 @@ describe('getPortfolioStats', () => {
 
     const expectedStats = {
       portfolioId: portfolio.id,
+      totalPortfolioValue: totalPortfolioValue.toFixed(2),
       valueChange: valueChange.toFixed(2),
       percentageChange: expectedPercentageChange,
     }

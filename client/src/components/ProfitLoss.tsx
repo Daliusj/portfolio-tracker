@@ -8,7 +8,7 @@ type ProfitLossProps = {
   flat: boolean
 }
 
-export default function ({ asset, full, flat }: ProfitLossProps) {
+export default function ProfitLoss({ asset, full, flat }: ProfitLossProps) {
   return (
     <div
       className={`flex items-center gap-1 text-sm ${Number(asset.valueChange) < 0 ? 'text-orange-500' : 'text-emerald-600'} `}

@@ -27,6 +27,7 @@ export default function PortfolioForm({
   asset,
 }: PortfolioFormProps) {
   const userPortfolio = usePortfolio()
+
   const [selectedPortfolio, setSelectedPortfolio] = useState<PortfolioPublic | undefined>(
     userPortfolio.activePortfolio
   )
@@ -155,6 +156,10 @@ export default function PortfolioForm({
       setDate(selectedPurchase?.purchaseDate)
     }
   }, [selectedPurchase])
+
+  useEffect(() => {
+    setSelectedPortfolio(userPortfolio.activePortfolio)
+  }, [userPortfolio.activePortfolio])
 
   return (
     <div>

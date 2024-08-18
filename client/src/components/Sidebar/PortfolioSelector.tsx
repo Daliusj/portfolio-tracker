@@ -1,16 +1,15 @@
 import { Dropdown } from 'flowbite-react'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { usePortfolio } from '@/context/PortfolioContext'
 import { HiMenu } from 'react-icons/hi'
 import PortfolioForm from '../PortfolioForm/PortfolioForm'
 import ConfirmationModal from '../ConfirmationModal'
 
-export default function () {
+export default function PortfolioSelector() {
   const userPortfolios = usePortfolio()
   const [openPortfolioModal, setOpenPortfolioModal] = useState(false)
   const [openConfirmationModal, setOpenConfirmationModal] = useState(false)
   const [portfolioFormMode, setPortfolioFormMode] = useState<'new' | 'edit'>('new')
-  const [disableClosePortfolioForm, setDisableClosePortfolioForm] = useState(false)
 
   const handleCreateNewButton = () => {
     setOpenPortfolioModal(true)
@@ -53,7 +52,6 @@ export default function () {
         openModal={openPortfolioModal}
         setOpenModal={setOpenPortfolioModal}
         mode={portfolioFormMode}
-        disableClose={disableClosePortfolioForm}
         modalMode={true}
       />
       <ConfirmationModal

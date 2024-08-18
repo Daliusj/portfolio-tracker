@@ -5,7 +5,7 @@ import { useAuth } from '@/context/AuthContext'
 import logoPng from './logo.png'
 import { HiSearch } from 'react-icons/hi'
 
-export default function () {
+export default function Header() {
   const { isLoggedIn, logout } = useAuth()
 
   return (

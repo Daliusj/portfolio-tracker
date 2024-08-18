@@ -68,9 +68,23 @@ export const PortfolioItemProvider = ({ children }: PortfolioItemProviderProps) 
   const { activePortfolio } = usePortfolio()
   const { setMessage } = useMessage()
 
-  const portfolioItemQuery = trpc.portfolioItem.get.useQuery({
-    portfolioId: activePortfolio?.id || 0,
-  })
+  const portfolioItemQuery = trpc.portfolioItem.get.useQuery(
+    {
+      portfolioId: activePortfolio?.id || 0,
+    },
+    {
+      enabled: !!activePortfolio,
+      onSuccess: (data) => {
+        const adjustedItems: PortfolioItemAdjusted[] = data.map((item) => ({
+          ...item,
+          purchasePrice: Number(item.purchasePrice),
+          quantity: Number(item.quantity),
+        }))
+        setUserPortfolioItems(adjustedItems)
+        setHasLoaded(true)
+      },
+    }
+  )
 
   const portfolioItemMutation = {
     create: trpc.portfolioItem.create.useMutation(),
@@ -96,7 +110,7 @@ export const PortfolioItemProvider = ({ children }: PortfolioItemProviderProps) 
         quantity,
       },
       {
-        onSuccess: (updatedPortfolioItem) => {
+        onSuccess: () => {
           setUserPortfolioItems((prevPortfolioItems) =>
             prevPortfolioItems?.map((portfolioItem) =>
               portfolioItem.id === id
@@ -167,17 +181,10 @@ export const PortfolioItemProvider = ({ children }: PortfolioItemProviderProps) 
   }
 
   useEffect(() => {
-    if (activePortfolio && portfolioItemQuery && portfolioItemQuery.isSuccess && !hasLoaded) {
-      const adjustedItems: PortfolioItemAdjusted[] = portfolioItemQuery.data.map((item) => ({
-        ...item,
-        purchasePrice: Number(item.purchasePrice),
-        quantity: Number(item.quantity),
-      }))
-
-      setUserPortfolioItems(adjustedItems)
-      setHasLoaded(true)
+    if (activePortfolio && !hasLoaded) {
+      portfolioItemQuery.refetch()
     }
-  }, [portfolioItemQuery, hasLoaded])
+  }, [activePortfolio, hasLoaded])
 
   if (!hasLoaded) {
     return <div>Loading...</div>

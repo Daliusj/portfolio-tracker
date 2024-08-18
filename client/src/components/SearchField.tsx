@@ -2,7 +2,7 @@ import React from 'react'
 import { TextInput } from 'flowbite-react'
 import { HiSearch } from 'react-icons/hi'
 
-export default function () {
+export default function SearchField() {
   return (
     <div className="mx-auto flex max-w-md items-center">
       <div className="relative w-full">

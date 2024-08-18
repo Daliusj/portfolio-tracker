@@ -5,7 +5,7 @@ import { PortfolioAssetsProvider } from '@/context/portfolioAssets'
 import { usePortfolio } from '@/context/PortfolioContext'
 import Stats from '@/components/Stats'
 
-export default function () {
+export default function Dashboard() {
   const { activePortfolio } = usePortfolio()
 
   return (

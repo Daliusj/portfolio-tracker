@@ -10,7 +10,7 @@ type AssetsTableProps = {
   selectedAsset: AssetPublic | undefined
 }
 
-export default function ({ assets, setSelectedAsset, selectedAsset }: AssetsTableProps) {
+export default function AssetsTable({ assets, setSelectedAsset, selectedAsset }: AssetsTableProps) {
   const handleClickRow = (asset: AssetPublic | undefined) => {
     setSelectedAsset(asset)
   }

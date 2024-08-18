@@ -75,7 +75,10 @@ it('should get portfolio stats', async () => {
     }),
   ])
 
-  const totalPurchaseValue = 150 + 500 + 1200
+  const totalPurchaseValue =
+    150 / Number(rateOne.exchangeRate) +
+    500 / Number(rateOne.exchangeRate) +
+    1200 / Number(rateTwo.exchangeRate)
 
   const totalPortfolioValue =
     (Number(assetOne.price) * 2) / Number(rateOne.exchangeRate) +
@@ -92,6 +95,7 @@ it('should get portfolio stats', async () => {
 
   const expectedStats = {
     portfolioId: portfolio.id,
+    totalPortfolioValue: totalPortfolioValue.toFixed(2),
     valueChange: valueChange.toFixed(2),
     percentageChange: expectedPercentageChange,
   }

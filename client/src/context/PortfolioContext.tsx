@@ -58,7 +58,7 @@ export const PortfolioProvider = ({ children }: PortfolioProviderProps) => {
         currencySymbol,
       },
       {
-        onSuccess: (updatedPortfolio) => {
+        onSuccess: () => {
           setUserPortfolios((prevPortfolios) =>
             prevPortfolios?.map((portfolio) =>
               portfolio.id === id ? { ...portfolio, name, currencySymbol } : portfolio
@@ -110,15 +110,13 @@ export const PortfolioProvider = ({ children }: PortfolioProviderProps) => {
   }
 
   useEffect(() => {
-    if (portfoliosQuery.isSuccess) {
+    if (portfoliosQuery.isSuccess && !hasLoaded) {
       const sortedPortfolios = portfoliosQuery.data.sort((a, b) => a.id - b.id)
       setUserPortfolios(sortedPortfolios)
       setActivePortfolio(sortedPortfolios[0])
       setHasLoaded(true)
     }
   }, [portfoliosQuery.data, portfoliosQuery.isSuccess, hasLoaded])
-
-  useEffect(() => {}, [userPortfolios, activePortfolio])
 
   if (!hasLoaded) {
     return <div>Loading...</div>

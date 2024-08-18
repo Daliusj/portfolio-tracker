@@ -11,7 +11,7 @@ type TableRowProps = {
   isSelected: boolean
   isDisabled?: boolean
 }
-export default function ({ asset, handleClickRow, isSelected, isDisabled }: TableRowProps) {
+export default function Row({ asset, handleClickRow, isSelected, isDisabled }: TableRowProps) {
   const [price, setPrice] = useState('')
 
   const currencyCode = trpc.exchange.getByShortName.useQuery({ shortName: asset.exchangeShortName })

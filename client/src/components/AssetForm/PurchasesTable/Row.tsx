@@ -15,7 +15,7 @@ type PurchaseTableRowProps = {
   setOpenAssetModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export default function ({
+export default function Row({
   purchase,
   handleClickRow,
   isSelected,

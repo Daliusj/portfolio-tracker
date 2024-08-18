@@ -9,7 +9,7 @@ type CustomPaginationProps = {
   onPageChange: (page: number) => void
 }
 
-export default function ({
+export default function PageSelector({
   currentPage,
   totalPages,
   totalEntries,

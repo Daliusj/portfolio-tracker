@@ -1,4 +1,3 @@
-import { usePortfolioItem } from '@/context/PortfolioItemContext'
 import { FullPortfolioGroupedPublic } from '@server/shared/types'
 import React from 'react'
 import { Sidebar as SidebarFlowbite } from 'flowbite-react'
@@ -12,8 +11,7 @@ type TreeGroupProps = {
   type: string
 }
 
-export default function ({ data, type }: TreeGroupProps) {
-  const { setActivePortfolioItem } = usePortfolioItem()
+export default function TreeGroup({ data, type }: TreeGroupProps) {
   const { assetsStats } = useStats()
 
   const filterAssetType = (assets: FullPortfolioGroupedPublic[], type: string) =>

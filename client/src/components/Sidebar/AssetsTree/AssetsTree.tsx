@@ -1,19 +1,11 @@
 import React from 'react'
 import { Sidebar as SidebarFlowbite } from 'flowbite-react'
 import { usePortfolioAssets } from '@/context/portfolioAssets'
-import { usePortfolioItem } from '@/context/PortfolioItemContext'
-import { FullPortfolioGroupedPublic, FullPortfolioPublic } from '@server/shared/types'
+import { FullPortfolioGroupedPublic } from '@server/shared/types'
 import TreeGroup from './TreeGroup'
 
-export default function () {
+export default function AssetsTree() {
   const { data } = usePortfolioAssets()
-
-  const { setActivePortfolioItem } = usePortfolioItem()
-
-  const filterAssetType = (
-    assets: FullPortfolioPublic[] | FullPortfolioGroupedPublic[],
-    type: string
-  ) => assets.filter((asset) => asset.assetType === type)
 
   return (
     <div className="sidebar flex-col ">

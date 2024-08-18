@@ -4,7 +4,7 @@ import TableRow from './Row'
 import TableHead from './Head'
 import { useStats } from '@/context/StatsContex'
 
-export default function () {
+export default function TableBox() {
   const { assetsStats } = useStats()
 
   return (

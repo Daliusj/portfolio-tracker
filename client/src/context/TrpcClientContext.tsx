@@ -20,10 +20,17 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     if (!(error instanceof TRPCError)) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const trpcError = error as TRPCClientError<any>
-      const validationError = JSON.parse(trpcError.message)
-      const validationErrorMessages = validationError.map((error: validationError) => error.message)
-      setMessage('error', validationErrorMessages)
+      try {
+        const validationError = JSON.parse(trpcError.message)
+        const validationErrorMessages = validationError.map(
+          (error: validationError) => error.message
+        )
+        setMessage('error', validationErrorMessages)
+      } catch {
+        setMessage('error', [DEFAULT_SERVER_ERROR])
+      }
     }
   }
 

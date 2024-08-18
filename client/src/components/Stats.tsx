@@ -4,7 +4,7 @@ import PortfolioProfitLoss from '@/components/PortfolioProfitLoss'
 import { PortfolioStatsProvider } from '@/context/StatsContex'
 import { usePortfolioItem } from '@/context/PortfolioItemContext'
 
-export default function () {
+export default function Stats() {
   const { userPortfolioItems } = usePortfolioItem()
 
   return (

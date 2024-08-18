@@ -1,7 +1,7 @@
 import { Table } from 'flowbite-react'
 import React from 'react'
 
-export default function () {
+export default function Head() {
   return (
     <Table.Head>
       <Table.HeadCell>Name</Table.HeadCell>

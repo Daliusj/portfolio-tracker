@@ -12,7 +12,7 @@ type PurchaseHistoryTableProps = {
   setOpenAssetModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export default function ({
+export default function PurchaseTable({
   purchases,
   setSelectedPurchase,
   selectedPurchase,

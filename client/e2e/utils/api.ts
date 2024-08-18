@@ -47,6 +47,7 @@ export async function loginNewUser(userLogin: UserLogin = fakeUser()): Promise<U
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint, @typescript-eslint/no-explicit-any
 export async function asUser<T extends any>(
   page: Page,
   userLogin: UserLogin,

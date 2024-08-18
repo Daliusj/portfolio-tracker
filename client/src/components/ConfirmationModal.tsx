@@ -9,7 +9,12 @@ type ConfirmationModalProps = {
   onConfirm: () => void
 }
 
-export default function ({ name, openModal, setOpenModal, onConfirm }: ConfirmationModalProps) {
+export default function ConfirmationModal({
+  name,
+  openModal,
+  setOpenModal,
+  onConfirm,
+}: ConfirmationModalProps) {
   const handleYesButton = () => {
     onConfirm()
     setOpenModal(false)

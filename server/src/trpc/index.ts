@@ -6,20 +6,16 @@ import SuperJSON from 'superjson'
 import { ZodError } from 'zod'
 import { fromZodError } from 'zod-validation-error'
 import type { Repositories } from '@server/repositories'
+import type { Services } from '@server/services'
+import type { Fmp } from '@server/utils/externalApi/fmpApi'
 
 export type Context = {
   db: Database
-
-  // Express types. These are optional as
-  // vast majority of requests do not need them.
-  // Then it is a bit easier to test procedures.
   req?: Request
   res?: Response
-
-  // We can also add our own custom context properties.
   authUser?: AuthUser
-
-  // For providing repos in a slightly easier to test way
+  fmp?: Fmp
+  services?: Partial<Services>
   repos?: Partial<Repositories>
 }
 

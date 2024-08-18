@@ -8,7 +8,7 @@ import ProfitLoss from '../ProfitLoss'
 type TableRowProps = {
   asset: AssetStatsPublic
 }
-export default function ({ asset }: TableRowProps) {
+export default function Row({ asset }: TableRowProps) {
   const cellStyles = 'font-small whitespace-no-wrap items-center text-gray-900 dark:text-white'
   const { activePortfolio } = usePortfolio()
 

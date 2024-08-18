@@ -4,7 +4,7 @@ import AssetForm from '@/components/AssetForm/AssetForm'
 import PortfolioSelector from './PortfolioSelector'
 import AssetsTree from './AssetsTree/AssetsTree'
 
-export default function () {
+export default function Sidebar() {
   const [openAssetModal, setOpenAssetModal] = useState(false)
 
   return (

@@ -8,7 +8,7 @@ type DropdownMenuProps = {
   asset: FullPortfolioGroupedPublic
 }
 
-export default function ({ asset }: DropdownMenuProps) {
+export default function DropdownMenu({ asset }: DropdownMenuProps) {
   const [openAssetModal, setOpenAssetModal] = useState(false)
   const [mode, setMode] = useState<'edit' | 'createWithBase'>('edit')
 

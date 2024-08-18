@@ -8,7 +8,11 @@ type RadioOptionsProps = {
   setPortfolioCurrency: React.Dispatch<React.SetStateAction<BaseCurrency>>
 }
 
-export default function ({ currency, portfolioCurrency, setPortfolioCurrency }: RadioOptionsProps) {
+export default function RadioOptions({
+  currency,
+  portfolioCurrency,
+  setPortfolioCurrency,
+}: RadioOptionsProps) {
   const id = useId()
   return (
     <div className="flex items-center gap-2">
