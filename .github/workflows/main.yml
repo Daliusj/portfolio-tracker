@@ -12,6 +12,10 @@ jobs:
 
       # variables for our back-end tests, see server/src/config.ts
       DATABASE_URL: postgres://turing:turing@localhost:5432/testdb
+      TEST_DATABASE_CONNECTION_STRING: postgres://turing:turing@localhost:5432/testdb
+      FMP_API_KEY: your_fmp_api_key_here
+      EXCHANGE_RATE_API_KEY: your_exchange_rate_api_key_here
+
     services:
       # spin up a database for tests
       postgres:
