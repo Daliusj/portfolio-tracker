@@ -3,19 +3,12 @@ import { groupAssets } from '@server/utils/assets'
 import { currencyExchangeRateRepository } from '@server/repositories/currencyExchangeRatesRepository'
 import { portfolioRepository } from '../repositories/portfolioRepository'
 import portfolioValueServices from './portfolioValueServices'
-import type { AssetStatsPublic } from './types'
+import type { AssetStatsPublic, PortfolioStatsPublic } from './types'
 
 export default (db: Database) => {
   const portfolioRepo = portfolioRepository(db)
   const valueServices = portfolioValueServices(db, {} as any)
   const exchangeRateRepo = currencyExchangeRateRepository(db)
-
-  type PortfolioStats = {
-    portfolioId: number
-    totalPortfolioValue: string
-    valueChange: string
-    percentageChange: string
-  }
 
   return {
     getAssetsStats: async (
@@ -76,7 +69,9 @@ export default (db: Database) => {
       return []
     },
 
-    getPortfolioStats: async (portfolioId: number): Promise<PortfolioStats> => {
+    getPortfolioStats: async (
+      portfolioId: number
+    ): Promise<PortfolioStatsPublic> => {
       const portfolioAssets = await portfolioRepo.findFull(portfolioId)
       const portfolio = await portfolioRepo.findById(portfolioId)
 

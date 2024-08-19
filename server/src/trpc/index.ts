@@ -14,7 +14,7 @@ export type Context = {
   req?: Request
   res?: Response
   authUser?: AuthUser
-  fmp?: Fmp
+  fmp: Fmp
   services?: Partial<Services>
   repos?: Partial<Repositories>
 }

@@ -14,7 +14,7 @@ export type AssetStatsPublic = {
 
 export type PortfolioStatsPublic = {
   portfolioId: number
-  totalPortfolioValue: number
+  totalPortfolioValue: string
   valueChange: string
   percentageChange: string
 }
