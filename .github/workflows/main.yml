@@ -11,15 +11,15 @@ jobs:
       VITE_API_PATH: /api/v1/trpc
 
       # variables for our back-end tests, see server/src/config.ts
-      DATABASE_URL: postgres://portfolioapp:portfolioapp@localhost:5432/testdb
+      DATABASE_URL: postgres://turing:turing@localhost:5432/testdb
     services:
       # spin up a database for tests
       postgres:
         image: postgres:16.1-alpine
         env:
           # Postgres will create a database with the following credentials
-          POSTGRES_USER: portfolioapp
-          POSTGRES_PASSWORD: portfolioapp
+          POSTGRES_USER: turing
+          POSTGRES_PASSWORD: turing
           POSTGRES_DB: testdb
         ports:
           - 5432:5432
