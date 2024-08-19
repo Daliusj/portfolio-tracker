@@ -13,7 +13,7 @@ import type { SeedDatabase } from '../seedDatabase'
 
 export const fakeScripts: Scripts = {
   databaseUpdatePrices: (db: Database, fmpApi: Fmp): DatabaseUpdatePrices => ({
-    update: vi.fn(async () => [fakePublicAsset({})]),
+    update: vi.fn(async () => ({ success: true, data: [fakePublicAsset({})] })),
   }),
   databaseUpsertExchangeRates: (
     db: Database,
@@ -22,6 +22,6 @@ export const fakeScripts: Scripts = {
     update: vi.fn(async () => [fakeCurrencyExchangeRatePublic({})]),
   }),
   seedDatabase: (db: Database, fmpApi: Fmp): SeedDatabase => ({
-    seed: vi.fn(async () => [fakePublicAsset({})]),
+    seed: vi.fn(async () => ({ success: true, data: [fakePublicAsset({})] })),
   }),
 }

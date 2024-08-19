@@ -22,6 +22,7 @@ vi.mock('jsonwebtoken', () => ({
 
 // we do not need a database for this test
 const db = {} as any
+const fmp = {} as any
 const authenticated = createCaller(authContext({ db }))
 
 it('should pass if user is already authenticated', async () => {
@@ -33,6 +34,7 @@ it('should pass if user is already authenticated', async () => {
 it('should pass if user provides a valid token', async () => {
   const usingValidToken = createCaller({
     db,
+    fmp,
     req: {
       header: () => `Bearer ${VALID_TOKEN}`,
     } as any,

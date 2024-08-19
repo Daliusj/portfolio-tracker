@@ -1,6 +1,7 @@
 import { fakeAuthUser } from '@server/entities/tests/fakes'
 import { authUserSchema, type AuthUser } from '@server/entities/user'
 import type { Context, ContextMinimal } from '@server/trpc'
+import { fakeFmp } from '@server/utils/externalApi/tests/utils'
 
 export const requestContext = (
   context: Partial<Context> & ContextMinimal
@@ -12,6 +13,7 @@ export const requestContext = (
   res: {
     cookie: () => undefined,
   } as any,
+  fmp: fakeFmp(),
   ...context,
 })
 
@@ -20,6 +22,7 @@ export const authContext = (
   user: AuthUser = fakeAuthUser()
 ): Context => ({
   authUser: authUserSchema.parse(user),
+  fmp: fakeFmp(),
   ...context,
 })
 
