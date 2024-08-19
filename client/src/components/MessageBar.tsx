@@ -12,7 +12,7 @@ export default function MessageToasts() {
   }
 
   return (
-    <div>
+    <div data-testid={message.type === 'success' && 'successMessage'}>
       {message.text.length && (
         <Toast
           className={`min-w-96 flex-col gap-2 bg-slate-300 text-center shadow-none dark:bg-slate-800 ${getToastStyles()}`}

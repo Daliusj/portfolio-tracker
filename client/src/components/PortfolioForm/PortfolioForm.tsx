@@ -8,7 +8,7 @@ type PortfolioFormProps = {
   setOpenModal?: React.Dispatch<React.SetStateAction<boolean>>
   disableClose?: boolean
   modalMode?: boolean
-  first?: boolean
+  first: boolean
 }
 
 export default function PortfolioForm({

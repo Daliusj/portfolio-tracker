@@ -46,14 +46,13 @@ export default function Form({ setOpenModal, mode, first }: PortfolioFormProps) 
 
   const getTitle = () => {
     if (mode === 'edit') return 'Edit portfolio'
-    if (mode === 'new' && !first)
-      return (
-        <p>
-          You do not have a portfolio! <br />
-          Create one to start
-        </p>
-      )
-    return 'Create Portfolio'
+    if (mode === 'new' && userPortfolio.activePortfolio) return 'Create Portfolio'
+    return (
+      <p>
+        You do not have a portfolio! <br />
+        Create one to start
+      </p>
+    )
   }
 
   return (

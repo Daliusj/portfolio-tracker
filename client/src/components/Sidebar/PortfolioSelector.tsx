@@ -43,7 +43,7 @@ export default function PortfolioSelector() {
         ))}
       </Dropdown>
 
-      <Dropdown label={<HiMenu />} arrowIcon={false}>
+      <Dropdown data-testid="portfolio-menu" label={<HiMenu />} arrowIcon={false}>
         <Dropdown.Item onClick={() => handleCreateNewButton()}>Create new</Dropdown.Item>
         <Dropdown.Item onClick={() => handleEditButton()}>Edit</Dropdown.Item>
         <Dropdown.Item onClick={() => handleDeleteButton()}>Delete</Dropdown.Item>
@@ -53,6 +53,7 @@ export default function PortfolioSelector() {
         setOpenModal={setOpenPortfolioModal}
         mode={portfolioFormMode}
         modalMode={true}
+        first={false}
       />
       <ConfirmationModal
         name={userPortfolios.activePortfolio?.name || 'portfolio'}

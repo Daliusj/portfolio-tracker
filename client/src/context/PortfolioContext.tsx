@@ -97,12 +97,15 @@ export const PortfolioProvider = ({ children }: PortfolioProviderProps) => {
     const { id } = idObj
     portfolioMutation.remove.mutate(idObj, {
       onSuccess: () => {
-        setUserPortfolios((prevPortfolios) =>
-          prevPortfolios?.filter((portfolio) => portfolio.id !== id)
-        )
-        if (activePortfolio?.id === id) {
-          setActivePortfolio(userPortfolios?.[0])
-        }
+        setUserPortfolios((prevPortfolios) => {
+          const updatedPortfolios = prevPortfolios?.filter((portfolio) => portfolio.id !== id)
+          if (updatedPortfolios.length === 0) {
+            setActivePortfolio(undefined)
+          } else if (activePortfolio?.id === id) {
+            setActivePortfolio(updatedPortfolios[0])
+          }
+          return updatedPortfolios
+        })
         portfoliosQuery.refetch()
         setMessage('success', ['Portfolio removed successfully'])
       },
@@ -117,6 +120,10 @@ export const PortfolioProvider = ({ children }: PortfolioProviderProps) => {
       setHasLoaded(true)
     }
   }, [portfoliosQuery.data, portfoliosQuery.isSuccess, hasLoaded])
+
+  useEffect(() => {
+    console.log(activePortfolio)
+  }, [activePortfolio])
 
   if (!hasLoaded) {
     return <div>Loading...</div>

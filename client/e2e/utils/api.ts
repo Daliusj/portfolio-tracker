@@ -13,7 +13,6 @@ export const trpc = createTRPCProxyClient<AppRouter>({
     httpBatchLink({
       url: `${apiOrigin}${apiPath}`,
 
-      // send the access token with every request
       headers: () => {
         return {
           ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
@@ -57,7 +56,6 @@ export async function asUser<T extends any>(
   const [user] = await Promise.all([
     loginNewUser(userLogin),
     (async () => {
-      // if no page is open, go to the home page
       if (page.url() === 'about:blank') {
         await page.goto('/')
         await page.waitForURL('/')
@@ -65,10 +63,6 @@ export async function asUser<T extends any>(
     })(),
   ])
 
-  // Unfortunate that we are dealing with page internals and
-  // implementation details here, but as long as we make sure that
-  // this logic is in one place and it does not spill into tests,
-  // we should be fine.
   accessToken = user.accessToken
   await page.evaluate(
     ({ accessToken }) => {

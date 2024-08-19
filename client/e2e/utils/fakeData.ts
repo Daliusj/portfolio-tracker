@@ -1,6 +1,12 @@
-import type { Article, Comment, User } from '@server/shared/types'
+import type { Portfolio, User } from '@server/shared/types'
 import type { Insertable } from 'kysely'
 import { Chance } from 'chance'
+
+const randomId = () =>
+  random.integer({
+    min: 1,
+    max: 1000000,
+  })
 
 // Chance is a lightweight fake data generator.
 // Faker.js is another popular library, but it is relatively slow to import.
@@ -16,14 +22,16 @@ export const random = process.env.CI ? Chance(1) : Chance()
 export const fakeUser = <T extends Insertable<User>>(overrides: Partial<T> = {} as T) => ({
   email: random.email(),
   password: 'password.123',
-  firstName: random.first(),
-  lastName: random.last(),
+  userName: random.first(),
   ...overrides,
 })
 
-export const fakeArticle = <T extends Partial<Insertable<Article>>>(overrides: T = {} as T) => ({
-  title: random.sentence({ words: 5 }),
-  content: random.paragraph(),
+export const fakePortfolio = <T extends Partial<Insertable<Portfolio>>>(
+  overrides: T = {} as T
+) => ({
+  userId: randomId(),
+  currencySymbol: 'EUR',
+  name: random.string({ length: 8 }),
   ...overrides,
 })
 
