@@ -167,7 +167,7 @@ jobs:
                 "TOKEN_KEY": "${{ secrets.TOKEN_KEY }}",
                 "FMP_API_KEY": "${{secrets.FMP_API_KEY}}",
                 "EXCHANGE_RATE_API_KEY": "${{secrets.EXCHANGE_RATE_API_KEY}}",
-              }
+              },
             }
           }' > containers.json
 
@@ -274,7 +274,7 @@ jobs:
                         "EXCHANGE_RATE_API_KEY": "${{secrets.EXCHANGE_RATE_API_KEY}}"
                         "FMP_API_KEY: "${{secrets.FMP_API_KEY}}",
                         "DATABASE_URL": "${{ secrets.DATABASE_URL }}",
-                      }
+                      },
                     }
                   }' > containers.json
               - name: Create public-endpoint.json file
