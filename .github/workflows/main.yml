@@ -250,33 +250,35 @@ jobs:
               # then you will need to pass them as a json file:
               - name: Create containers.json
                 run: |
-                  echo '{
-                    "client": {
-                      "image": "${{ env.LIGHTSAIL_CLIENT_IMAGE }}",
-                      "command": [],
-                      "ports": {
-                        "80": "HTTP"
+                   cat <<EOF > containers.json
+                    {
+                      "client": {
+                        "image": "${{ env.LIGHTSAIL_CLIENT_IMAGE }}",
+                        "command": [],
+                        "ports": {
+                          "80": "HTTP"
+                        },
+                        "environment": {
+                          "API_PROXY_PASS": "http://localhost:3000"
+                        }
                       },
-                      "environment": {
-                        "API_PROXY_PASS": "http://localhost:3000"
-                      }
-                    },
-                    "server": {
-                      "image": "${{ env.LIGHTSAIL_SERVER_IMAGE }}",
-                      "ports": {
-                        "3000": "HTTP"
-                      },
-                      "environment": {
-                        "NODE_ENV": "production",
-                        "PORT": "3000",
-                        "DATABASE_URL": "${{ secrets.DATABASE_URL }}",
-                        "TEST_DATABASE_URL": "${{ secrets.TEST_DATABASE_URL }}",
-                        "TOKEN_KEY": "${{ secrets.TOKEN_KEY }}",
-                        "FMP_API_KEY: "${{secrets.FMP_API_KEY}}",
-                        "EXCHANGE_RATE_API_KEY": "${{secrets.EXCHANGE_RATE_API_KEY}}",
+                      "server": {
+                        "image": "${{ env.LIGHTSAIL_SERVER_IMAGE }}",
+                        "ports": {
+                          "3000": "HTTP"
+                        },
+                        "environment": {
+                          "NODE_ENV": "production",
+                          "PORT": "3000",
+                          "DATABASE_URL": "${{ secrets.DATABASE_URL }}",
+                          "TEST_DATABASE_URL": "${{ secrets.TEST_DATABASE_URL }}",
+                          "TOKEN_KEY": "${{ secrets.TOKEN_KEY }}",
+                          "FMP_API_KEY": "${{ secrets.FMP_API_KEY }}",
+                          "EXCHANGE_RATE_API_KEY": "${{ secrets.EXCHANGE_RATE_API_KEY }}"
+                        }
                       }
                     }
-                  }' > containers.json
+                    EOF
               - name: Create public-endpoint.json file
                 run: |
                   echo '{
