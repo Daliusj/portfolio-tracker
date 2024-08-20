@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   # spin up a database
@@ -7,11 +7,11 @@ services:
     environment:
       POSTGRES_USER: turing
       POSTGRES_PASSWORD: turing
-      POSTGRES_DB: blog
+      POSTGRES_DB: portfolio
     ports:
       - "5432"
     volumes:
-      - blog-db:/var/lib/postgresql/data
+      - portfolio-db:/var/lib/postgresql/data
 
   # start up an API server
   server:
@@ -22,7 +22,7 @@ services:
     # env_file:
     #   - ./server/.env
     environment:
-      DATABASE_URL: postgres://turing:turing@postgres:5432/blog
+      DATABASE_URL: postgres://turing:turing@postgres:5432/portfolio
       PORT: 3000
     ports:
       - "3000"
@@ -55,4 +55,4 @@ services:
       - server
 
 volumes:
-  blog-db:
+  portfolio-db:

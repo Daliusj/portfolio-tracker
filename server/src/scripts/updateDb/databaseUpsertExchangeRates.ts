@@ -1,8 +1,8 @@
-import type { Database } from '../database'
-import type { CurrencyPublic } from '../entities/currency'
-import { currencyExchangeRateRepository } from '../repositories/currencyExchangeRatesRepository'
-import { currencyRepository } from '../repositories/currencyRepository'
-import type { ExchangeRatesApi } from '../utils/externalApi/exchangeRatesApi'
+import type { Database } from '../../database'
+import type { CurrencyPublic } from '../../entities/currency'
+import { currencyExchangeRateRepository } from '../../repositories/currencyExchangeRatesRepository'
+import { currencyRepository } from '../../repositories/currencyRepository'
+import type { ExchangeRatesApi } from '../../utils/externalApi/exchangeRatesApi'
 
 export function databaseUpsertExchangeRates(
   db: Database,

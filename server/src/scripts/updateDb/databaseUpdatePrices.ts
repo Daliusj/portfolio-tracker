@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import type { Database } from '@server/database'
 import { uniqBy, chunk } from 'lodash-es'
-import { assetRepository as buildAssetRepository } from '../repositories/assetRepository'
-import type { Fmp } from '../utils/externalApi/fmpApi'
+import { assetRepository as buildAssetRepository } from '../../repositories/assetRepository'
+import type { Fmp } from '../../utils/externalApi/fmpApi'
 
 export function databaseUpdatePrices(db: Database, fmpApi: Fmp) {
   const assetRepo = buildAssetRepository(db)

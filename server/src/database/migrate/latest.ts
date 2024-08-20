@@ -67,7 +67,7 @@ if (isFileRunDirectly) {
   console.log('Start production database migration')
   await migrateLatest(db)
 
-  if (!process.env.CI) {
+  if (!process.env.CI && config.env === 'development') {
     const testDb = createDatabase(config.testDatabase)
     console.log('Start test database migration')
     await migrateLatest(testDb)

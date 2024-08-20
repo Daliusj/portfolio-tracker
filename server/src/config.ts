@@ -5,9 +5,6 @@ const { env } = process
 
 if (!env.NODE_ENV) env.NODE_ENV = 'development'
 
-if (!env.DB_INIT_SEED) env.DB_INIT_SEED = 'false'
-if (!env.DB_UPDATE) env.DB_UPDATE = 'false'
-
 // force UTC timezone, so it matches the default timezone in production
 env.TZ = 'UTC'
 
@@ -21,9 +18,6 @@ const schema = z
       .default('development'),
     isCi: z.preprocess(coerceBoolean, z.boolean().default(false)),
     port: z.coerce.number().default(3000),
-
-    seed: z.preprocess(coerceBoolean, z.boolean().default(false)),
-    update: z.preprocess(coerceBoolean, z.boolean().default(false)),
 
     auth: z.object({
       tokenKey: z.string().default(() => {
@@ -54,9 +48,6 @@ const config = schema.parse({
   env: env.NODE_ENV,
   port: env.PORT,
   isCi: env.CI,
-
-  seed: env.DB_INIT_SEED,
-  update: env.DB_UPDATE,
 
   auth: {
     tokenKey: env.TOKEN_KEY,

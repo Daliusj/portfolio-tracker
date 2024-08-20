@@ -1,7 +1,7 @@
 import { fakeExchangeRatesApi } from '@server/utils/externalApi/tests/utils'
 import { createTestDatabase } from '@tests/utils/database'
 import { wrapInRollbacks } from '@tests/utils/transactions'
-import { databaseUpsertExchangeRates } from '../databaseUpsertExchangeRates'
+import { databaseUpsertExchangeRates } from '../updateDb/databaseUpsertExchangeRates'
 
 const exchangeRatesApi = fakeExchangeRatesApi()
 const db = await wrapInRollbacks(createTestDatabase())

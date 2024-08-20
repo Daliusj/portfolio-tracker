@@ -1,8 +1,12 @@
 /* eslint-disable no-console */
+import path from 'path'
+import { fileURLToPath } from 'node:url'
 import { chunk, uniqBy } from 'lodash-es'
 import type { Fmp } from '../utils/externalApi/fmpApi'
 import { assetRepository } from '../repositories/assetRepository'
-import type { Database } from '../database'
+import { createDatabase, type Database } from '../database'
+import buildFmp from '../utils/externalApi/fmpApi'
+import config from '../config'
 
 export function seedDatabase(db: Database, fmpApi: Fmp) {
   const repository = assetRepository(db)
@@ -64,3 +68,26 @@ export function seedDatabase(db: Database, fmpApi: Fmp) {
 }
 
 export type SeedDatabase = ReturnType<typeof seedDatabase>
+
+const pathToThisFile = path.resolve(fileURLToPath(import.meta.url))
+const pathPassedToNode = path.resolve(process.argv[1])
+const isFileRunDirectly = pathToThisFile.includes(pathPassedToNode)
+
+if (isFileRunDirectly) {
+  const db = createDatabase(config.database)
+  const fmp = buildFmp()
+  const dbSeed = seedDatabase(db, fmp)
+  try {
+    // eslint-disable-next-line no-console
+    console.log('Start seeding the database with assets listings')
+    await dbSeed.seed()
+    // eslint-disable-next-line no-console
+    console.log('Seeding completed')
+  } catch (err) {
+    throw new Error(
+      `Error seeding the database: ${
+        err instanceof Error ? err.message : 'An unknown error occurred'
+      }`
+    )
+  }
+}

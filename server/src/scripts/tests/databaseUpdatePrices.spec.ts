@@ -6,7 +6,7 @@ import {
   fakeStocksList,
 } from '@server/utils/externalApi/tests/fakes'
 import { insertAll } from '@tests/utils/records'
-import { databaseUpdatePrices } from '../databaseUpdatePrices'
+import { databaseUpdatePrices } from '../updateDb/databaseUpdatePrices'
 import { fakeFundsList } from '../../utils/externalApi/tests/fakes'
 
 const fmpApi = fakeFmp()

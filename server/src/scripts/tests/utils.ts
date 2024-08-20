@@ -6,12 +6,11 @@ import {
   fakeCurrencyExchangeRatePublic,
   fakePublicAsset,
 } from '@server/entities/tests/fakes'
-import type { Scripts } from '..'
-import type { DatabaseUpdatePrices } from '../databaseUpdatePrices'
-import type { DatabaseUpsertExchangeRates } from '../databaseUpsertExchangeRates'
+import type { DatabaseUpdatePrices } from '../updateDb/databaseUpdatePrices'
+import type { DatabaseUpsertExchangeRates } from '../updateDb/databaseUpsertExchangeRates'
 import type { SeedDatabase } from '../seedDatabase'
 
-export const fakeScripts: Scripts = {
+export const fakeScripts = {
   databaseUpdatePrices: (db: Database, fmpApi: Fmp): DatabaseUpdatePrices => ({
     update: vi.fn(async () => ({ success: true, data: [fakePublicAsset({})] })),
   }),

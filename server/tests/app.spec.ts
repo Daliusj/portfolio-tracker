@@ -1,17 +1,12 @@
 // starts with the real database configuration
 import createApp from '@server/app'
 import supertest from 'supertest'
-import {
-  fakeExchangeRatesApi,
-  fakeFmp,
-} from '@server/utils/externalApi/tests/utils'
-import { fakeScripts } from '@server/scripts/tests/utils'
+import { fakeFmp } from '@server/utils/externalApi/tests/utils'
 import { createTestDatabase } from './utils/database'
 
 const database = createTestDatabase()
 const fmp = fakeFmp()
-const exchangeRatesApi = fakeExchangeRatesApi()
-const app = createApp(database, fakeScripts, fmp, exchangeRatesApi)
+const app = createApp(database, fmp)
 
 afterAll(() => {
   database.destroy()
