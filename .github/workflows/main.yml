@@ -269,8 +269,11 @@ jobs:
                       "environment": {
                         "NODE_ENV": "production",
                         "PORT": "3000",
-                        "DATABASE_URL": "${{ secrets.PROD_DATABASE_URL }}",
-                        "TOKEN_KEY": "${{ secrets.PROD_TOKEN_KEY }}"
+                        "DATABASE_URL": "${{ secrets.DATABASE_URL }}",
+                        "DATABASE_URL": "${{ secrets.TEST_DATABASE_URL }}",
+                        "TOKEN_KEY": "${{ secrets.TOKEN_KEY }}",
+                        "FMP_API_KEY: "${{secrets.FMP_API_KEY}}",
+                        "EXCHANGE_RATE_API_KEY": "${{secrets.EXCHANGE_RATE_API_KEY}}",
                       }
                     }
                   }' > containers.json
