@@ -272,7 +272,7 @@ jobs:
                         "TEST_DATABASE_URL": "${{ secrets.TEST_DATABASE_URL }}",
                         "TOKEN_KEY": "${{ secrets.TOKEN_KEY }}",
                         "EXCHANGE_RATE_API_KEY": "${{secrets.EXCHANGE_RATE_API_KEY}}"
-                        "FMP_API_KEY: "${{secrets.FMP_API_KEY}}",
+                        "FMP_API_KEY": "${{secrets.FMP_API_KEY}}",
                         "DATABASE_URL": "${{ secrets.DATABASE_URL }}",
                       },
                     }
