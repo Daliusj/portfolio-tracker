@@ -5,9 +5,9 @@ services:
   postgres:
     image: postgres:16.1-alpine
     environment:
-      POSTGRES_USER: turing
-      POSTGRES_PASSWORD: turing
-      POSTGRES_DB: portfolio
+      POSTGRES_USER: portfolio
+      POSTGRES_PASSWORD: portfolio
+      POSTGRES_DB: portfolio-tracker
     ports:
       - "5432"
     volumes:
@@ -19,11 +19,12 @@ services:
       context: .
       dockerfile: ./server/Dockerfile
     # If we would have some secrets that we want to pass:
-    # env_file:
-    #   - ./server/.env
+    env_file:
+      - ./server/.env
     environment:
-      DATABASE_URL: postgres://turing:turing@postgres:5432/portfolio
+      DATABASE_URL: postgres://portfolio:portfolio@postgres:5432/portfolio-tracker
       PORT: 3000
+      NODE_ENV: "production"
     ports:
       - "3000"
     depends_on:

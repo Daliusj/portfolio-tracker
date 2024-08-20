@@ -121,10 +121,6 @@ export const PortfolioProvider = ({ children }: PortfolioProviderProps) => {
     }
   }, [portfoliosQuery.data, portfoliosQuery.isSuccess, hasLoaded])
 
-  useEffect(() => {
-    console.log(activePortfolio)
-  }, [activePortfolio])
-
   if (!hasLoaded) {
     return <div>Loading...</div>
   }
