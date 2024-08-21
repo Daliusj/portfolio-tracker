@@ -33,7 +33,7 @@ export default function PortfolioForm({
             <div className="flex h-[32px] items-start justify-between rounded-t border-b-0 p-2 dark:border-gray-600"></div>
           )}
           <Modal.Body>
-            <Form mode={mode} setOpenModal={setOpenModal} first={first} />
+            <Form mode={mode} setOpenModal={setOpenModal} />
           </Modal.Body>
         </Modal>
       ) : (
