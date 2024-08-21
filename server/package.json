@@ -15,12 +15,11 @@
     "migrate:latest": "tsx src/database/migrate/latest",
     "migrate:latest:prod": "npm run node-es dist/database/migrate/latest.js",
     "node-es": "node --loader ./loader.js",
-    "prod": "npm run migrate:latest:prod && npm run seed && npm run update:db && npm run start",
+    "prod": "npm run migrate:latest:prod && npm run start",
     "start": "npm run node-es ./dist/index.js",
     "test": "vitest",
     "test:safe": "vitest --no-file-parallelism --maxWorkers 1 --poolOptions.threads.useAtomics false --poolOptions.threads.isolate true",
-    "typecheck": "tsc --noEmit",
-    "seed": "tsx ./src/scripts/seedDatabase.ts"
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",
