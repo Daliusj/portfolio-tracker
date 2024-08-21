@@ -20,8 +20,7 @@
     "test": "vitest",
     "test:safe": "vitest --no-file-parallelism --maxWorkers 1 --poolOptions.threads.useAtomics false --poolOptions.threads.isolate true",
     "typecheck": "tsc --noEmit",
-    "seed": "tsx ./src/scripts/seedDatabase.ts",
-    "update:db": "tsx ./src/scripts/updateDb/index.ts"
+    "seed": "tsx ./src/scripts/seedDatabase.ts"
   },
   "keywords": [],
   "author": "",
