@@ -1,24 +1,16 @@
 import React from 'react'
 import TableBox from '@/components/TableBox/TableBox'
-import PortfolioProfitLoss from '@/components/PortfolioProfitLoss'
-import { PortfolioStatsProvider } from '@/context/StatsContex'
 import { usePortfolioItem } from '@/context/PortfolioItemContext'
 
 export default function Stats() {
   const { userPortfolioItems } = usePortfolioItem()
 
   return (
-    <div className="flex w-full flex-col items-center space-x-[80px]">
+    <div className="stats">
       {userPortfolioItems?.length ? (
-        <PortfolioStatsProvider>
-          <PortfolioProfitLoss />
-          <div className="mb-6 w-4/5">
-            {' '}
-            <TableBox />
-          </div>
-        </PortfolioStatsProvider>
+        <TableBox />
       ) : (
-        <div className="flex w-4/5 justify-center text-xl">
+        <div className="flex h-3/5 w-full items-center justify-center text-xl text-slate-900 dark:text-slate-300 ">
           <p>Nothing to show. Add assets to your portfolio</p>
         </div>
       )}

@@ -8,10 +8,10 @@ export default function TableBox() {
   const { assetsStats } = useStats()
 
   return (
-    <div className="overflow-x-auto">
+    <div className="stats-table overflow-x-auto">
       <Table hoverable>
         <TableHead />
-        <Table.Body className="divide-y overflow-y-auto">
+        <Table.Body className="divide-y">
           {assetsStats &&
             assetsStats.map((asset) => (
               <TableRow key={`${asset.assetId}-table-box`} asset={asset} />

@@ -14,6 +14,18 @@ describe('findByShortName', () => {
     expect(exchangeFound).toEqual(exchange)
   })
 
+  it('should find by exchange shortname case insensitive', async () => {
+    const [exchange] = await insertAll(
+      db,
+      'exchange',
+      fakeExchange({ name: 'Euronext' })
+    )
+    const exchangeFound = await repository.findByShortName(
+      exchange.shortName.toLowerCase()
+    )
+    expect(exchangeFound).toEqual(exchange)
+  })
+
   it('should return undifined if no exchange are found', async () => {
     const exchangeFound = await repository.findByShortName('XXX')
     expect(exchangeFound).toBeUndefined()

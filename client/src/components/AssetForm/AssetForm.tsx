@@ -219,19 +219,21 @@ export default function PortfolioForm({
                     </div>
                   )}
                   {selectedAsset && (
-                    <Table hoverable>
-                      <TableHead />
-                      <Table.Body>
-                        <TableRow
-                          asset={selectedAsset}
-                          handleClickRow={(asset: AssetPublic | undefined) =>
-                            setSelectedAsset(asset)
-                          }
-                          isSelected={true}
-                          isDisabled={mode === 'edit' || mode == 'createWithBase'}
-                        />
-                      </Table.Body>
-                    </Table>
+                    <div className="overflow-x-auto">
+                      <Table hoverable>
+                        <TableHead />
+                        <Table.Body>
+                          <TableRow
+                            asset={selectedAsset}
+                            handleClickRow={(asset: AssetPublic | undefined) =>
+                              setSelectedAsset(asset)
+                            }
+                            isSelected={true}
+                            isDisabled={mode === 'edit' || mode == 'createWithBase'}
+                          />
+                        </Table.Body>
+                      </Table>
+                    </div>
                   )}
                 </div>
               </div>

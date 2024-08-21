@@ -2,7 +2,7 @@ import AssetForm from '@/components/AssetForm/AssetForm'
 import { FullPortfolioGroupedPublic } from '@server/shared/types'
 import { Dropdown } from 'flowbite-react'
 import React, { useState } from 'react'
-import { HiAdjustments } from 'react-icons/hi'
+import { HiOutlinePencilAlt } from 'react-icons/hi'
 
 type DropdownMenuProps = {
   asset: FullPortfolioGroupedPublic
@@ -22,8 +22,11 @@ export default function DropdownMenu({ asset }: DropdownMenuProps) {
   }
 
   return (
-    <div>
-      <Dropdown className="items-center" label={<HiAdjustments />} arrowIcon={false}>
+    <div className="flex w-full justify-end">
+      <Dropdown
+        label={<HiOutlinePencilAlt size={'18'} className="text-slate-900 dark:text-slate-300" />}
+        arrowIcon={false}
+      >
         <Dropdown.Item onClick={() => handleAddButton()}>Add</Dropdown.Item>
         <Dropdown.Item onClick={() => handleEditButton()}>Edit</Dropdown.Item>
       </Dropdown>

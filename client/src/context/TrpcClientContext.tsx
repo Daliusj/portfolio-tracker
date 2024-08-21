@@ -29,7 +29,10 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
         )
         setMessage('error', validationErrorMessages)
       } catch {
-        setMessage('error', [DEFAULT_SERVER_ERROR])
+        if (trpcError.message === 'Failed to fetch') setMessage('error', [DEFAULT_SERVER_ERROR])
+        else {
+          setMessage('error', [trpcError.message])
+        }
       }
     }
   }

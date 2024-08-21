@@ -12,7 +12,7 @@ export function exchangeRepository(db: Database) {
       return db
         .selectFrom('exchange')
         .select(exchangeKeysPublic)
-        .where('exchange.shortName', '=', shortName)
+        .where('exchange.shortName', 'ilike', shortName)
         .executeTakeFirst()
     },
   }

@@ -8,16 +8,15 @@ import { usePortfolio } from '@/context/PortfolioContext'
 type PortfolioFormProps = {
   mode: 'new' | 'edit'
   setOpenModal?: React.Dispatch<React.SetStateAction<boolean>>
-  first?: boolean
 }
 
-export default function Form({ setOpenModal, mode, first }: PortfolioFormProps) {
+export default function Form({ setOpenModal, mode }: PortfolioFormProps) {
   const userPortfolio = usePortfolio()
   const [portfolioName, setPortfolioName] = useState('')
   const [currencySymbol, setCurrencySymbol] = useState<BaseCurrency>('USD')
 
   const handleSubmit = () => {
-    if (portfolioName) {
+    if (portfolioName && portfolioName.length <= 20) {
       mode === 'edit' && userPortfolio.activePortfolio
         ? userPortfolio.update({
             id: userPortfolio.activePortfolio?.id,
@@ -72,6 +71,7 @@ export default function Form({ setOpenModal, mode, first }: PortfolioFormProps) 
           />
           <p className="mt-2 h-8 text-sm text-red-600">
             {!portfolioName && 'Enter Portfolio Name'}
+            {portfolioName.length > 20 && 'Name can be max 20 symbols length'}
           </p>
         </div>
 

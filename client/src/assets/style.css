@@ -5,23 +5,48 @@
 @tailwind utilities;
 
 .app {
-  @apply h-screen flex-col bg-slate-300 p-4 text-white dark:bg-slate-800;
+  @apply min-h-screen w-screen flex-col items-center justify-center bg-slate-300 text-white dark:bg-slate-800;
 }
 
 .sidebar {
-  @apply mb-6 h-full w-1/5;
+  @apply mb-6 h-full w-full;
 }
 
-.custom-button-group button {
-  border-radius: 0 !important;
+.dashboard {
+  @apply w-screen justify-center p-4;
 }
 
-.custom-button-group .first-button {
-  border-top-left-radius: 8px !important;
-  border-bottom-left-radius: 8px !important;
+.stats {
+  @apply w-full;
 }
 
-.custom-button-group .last-button {
-  border-top-right-radius: 8px !important;
-  border-bottom-right-radius: 8px !important;
+@media (max-width: 767px) {
+  .dashboard {
+    @apply flex-col items-center;
+  }
+}
+
+@media (min-width: 768px) and (min-height: 600px) {
+  .app {
+    @apply h-screen;
+  }
+  .sidebar {
+    @apply h-full w-96;
+    height: calc(100% - 70px);
+  }
+  .dashboard {
+    @apply absolute bottom-0 left-0 right-0 top-[130px] flex p-5;
+    height: auto;
+  }
+  .stats {
+    @apply ml-6 flex-1;
+    min-width: 0;
+  }
+
+  .stats-table {
+    @apply h-full;
+  }
+  .assets-tree {
+    height: calc(100% - 95px);
+  }
 }

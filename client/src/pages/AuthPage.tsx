@@ -8,7 +8,7 @@ type AuthPageProps = {
 export default function Login({ mode }: AuthPageProps) {
   return (
     <div className="flex justify-center">
-      <UserForm type={mode} />
+      <UserForm key={mode} type={mode} />
     </div>
   )
 }

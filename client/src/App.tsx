@@ -19,20 +19,20 @@ function App() {
       <AppProvider>
         <AuthProvider>
           <div className={`${mode === 'dark' ? 'dark' : ''} app `}>
-            <Header></Header>
-            <div className="mb-10 flex  min-h-14 w-full justify-center">
+            <div className="p-4">
+              <Header></Header>
+            </div>
+            <div className="mb-4 flex w-full justify-center">
               <MessageBar />
             </div>
-            <div className="h-max">
-              <Routes>
-                <Route element={<PrivateRouteGuard />}>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/create-portfolio" element={<CreatePortfolio />} />
-                </Route>
-                <Route path="/login" element={<AuthPage mode="login" />} />
-                <Route path="/signup" element={<AuthPage mode="signup" />} />
-              </Routes>
-            </div>
+            <Routes>
+              <Route element={<PrivateRouteGuard />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/create-portfolio" element={<CreatePortfolio />} />
+              </Route>
+              <Route path="/login" element={<AuthPage mode="login" />} />
+              <Route path="/signup" element={<AuthPage mode="signup" />} />
+            </Routes>
           </div>
         </AuthProvider>
       </AppProvider>

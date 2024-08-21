@@ -27,6 +27,7 @@ export function UserForm({ type }: UserFormProps) {
     if (email && password && password === repeatPassword && userName)
       await signup({ email, userName, password })
   }
+
   return (
     <form className="flex max-w-md flex-col">
       <div>
@@ -41,7 +42,7 @@ export function UserForm({ type }: UserFormProps) {
           shadow
           onChange={(e) => setEmail(e.target.value)}
         />
-        <p className="mt-2 h-8 text-sm text-red-600">{!email && 'Enter your Email'}</p>
+        <p className="mt-1 h-8 text-xs text-red-600">{!email && 'Enter your Email'}</p>
       </div>
       <div>
         <div className="mb-2 block">
@@ -54,7 +55,7 @@ export function UserForm({ type }: UserFormProps) {
           shadow
           onChange={(e) => setPassword(e.target.value)}
         />
-        <p className="mt-2 h-8 text-sm text-red-600">{!password && 'Enter your Password'}</p>
+        <p className="mt-1 h-8 text-xs text-red-600">{!password && 'Enter your Password'}</p>
       </div>
       {type === 'signup' && (
         <div>
@@ -69,7 +70,7 @@ export function UserForm({ type }: UserFormProps) {
               shadow
               onChange={(e) => setRepeatPassword(e.target.value)}
             />
-            <p className="mt-2 h-8 text-sm text-red-600">
+            <p className="mt-1 h-8 text-xs text-red-600">
               {!repeatPassword && 'Repeat your Password'}
               {repeatPassword && repeatPassword !== password && 'Your password does not match'}
             </p>
@@ -84,7 +85,7 @@ export function UserForm({ type }: UserFormProps) {
               shadow
               onChange={(e) => setUserName(e.target.value)}
             />
-            <p className="mt-2 h-8 text-sm text-red-600">{!userName && 'Enter your User Name'}</p>
+            <p className="mt-1 h-8 text-xs text-red-600">{!userName && 'Enter your User Name'}</p>
           </div>
         </div>
       )}
@@ -95,7 +96,7 @@ export function UserForm({ type }: UserFormProps) {
       >
         {type === 'login' ? SUBMIT_BUTTON_LABEL.login : SUBMIT_BUTTON_LABEL.signup}
       </Button>
-      <div className="flex justify-between text-sm font-medium text-gray-500 dark:text-gray-300">
+      <div className="flex justify-between text-sm font-medium text-gray-900 dark:text-gray-300">
         {type === 'login' ? 'Not registered?' : 'Have an account?'}
         <Link
           className="text-cyan-700 hover:underline dark:text-cyan-500"

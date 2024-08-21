@@ -9,13 +9,15 @@ export default function PortfolioProfitLoss() {
   const { portfolioStats } = useStats()
 
   return (
-    <div className="mb-12 ml-80 w-full flex-col">
+    <div className="mb-4 w-full flex-col text-sm text-gray-900 dark:text-white">
       <div>Portfolio Balance</div>
-      <div className="flex space-x-4">
-        <div className="text-2xl">
+      <div className="f-full flex justify-between">
+        <div className="h-[40px] text-2xl text-gray-900 dark:text-white">
           {`${getSymbolFromCurrency(activePortfolio?.currencySymbol || '')}${portfolioStats?.totalPortfolioValue}`}
         </div>
-        {portfolioStats && <ProfitLoss asset={portfolioStats} full={true} flat={true} />}
+        {portfolioStats && portfolioStats?.totalPortfolioValue !== '0' && (
+          <ProfitLoss asset={portfolioStats} full={true} flat={false} />
+        )}
       </div>
     </div>
   )

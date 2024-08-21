@@ -11,7 +11,7 @@ type ProfitLossProps = {
 export default function ProfitLoss({ asset, full, flat }: ProfitLossProps) {
   return (
     <div
-      className={`flex items-center gap-1 text-sm ${Number(asset.valueChange) < 0 ? 'text-orange-500' : 'text-emerald-600'} `}
+      className={`flex items-center gap-1 text-sm ${Number(asset.valueChange) < 0 ? 'text-orange-700 dark:text-orange-500' : 'text-emerald-700 dark:text-emerald-500'} `}
     >
       <div>
         {Number(asset.valueChange) < 0 ? (

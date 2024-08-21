@@ -8,8 +8,8 @@ export default function AssetsTree() {
   const { data } = usePortfolioAssets()
 
   return (
-    <div className="sidebar flex-col ">
-      <SidebarFlowbite aria-label="Sidebar with multi-level dropdown" className="w-80">
+    <div className="assets-tree flex-col">
+      <SidebarFlowbite aria-label="Sidebar with multi-level dropdown" className="w-full">
         <SidebarFlowbite.Items>
           {data && <TreeGroup data={data as FullPortfolioGroupedPublic[]} type="stock" />}
           {data && <TreeGroup data={data as FullPortfolioGroupedPublic[]} type="fund" />}

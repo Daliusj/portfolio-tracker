@@ -25,7 +25,7 @@ export default function Row({ asset, handleClickRow, isSelected, isDisabled }: T
   return (
     <Table.Row
       onClick={() => !isSelected && handleClickRow(asset)}
-      className={` dark:border-gray-700 ${isSelected ? 'bg-blue-800 dark:bg-blue-800' : ' bg-white dark:bg-gray-800'} `}
+      className={` dark:border-gray-700 ${isSelected ? 'bg-blue-300 dark:bg-blue-800' : ' bg-white dark:bg-gray-800'} `}
       key={useId()}
     >
       <Table.Cell className="font-small whitespace-no-wrap flex items-center text-gray-900 dark:text-white">
@@ -34,14 +34,14 @@ export default function Row({ asset, handleClickRow, isSelected, isDisabled }: T
             onClick={() => isSelected && handleClickRow(undefined)}
             className="flex h-5 w-5 items-center justify-center p-0"
           >
-            <HiXCircle className="mr-3 h-5 w-5 p-0" />
+            <HiXCircle className="mr-3 h-5 w-5 p-0 text-gray-900 dark:text-white" />
           </Button>
         )}
         {`${asset.name}(${asset.symbol})`}
       </Table.Cell>
-      <Table.Cell>{asset.type}</Table.Cell>
-      <Table.Cell>{price}</Table.Cell>
-      <Table.Cell>{`${asset.exchange}(${asset.exchangeShortName})`}</Table.Cell>
+      <Table.Cell className=" text-gray-900 dark:text-white">{asset.type}</Table.Cell>
+      <Table.Cell className=" text-gray-900 dark:text-white">{price}</Table.Cell>
+      <Table.Cell className=" text-gray-900 dark:text-white">{`${asset.exchange}(${asset.exchangeShortName})`}</Table.Cell>
     </Table.Row>
   )
 }

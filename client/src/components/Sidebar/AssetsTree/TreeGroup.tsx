@@ -20,21 +20,17 @@ export default function TreeGroup({ data, type }: TreeGroupProps) {
   return (
     <SidebarFlowbite.ItemGroup>
       <div className="flex justify-between">
-        <SidebarFlowbite.Item icon={HiTrendingUp} labelColor="green">
-          {`${type.toUpperCase()}S`}
+        <SidebarFlowbite.Item icon={HiTrendingUp}>
+          <div className="text-xs">{`${type.toUpperCase()}S`}</div>
         </SidebarFlowbite.Item>
-        <div className="w-12 "></div>
       </div>
 
       {data &&
         filterAssetType(data, type)?.map((asset) => (
-          <SidebarFlowbite.Item
-            className="flex w-full items-center justify-center pl-8"
-            key={asset.assetId}
-          >
-            <div className="flex w-full max-w-xs items-center justify-between">
-              <p className="whitespace-normal break-words">{asset.assetName}</p>
-              <div className="flex">
+          <SidebarFlowbite.Item className="flex w-full items-center" key={asset.assetId}>
+            <div className="flex w-full items-center justify-between">
+              <p className="whitespace-normal break-words text-sm">{asset.assetName}</p>
+              <div className="jusify-center flex-col items-center">
                 {assetsStats && assetsStats.find((stats) => stats.assetId === asset.assetId) && (
                   <ProfitLoss
                     asset={assetsStats.find((stats) => stats.assetId === asset.assetId)!}
