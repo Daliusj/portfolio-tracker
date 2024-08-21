@@ -17,7 +17,6 @@ export default function PortfolioForm({
   mode,
   disableClose,
   modalMode,
-  first,
 }: PortfolioFormProps) {
   const onCloseModal = () => {
     setOpenModal && setOpenModal(false)

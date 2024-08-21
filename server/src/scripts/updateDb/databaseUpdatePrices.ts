@@ -25,9 +25,7 @@ export function databaseUpdatePrices(db: Database, fmpApi: Fmp) {
           await Promise.all(
             chunks.map(async (chunkData, index) => {
               try {
-                console.log(`Processing chunk ${index + 1} of ${chunks.length}`)
                 await assetRepo.updatePrices(chunkData)
-                console.log(`Chunk ${index + 1} successfully processed`)
               } catch (error) {
                 console.error(`Error processing chunk ${index + 1}:`, error)
                 throw error
