@@ -42,7 +42,7 @@ it('should get portfolio stats', async () => {
     fakeAsset({
       type: 'stock',
       price: '300',
-      exchangeShortName: 'Euronext',
+      exchangeShortName: 'EURONEXT',
     }),
   ])
 

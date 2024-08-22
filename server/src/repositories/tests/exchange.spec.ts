@@ -31,3 +31,10 @@ describe('findByShortName', () => {
     expect(exchangeFound).toBeUndefined()
   })
 })
+
+describe('findAll', () => {
+  it('should return all exchanges', async () => {
+    const exchangesFound = await repository.findAll()
+    expect(exchangesFound).toHaveLength(67)
+  })
+})

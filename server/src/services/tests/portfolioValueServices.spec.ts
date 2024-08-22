@@ -30,7 +30,7 @@ describe('getTotalValue', () => {
     const [assetOne, assetTwo, assetThree] = await insertAll(db, 'asset', [
       fakeAsset({ type: 'fund', price: 100, exchangeShortName: 'NYSE' }),
       fakeAsset({ type: 'stock', price: 200, exchangeShortName: 'NASDAQ' }),
-      fakeAsset({ type: 'stock', price: 300, exchangeShortName: 'Euronext' }),
+      fakeAsset({ type: 'stock', price: 300, exchangeShortName: 'EURONEXT' }),
     ])
     const [user] = await insertAll(db, 'user', fakeUser())
     const [portfolio] = await insertAll(db, 'portfolio', [
@@ -89,7 +89,7 @@ describe('getAssetsTypeValue', () => {
     const [assetOne, assetTwo, assetThree] = await insertAll(db, 'asset', [
       fakeAsset({ type: 'fund', price: 100, exchangeShortName: 'NYSE' }),
       fakeAsset({ type: 'stock', price: 200, exchangeShortName: 'NASDAQ' }),
-      fakeAsset({ type: 'stock', price: 300, exchangeShortName: 'Euronext' }),
+      fakeAsset({ type: 'stock', price: 300, exchangeShortName: 'EURONEXT' }),
     ])
     const [user] = await insertAll(db, 'user', fakeUser())
     const [portfolio] = await insertAll(db, 'portfolio', [

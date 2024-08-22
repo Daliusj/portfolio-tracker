@@ -15,5 +15,9 @@ export function exchangeRepository(db: Database) {
         .where('exchange.shortName', 'ilike', shortName)
         .executeTakeFirst()
     },
+
+    async findAll(): Promise<ExchangePublic[]> {
+      return db.selectFrom('exchange').select(exchangeKeysPublic).execute()
+    },
   }
 }

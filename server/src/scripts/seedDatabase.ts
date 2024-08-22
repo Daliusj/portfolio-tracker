@@ -2,6 +2,7 @@
 import path from 'path'
 import { fileURLToPath } from 'node:url'
 import { chunk, uniqBy } from 'lodash-es'
+import { exchangeRepository } from '@server/repositories/exchangeRepository'
 import type { Fmp } from '../utils/externalApi/fmpApi'
 import { assetRepository } from '../repositories/assetRepository'
 import { createDatabase, type Database } from '../database'
@@ -9,14 +10,20 @@ import buildFmp from '../utils/externalApi/fmpApi'
 import config from '../config'
 
 export function seedDatabase(db: Database, fmpApi: Fmp) {
-  const repository = assetRepository(db)
+  const assetRepo = assetRepository(db)
+  const exchangeRepo = exchangeRepository(db)
 
   const seed = async () => {
     try {
-      if (await repository.isAssetsEmpty()) {
+      if (await assetRepo.isAssetsEmpty()) {
         const stocks = await fmpApi.fetchAllStocks()
         const cryptos = await fmpApi.fetchAllCryptos()
         const funds = await fmpApi.fetchAllFunds()
+
+        const validExchanges = await exchangeRepo.findAll()
+        const validExchangeShortNames = validExchanges.map(
+          (exchange) => exchange.shortName
+        )
 
         const filterAssets = (assets: any[]) =>
           assets.filter(
@@ -26,9 +33,7 @@ export function seedDatabase(db: Database, fmpApi: Fmp) {
               asset.exchange &&
               asset.exchange.trim() !== '' &&
               asset.price &&
-              asset.exchange !== 'Other OTC' &&
-              asset.exchange !== 'OEM' &&
-              asset.exchange !== 'OQB'
+              validExchangeShortNames.includes(asset.exchangeShortName)
           )
 
         const filteredAssets = filterAssets(
@@ -41,9 +46,7 @@ export function seedDatabase(db: Database, fmpApi: Fmp) {
           await Promise.all(
             chunks.map(async (chunkData, index) => {
               try {
-                console.log(`Processing chunk ${index + 1} of ${chunks.length}`)
-                await repository.create(chunkData)
-                console.log(`Chunk ${index + 1} successfully processed`)
+                await assetRepo.create(chunkData)
               } catch (error) {
                 console.error(`Error processing chunk ${index + 1}:`, error)
                 throw error

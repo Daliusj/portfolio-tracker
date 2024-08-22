@@ -158,18 +158,17 @@ describe('findAll', () => {
     const assetFound = await repository.findAll()
     expect(assetFound).toEqual([])
   })
+})
+describe('isAssetsEmpty', () => {
+  it('should return false if database is not empty', async () => {
+    await insertAll(db, 'asset', fakeAsset({}))
+    const isEmpty = await repository.isAssetsEmpty()
+    expect(isEmpty).toBeFalsy()
+  })
 
-  describe('isAssetsEmpty', () => {
-    it('should return false if database is not empty', async () => {
-      await insertAll(db, 'asset', fakeAsset({}))
-      const isEmpty = await repository.isAssetsEmpty()
-      expect(isEmpty).toBeFalsy()
-    })
-
-    it('should return true if database is empty', async () => {
-      const isEmpty = await repository.isAssetsEmpty()
-      expect(isEmpty).toBeTruthy()
-    })
+  it('should return true if database is empty', async () => {
+    const isEmpty = await repository.isAssetsEmpty()
+    expect(isEmpty).toBeTruthy()
   })
 })
 
