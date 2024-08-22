@@ -1,275 +1,256 @@
-# Investment Portfolio Tracker
+# Portfolio Tracker Monorepo
 
-## Project Description
+## Overview
 
-The Investment Portfolio Tracker is a comprehensive application designed to help users manage and track their investment portfolios.
-It offers features such as portfolio creation, asset management, historical data retrieval, and valuation services.
-The application leverages tRPC for seamless communication between the client and server, providing a robust and efficient API interface.
+The Portfolio Tracker is a full-stack application designed to help users manage and track their investment portfolios, including assets like cryptocurrencies, stocks, and funds. The project is split into two main components: the frontend and the backend. The frontend is built with React, TypeScript, and Vite, while the backend is developed using Node.js, TypeScript, Express.js, and TRPC, with a PostgreSQL database for data storage.
+
+You can access the live application at the following link:
+
+- https://portfolio-tracker-service.nichunkt3352c.eu-central-1.cs.amazonlightsail.com/
+
+## Features
+
+### Frontend
+
+- **User Authentication:** Signup, login, and session management.
+- **Portfolio Management:** Create, update and delete portfolios.
+- **Asset Management:** View, add, edit, and delete assets within a portfolio.
+- **Portfolio Stats:** View portfolio value, asset-specific statistics, and profit/loss analysis.
+- **Responsive Design:** Optimized for both desktop and mobile devices.
+
+### Backend
+
+- **Asset Management:** Manage various asset types (crypto, stocks, funds) within portfolios.
+- **Portfolio Management:** CRUD operations for user portfolios.
+- **Historical Data:** Retrieve and analyze historical data for assets.
+- **Portfolio Valuation:** Calculate portfolio values and track changes over time.
+- **User Authentication:** Secure routes with JWT-based authentication.
+
+## Table of Contents
+
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Database Migrations](#database-migrations)
+- [Seeding the Database](#seeding-the-database)
+- [Running the Development Servers](#running-the-development-servers)
+- [Building for Production](#building-for-production)
+- [Running Tests](#running-tests)
+- [CI/CD Pipeline](#ci-cd-pipeline)
+- [Docker Setup](#docker-setup)
+- [Project Structure](#project-structure)
+- [License](#license)
 
 ## Installation
 
-1. Clone the repository:
+Clone the monorepo and install dependencies for both the frontend and backend:
 
-   ```sh
-   git clone https://github.com/Daliusj/portfolio-tracker.git
-   cd portfolio-tracker/
-   ```
+```bash
+git https://github.com/Daliusj/portfolio-tracker.git
+cd portfolio-tracker
 
-2. Install the dependencies:
+# Install backend dependencies
+cd server/
+npm install
 
-   ```sh
-   npm install
-   ```
+# Install frontend dependencies
+cd client/
+npm install
+```
 
-3. Set up the environment variables:
-   Create a `.env` file in the root directory and add the following:
-   ```sh
-    DATABASE_URL=postgres://username:password@localhost:5432/prod_database_name
-    TEST_DATABASE_URL=postgres://username:password@localhost:5432/test_database_name
-    TOKEN_KEY=supersecretkey
-    FMP_API_KEY=<your_api_key>
-    EXCHANGE_RATE_API_KEY=<your_api_key>
-    DB_INIT_SEED='false' #choose 'true' to run database seeding at the project initialization.
-    DB_UPDATE='false' #choose 'true' to run database data update at the project initialization.
-   ```
+## Configuration
 
-## Running the Application
+### Frontend
 
-1. cd server/
-1. Run database migrations
-   ```sh
-   npm run migrate:latest
-   npm run gen:types
-   ```
-1. Run the server:
+The frontend requires environment variables for the API base URL. Create a `.env` file in the frontend root directory:
 
-   ```sh
-   npm run dev
+```env
+VITE_API_ORIGIN=http://localhost:3000
+VITE_API_PATH=/api/v1/trpc
+```
 
-   ```
+### Backend
 
-1. The server should now be running.
+The backend requires several environment variables for configuration. Create a `.env` file in the backend root directory:
 
-## Usage
+```env
+NODE_ENV=development
+DATABASE_URL=postgres://user:password@localhost:5432/portfolio
+TEST_DATABASE_URL=postgres://user:password@localhost:5432/portfolio_test
+TOKEN_KEY=your_secret_key
+FMP_API_KEY=your_fmp_api_key
+EXCHANGE_RATE_API_KEY=your_exchange_rate_api_key
+```
 
-### tRPC Routes Interaction
+FMP_API and EXCHANGE_RATE_API are external api services. More information:
 
-The Investment Portfolio Tracker uses tRPC for defining and interacting with API routes. Below is a guide on how to interact with the available tRPC routes.
+- https://site.financialmodelingprep.com/
+- https://www.exchangerate-api.com/
 
-#### Accessing the tRPC Panel
+## Database Migrations
 
-1. Start the development server
-   ```sh
-   npm run dev
-   ```
-2. Navigate to http://localhost:3000/api/v1/trpc-panel in your web browser.
+To manage database migrations, navigate to the backend directory and run migration command:
 
-### Example Interactions
+```bash
+cd server/
+npm run migrate:latest
+```
 
-Here are some examples of how to interact with different routes using the tRPC panel:
+## Seeding the Database
 
-#### Authentication
+Seed the database with initial data and update currency exchange rates by running:
 
-Some routes require authentication. After successful user login the response will display the generated access token. The tRPC panel provides fields to input and manage headers for authenticated routes.
-In the 'key' field enter 'Autorization' and in the 'Value' field enter 'Bearer <your_access_token>' press confirm and you will be able to interact with routes that require authorization.
+```bash
+npm run seed
+npm run update:db
+```
 
-### User Routes
+## Running the Development Servers
 
-#### User Login
+### Frontend
 
-- **Route**: `user.login`
-- **Description**: Authenticate a user and generate an access token.
-- **Input Parameters**:
-  - `email`: The user's email address (e.g., "user@example.com").
-  - `password`: The user's password (e.g., "password123").
-- **Example**:
-  - Fill in the `email` and `password` fields with appropriate values.
-  - Click "Send".
-  - The response will display the generated access token.
+Start the frontend development server:
 
-#### User Signup
+```bash
+cd client/
+npm run dev
+```
 
-- **Route**: `user.signup`
-- **Description**: Register a new user account.
-- **Input Parameters**:
-  - `email`: The user's email address (e.g., "newuser@example.com").
-  - `password`: The user's password (e.g., "password123").
-  - `userName`: The user's name (e.g., "newuser").
-- **Example**:
-  - Fill in the `email`, `password`, and `userName` fields with appropriate values.
-  - Click "Send".
-  - The response will display the details of the newly created user.
+The frontend will be accessible at [http://localhost:5173](http://localhost:5173).
 
-### Portfolio Routes
+### Backend
 
-#### Create Portfolio
+Start the backend server:
 
-- **Route**: `portfolio.create`
-- **Description**: Create a new investment portfolio.
-- **Input Parameters**:
-  - `currencySymbol`: The currency symbol for the portfolio (e.g., "USD").
-- **Example**:
-  - Fill in the `currencySymbol` field with "USD".
-  - Click "Send".
-  - The response will display the newly created portfolio details.
+```bash
+cd server/
+npm run dev
+```
 
-#### Get Portfolio by User ID
+The backend will be accessible at [http://localhost:3000](http://localhost:3000).
 
-- **Route**: `portfolio.get`
-- **Description**: Retrieve portfolios for the authenticated user.
-- **Input Parameters**: None.
-- **Example**:
-  - Click "Send".
-  - The response will display the portfolios associated with the authenticated user.
+## Building for Production
 
-#### Update Portfolio
+### Frontend
 
-- **Route**: `portfolio.update`
-- **Description**: Update an existing portfolio.
-- **Input Parameters**:
-  - `id`: The portfolio ID (e.g., 1).
-  - `currencySymbol`: The new currency symbol for the portfolio (e.g., "EUR").
-- **Example**:
-  - Fill in the `id` field with "1".
-  - Fill in the `currencySymbol` field with "EUR".
-  - Click "Send".
-  - The response will display the updated portfolio details.
+To build the frontend for production:
 
-#### Remove Portfolio
+```bash
+cd client/
+npm run build
+```
 
-- **Route**: `portfolio.remove`
-- **Description**: Remove a portfolio.
-- **Input Parameters**:
-  - `id`: The portfolio ID (e.g., 1).
-- **Example**:
-  - Fill in the `id` field with "1".
-  - Click "Send".
-  - The response will display the details of the removed portfolio.
+To preview the production build locally:
 
-### Asset Routes
+```bash
+npm run preview
+```
 
-#### Get Assets by Query
+### Backend
 
-- **Route**: `asset.get`
-- **Description**: Retrieve assets based on a search query.
-- **Input Parameters**:
-  - `query`: A string representing the asset query (e.g., "AAPL").
-- **Example**:
-  - Fill in the `query` field with "AAPL".
-  - Click "Send".
-  - The response will display assets matching the query.
+To build and start the backend server for production:
 
-#### Get Assets by ID
+```bash
+cd server/
+npm run build
+npm run start
+```
 
-- **Route**: `asset.getById`
-- **Description**: Retrieve assets based on their ID.
-- **Input Parameters**:
-  - `id`: An array of asset IDs (e.g., [1, 2, 3]).
-- **Example**:
-  - Fill in the `id` field with [1, 2, 3].
-  - Click "Send".
-  - The response will display the assets with the specified IDs.
+## Running Tests
 
-### Portfolio Item Routes
+### Frontend
 
-#### Create Portfolio Item
+The frontend includes both unit and end-to-end tests.
 
-- **Route**: `portfolioItem.create`
-- **Description**: Create a new portfolio item.
-- **Input Parameters**:
-  - `portfolioId`: The portfolio ID (e.g., 1).
-  - `assetId`: The asset ID (e.g., 2).
-  - `quantity`: The quantity of the asset (e.g., 10).
-  - `purchasePrice`: The purchase price of the asset (e.g., 150).
-  - `purchaseDate`: The purchase date of the asset (e.g., "2024-07-01").
-- **Example**:
-  - Fill in the fields with appropriate values.
-  - Click "Send".
-  - The response will display the newly created portfolio item details.
+#### Unit tests:
 
-#### Get Items by Portfolio ID
+```bash
+npm run test:unit
+```
 
-- **Route**: `portfolioItem.get`
-- **Description**: Retrieve items for a specific portfolio.
-- **Input Parameters**:
-  - `portfolioId`: The portfolio ID (e.g., 1).
-- **Example**:
-  - Fill in the `portfolioId` field with "1".
-  - Click "Send".
-  - The response will display the items associated with the specified portfolio.
+#### End-to-End tests:
 
-#### Update Portfolio Item
+```bash
+npm run test:e2e
+```
 
-- **Route**: `portfolioItem.update`
-- **Description**: Update an existing portfolio item.
-- **Input Parameters**:
-  - `id`: The portfolio item ID (e.g., 1).
-  - `quantity`: The new quantity of the asset (e.g., 20).
-  - `purchasePrice`: The new purchase price of the asset (e.g., 140).
-- **Example**:
-  - Fill in the fields with appropriate values.
-  - Click "Send".
-  - The response will display the updated portfolio item details.
+### Backend
 
-#### Remove Portfolio Item
+To run tests for the backend:
 
-- **Route**: `portfolioItem.remove`
-- **Description**: Remove a portfolio item.
-- **Input Parameters**:
-  - `id`: The portfolio item ID (e.g., 1).
-- **Example**:
-  - Fill in the `id` field with "1".
-  - Click "Send".
-  - The response will display the details of the removed portfolio item.
+```bash
+npm run test
+```
 
-### Historical Data Routes
+## CI/CD Pipeline
 
-#### Get Historical Data
+This project uses GitHub Actions to automate the Continuous Integration and Continuous Deployment (CI/CD) processes. The pipeline is triggered on every push to the repository and includes the following steps:
 
-- **Route**: `historicalData.get`
-- **Description**: Retrieve historical data for a given asset.
-- **Input Parameters**:
-  - `symbol`: The asset symbol (e.g., "AAPL").
-  - `dateFrom`: The start date for the data range (e.g., "2023-01-01").
-  - `dateTo`: The end date for the data range (e.g., "2023-12-31").
-- **Example**:
-  - Fill in the `symbol`, `dateFrom`, and `dateTo` fields with appropriate values.
-  - Click "Send".
-  - The response will display the historical data for the specified asset and date range.
+- **Testing:** The pipeline runs all unit, integration, and end-to-end tests to ensure code quality and functionality.
+- **Build and Deployment:** If the tests pass, the pipeline builds Docker images for the frontend and backend and deploys them to AWS Lightsail.
 
-### Portfolio Value Routes
+### Key Jobs in CI/CD
 
-#### Get Total Portfolio Value
+- **Test:** Runs tests and linters for both the frontend and backend. It uses Docker to spin up a PostgreSQL service for integration testing.
+- **Build and Deploy:** Builds Docker images for the client and server, pushes them to AWS Lightsail, and deploys them.
 
-- **Route**: `portfolioValue.getTotalValue`
-- **Description**: Retrieve the total value of a portfolio.
-- **Input Parameters**:
-  - `portfolioId`: The portfolio ID (e.g., 1).
-- **Example**:
-  - Fill in the `portfolioId` field with "1".
-  - Click "Send".
-  - The response will display the total value of the specified portfolio.
+You can find the CI/CD configuration in the `.github/workflows` directory of the repository.
 
-#### Get Portfolio Value by Asset Type
+## Docker Setup
 
-- **Route**: `portfolioValue.getAssetsTypeValue`
-- **Description**: Retrieve the value of assets in a portfolio by type.
-- **Input Parameters**:
-  - `portfolioId`: The portfolio ID (e.g., 1).
-  - `type`: The asset type (e.g., "stock").
-- **Example**:
-  - Fill in the `portfolioId` and `type` fields with appropriate values.
-  - Click "Send".
-  - The response will display the value of the specified asset type in the portfolio.
+This project is Dockerized to ensure a consistent development environment and to simplify deployment. The setup includes three main services: PostgreSQL, the backend server, and the frontend client.
 
-#### Get Asset Value in Portfolio
+### Docker Compose
 
-- **Route**: `portfolioValue.getAssetValue`
-- **Description**: Retrieve the value of a specific asset in a portfolio.
-- **Input Parameters**:
-  - `portfolioId`: The portfolio ID (e.g., 1).
-  - `assetId`: The asset ID (e.g., 2).
-- **Example**:
-  - Fill in the `portfolioId` and `assetId` fields with appropriate values.
-  - Click "Send".
-  - The response will display the value of the specified asset in the portfolio.
+The `docker-compose.yml` file defines the following services:
+
+- **postgres:** A PostgreSQL database used by the backend.
+- **server:** The backend API server.
+- **client:** The frontend application served via Nginx.
+
+### Running the Application with Docker
+
+To start the application using Docker, run:
+
+```bash
+docker compose up --build
+```
+
+This command will:
+
+- Pull the necessary Docker images for PostgreSQL and Nginx.
+- Build Docker images for the frontend and backend based on the Dockerfiles.
+- Start all services, making the application accessible at [http://localhost:3001](http://localhost:3001).
+
+### Dockerfile Details
+
+- **Backend Dockerfile:** Builds the Node.js backend, installs dependencies, and runs the server.
+- **Frontend Dockerfile:** Builds the frontend assets using Vite and serves them using Nginx.
+
+This setup is designed to work both locally and in production, with environment variables controlling behavior in different environments.
+
+## Project Structure
+
+### Frontend
+
+- `/src`: Main source code directory.
+- `/components`: React components.
+- `/context`: Global state management.
+- `/pages`: Page components.
+- `/utils`: Utility functions.
+- `/trpc`: TRPC client setup.
+- `/assets`: Static assets.
+
+### Backend
+
+- `/src`: Main source code directory.
+- `/controllers`: API route handlers.
+- `/database`: Database configuration and migrations.
+- `/entities`: Zod schemas and TypeScript types.
+- `/repositories`: Database interaction logic.
+- `/services`: Business logic.
+- `/trpc`: TRPC router and middleware.
+- `/utils`: Utility functions.
+
+## License
+
+This project is licensed under the MIT License. See the LICENSE file for more details.
