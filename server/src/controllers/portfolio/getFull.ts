@@ -5,6 +5,7 @@ import { portfolioSchema } from '@server/entities/portfolio'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { groupAssets } from '@server/utils/assets'
+import { isUserPortfolioOwner } from '@server/utils/isUserPortfolioOwner'
 
 export default authenticatedProcedure
   .use(provideRepos({ portfolioRepository }))
@@ -15,8 +16,22 @@ export default authenticatedProcedure
       })
       .extend({ group: z.boolean().default(false) })
   )
-  .query(async ({ input: inputData, ctx: { repos } }) => {
+  .query(async ({ input: inputData, ctx: { authUser, repos } }) => {
+    if (
+      !isUserPortfolioOwner(
+        inputData.id,
+        authUser.id,
+        repos.portfolioRepository
+      )
+    ) {
+      throw new TRPCError({
+        code: 'FORBIDDEN',
+        message: 'User do not have access to this portfolio.',
+      })
+    }
+
     const dataReturned = await repos.portfolioRepository.findFull(inputData.id)
+
     if (!dataReturned) {
       throw new TRPCError({
         code: 'NOT_FOUND',

@@ -1,9 +1,9 @@
-import { authenticatedProcedure } from '@server/trpc/authenticatedProcedure'
 import provideRepos from '@server/trpc/provideRepos'
 import { exchangeSchema } from '@server/entities/exchange'
+import { publicProcedure } from '@server/trpc'
 import { exchangeRepository } from '../../repositories/exchangeRepository'
 
-export default authenticatedProcedure
+export default publicProcedure
   .use(provideRepos({ exchangeRepository }))
   .input(
     exchangeSchema.pick({

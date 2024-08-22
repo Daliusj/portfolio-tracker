@@ -3,6 +3,7 @@ import provideRepos from '@server/trpc/provideRepos'
 import { portfolioItemSchema } from '@server/entities/portfolioItems'
 import { assetRepository } from '@server/repositories/assetRepository'
 import { TRPCError } from '@trpc/server'
+import { isUserPortfolioOwner } from '@server/utils/isUserPortfolioOwner'
 import { portfolioItemRepository } from '../../repositories/portfolioItemRepository'
 import { portfolioRepository } from '../../repositories/portfolioRepository'
 
@@ -23,7 +24,19 @@ export default authenticatedProcedure
       purchasePrice: true,
     })
   )
-  .mutation(async ({ input: portfolioItemData, ctx: { repos } }) => {
+  .mutation(async ({ input: portfolioItemData, ctx: { authUser, repos } }) => {
+    if (
+      !isUserPortfolioOwner(
+        portfolioItemData.portfolioId,
+        authUser.id,
+        repos.portfolioRepository
+      )
+    ) {
+      throw new TRPCError({
+        code: 'FORBIDDEN',
+        message: 'User do not have access to this portfolio.',
+      })
+    }
     const portfolio = await repos.portfolioRepository.findById(
       portfolioItemData.portfolioId
     )

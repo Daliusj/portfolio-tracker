@@ -3,6 +3,7 @@ import provideRepos from '@server/trpc/provideRepos'
 import { portfolioItemSchema } from '@server/entities/portfolioItems'
 import { TRPCError } from '@trpc/server'
 import { assetRepository } from '@server/repositories/assetRepository'
+import { isUserPortfolioOwner } from '@server/utils/isUserPortfolioOwner'
 import { portfolioItemRepository } from '../../repositories/portfolioItemRepository'
 import { portfolioRepository } from '../../repositories/portfolioRepository'
 
@@ -24,7 +25,7 @@ export default authenticatedProcedure
       id: true,
     })
   )
-  .mutation(async ({ input: portfolioItemData, ctx: { repos } }) => {
+  .mutation(async ({ input: portfolioItemData, ctx: { authUser, repos } }) => {
     const portfolio = await repos.portfolioRepository.findById(
       portfolioItemData.portfolioId
     )
@@ -40,6 +41,20 @@ export default authenticatedProcedure
       throw new TRPCError({
         code: 'NOT_FOUND',
         message: 'Portfolio not found with this id',
+      })
+    }
+
+    if (
+      portfolio &&
+      !isUserPortfolioOwner(
+        portfolio?.id,
+        authUser.id,
+        repos.portfolioRepository
+      )
+    ) {
+      throw new TRPCError({
+        code: 'FORBIDDEN',
+        message: 'User do not have access to this portfolio.',
       })
     }
 

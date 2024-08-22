@@ -4,6 +4,7 @@ import { TRPCError } from '@trpc/server'
 import provideRepos from '@server/trpc/provideRepos'
 import statsServices from '@server/services/statsServices'
 import { portfolioSchema } from '@server/entities/portfolio'
+import { isUserPortfolioOwner } from '@server/utils/isUserPortfolioOwner'
 import { portfolioRepository } from '../../repositories/portfolioRepository'
 
 export default authenticatedProcedure
@@ -14,7 +15,16 @@ export default authenticatedProcedure
       id: true,
     })
   )
-  .query(async ({ input: data, ctx: { services, repos } }) => {
+  .query(async ({ input: data, ctx: { authUser, services, repos } }) => {
+    if (
+      !isUserPortfolioOwner(data.id, authUser.id, repos.portfolioRepository)
+    ) {
+      throw new TRPCError({
+        code: 'FORBIDDEN',
+        message: 'User do not have access to this portfolio.',
+      })
+    }
+
     const portfolio = await repos.portfolioRepository.findById(data.id)
     if (!portfolio) {
       throw new TRPCError({
