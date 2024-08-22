@@ -4,6 +4,7 @@ import {
   fakeUser,
   fakeAsset,
   fakePortfolio,
+  fakeExchange,
 } from '@server/entities/tests/fakes'
 import { wrapInRollbacks } from '@tests/utils/transactions'
 import { insertAll, selectAll } from '@tests/utils/records'
@@ -20,7 +21,12 @@ describe('create', () => {
       'portfolio',
       fakePortfolio({ userId: user.id })
     )
-    const [asset] = await insertAll(db, 'asset', fakeAsset({}))
+    const [exchange] = await insertAll(db, 'exchange', fakeExchange({}))
+    const [asset] = await insertAll(
+      db,
+      'asset',
+      fakeAsset({ exchangeShortName: exchange.shortName })
+    )
     const portfolioItem = fakePortfolioItem({
       portfolioId: portfolio.id,
       assetId: asset.id,
@@ -45,7 +51,12 @@ describe('findById', () => {
       'portfolio',
       fakePortfolio({ userId: user.id })
     )
-    const [asset] = await insertAll(db, 'asset', fakeAsset({}))
+    const [exchange] = await insertAll(db, 'exchange', fakeExchange({}))
+    const [asset] = await insertAll(
+      db,
+      'asset',
+      fakeAsset({ exchangeShortName: exchange.shortName })
+    )
     const [portfolioItem] = await insertAll(
       db,
       'portfolioItem',
@@ -75,7 +86,12 @@ describe('findByPortfolioId', () => {
       fakePortfolio({ userId: userOne.id }),
       fakePortfolio({ userId: userTwo.id }),
     ])
-    const [asset] = await insertAll(db, 'asset', fakeAsset({}))
+    const [exchange] = await insertAll(db, 'exchange', fakeExchange({}))
+    const [asset] = await insertAll(
+      db,
+      'asset',
+      fakeAsset({ exchangeShortName: exchange.shortName })
+    )
     const [portfolioItemOne, portfolioItemTwo] = await insertAll(
       db,
       'portfolioItem',
@@ -115,7 +131,12 @@ describe('update', () => {
       'portfolio',
       fakePortfolio({ userId: user.id })
     )
-    const [asset] = await insertAll(db, 'asset', fakeAsset({}))
+    const [exchange] = await insertAll(db, 'exchange', fakeExchange({}))
+    const [asset] = await insertAll(
+      db,
+      'asset',
+      fakeAsset({ exchangeShortName: exchange.shortName })
+    )
     const [portfolioItem] = await insertAll(
       db,
       'portfolioItem',
@@ -150,7 +171,12 @@ describe('delete', () => {
       'portfolio',
       fakePortfolio({ userId: user.id })
     )
-    const [asset] = await insertAll(db, 'asset', fakeAsset({}))
+    const [exchange] = await insertAll(db, 'exchange', fakeExchange({}))
+    const [asset] = await insertAll(
+      db,
+      'asset',
+      fakeAsset({ exchangeShortName: exchange.shortName })
+    )
     const [portfolioItem] = await insertAll(
       db,
       'portfolioItem',

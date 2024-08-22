@@ -1,6 +1,7 @@
 import { createTestDatabase } from '@tests/utils/database'
 import {
   fakeAsset,
+  fakeExchange,
   fakePortfolio,
   fakePortfolioItem,
   fakeUser,
@@ -68,7 +69,12 @@ describe('delete', () => {
       'portfolio',
       fakePortfolio({ userId: user.id })
     )
-    const [asset] = await insertAll(db, 'asset', fakeAsset({}))
+    const [exchange] = await insertAll(db, 'exchange', fakeExchange({}))
+    const [asset] = await insertAll(
+      db,
+      'asset',
+      fakeAsset({ exchangeShortName: exchange.shortName })
+    )
     await insertAll(
       db,
       'portfolioItem',

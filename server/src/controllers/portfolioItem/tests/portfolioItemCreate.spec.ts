@@ -1,6 +1,7 @@
 import { authContext, requestContext } from '@tests/utils/context'
 import {
   fakeAsset,
+  fakeExchange,
   fakePortfolio,
   fakeUser,
 } from '@server/entities/tests/fakes'
@@ -33,7 +34,12 @@ it('should create a persisted portfolio item', async () => {
     'portfolio',
     fakePortfolio({ userId: user.id })
   )
-  const [asset] = await insertAll(db, 'asset', fakeAsset({}))
+  const [exchange] = await insertAll(db, 'exchange', fakeExchange({}))
+  const [asset] = await insertAll(
+    db,
+    'asset',
+    fakeAsset({ exchangeShortName: exchange.shortName })
+  )
   const { create } = createCaller(authContext({ db }, user))
   const portfolioItemReturned = await create({
     quantity: 1,

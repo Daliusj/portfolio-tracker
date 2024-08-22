@@ -1,6 +1,7 @@
 import { authContext, requestContext } from '@tests/utils/context'
 import {
   fakeAsset,
+  fakeExchange,
   fakePortfolio,
   fakePortfolioItem,
   fakeUser,
@@ -26,9 +27,10 @@ it('should get all portfolioItems', async () => {
     'portfolio',
     fakePortfolio({ userId: user.id })
   )
+  const [exchange] = await insertAll(db, 'exchange', fakeExchange({}))
   const [assetOne, assetTwo] = await insertAll(db, 'asset', [
-    fakeAsset({}),
-    fakeAsset({}),
+    fakeAsset({ exchangeShortName: exchange.shortName }),
+    fakeAsset({ exchangeShortName: exchange.shortName }),
   ])
   const [portfolioItemOne, portfolioItemTwo] = await insertAll(
     db,

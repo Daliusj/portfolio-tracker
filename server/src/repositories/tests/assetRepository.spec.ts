@@ -1,5 +1,5 @@
 import { createTestDatabase } from '@tests/utils/database'
-import { fakeAsset } from '@server/entities/tests/fakes'
+import { fakeAsset, fakeExchange } from '@server/entities/tests/fakes'
 import { wrapInRollbacks } from '@tests/utils/transactions'
 import { insertAll } from '@tests/utils/records'
 import { assetRepository } from '../assetRepository'
@@ -9,7 +9,8 @@ const repository = assetRepository(db)
 
 describe('create', () => {
   it('should create a new asset and return created assets', async () => {
-    const asset = fakeAsset({})
+    const [exchange] = await insertAll(db, 'exchange', fakeExchange({}))
+    const asset = fakeAsset({ exchangeShortName: exchange.shortName })
     const createdAssets = await repository.create(asset)
     expect(createdAssets).toEqual([
       {
@@ -22,12 +23,13 @@ describe('create', () => {
   })
 
   it('should create new assets and return created assets with array of assets data', async () => {
+    const [exchange] = await insertAll(db, 'exchange', fakeExchange({}))
     const createdAssets = await repository.create([
-      fakeAsset({}),
-      fakeAsset({}),
-      fakeAsset({}),
-      fakeAsset({}),
-      fakeAsset({}),
+      fakeAsset({ exchangeShortName: exchange.shortName }),
+      fakeAsset({ exchangeShortName: exchange.shortName }),
+      fakeAsset({ exchangeShortName: exchange.shortName }),
+      fakeAsset({ exchangeShortName: exchange.shortName }),
+      fakeAsset({ exchangeShortName: exchange.shortName }),
     ])
     expect(createdAssets).toHaveLength(5)
   })
@@ -35,15 +37,21 @@ describe('create', () => {
 
 describe('findById', () => {
   it('should find asset by id', async () => {
-    const [asset] = await insertAll(db, 'asset', fakeAsset({}))
+    const [exchange] = await insertAll(db, 'exchange', fakeExchange({}))
+    const [asset] = await insertAll(
+      db,
+      'asset',
+      fakeAsset({ exchangeShortName: exchange.shortName })
+    )
     const assetsFound = await repository.findById(asset.id)
     expect(assetsFound).toEqual([asset])
   })
 
   it('should find assets by array of ids', async () => {
+    const [exchange] = await insertAll(db, 'exchange', fakeExchange({}))
     const [assetOne, assetTwo] = await insertAll(db, 'asset', [
-      fakeAsset({}),
-      fakeAsset({}),
+      fakeAsset({ exchangeShortName: exchange.shortName }),
+      fakeAsset({ exchangeShortName: exchange.shortName }),
     ])
     const assetsFound = await repository.findById([assetOne.id, assetTwo.id])
     expect(assetsFound).toEqual([assetOne, assetTwo])
@@ -58,10 +66,15 @@ describe('findById', () => {
 
 describe('findAsset', () => {
   it('should find asset by provided full stock name', async () => {
+    const [exchange] = await insertAll(db, 'exchange', fakeExchange({}))
     const [asset] = await insertAll(
       db,
       'asset',
-      fakeAsset({ name: 'Apple', symbol: 'AAPL' })
+      fakeAsset({
+        name: 'Apple',
+        symbol: 'AAPL',
+        exchangeShortName: exchange.shortName,
+      })
     )
     const assetsFound = await repository.findAsset('Apple', {
       offset: 0,
@@ -71,10 +84,15 @@ describe('findAsset', () => {
   })
 
   it('should find asset by provided full stock name in lower case', async () => {
+    const [exchange] = await insertAll(db, 'exchange', fakeExchange({}))
     const [asset] = await insertAll(
       db,
       'asset',
-      fakeAsset({ name: 'Apple', symbol: 'AAPL' })
+      fakeAsset({
+        name: 'Apple',
+        symbol: 'AAPL',
+        exchangeShortName: exchange.shortName,
+      })
     )
     const assetsFound = await repository.findAsset('apple', {
       offset: 0,
@@ -84,10 +102,15 @@ describe('findAsset', () => {
   })
 
   it('should find asset by provided partial stock name in lower case', async () => {
+    const [exchange] = await insertAll(db, 'exchange', fakeExchange({}))
     const [asset] = await insertAll(
       db,
       'asset',
-      fakeAsset({ name: 'Apple', symbol: 'AAPL' })
+      fakeAsset({
+        name: 'Apple',
+        symbol: 'AAPL',
+        exchangeShortName: exchange.shortName,
+      })
     )
     const assetsFound = await repository.findAsset('pple', {
       offset: 0,
@@ -97,10 +120,15 @@ describe('findAsset', () => {
   })
 
   it('should find asset by provided full symbol', async () => {
+    const [exchange] = await insertAll(db, 'exchange', fakeExchange({}))
     const [asset] = await insertAll(
       db,
       'asset',
-      fakeAsset({ name: 'Apple', symbol: 'AAPL' })
+      fakeAsset({
+        name: 'Apple',
+        symbol: 'AAPL',
+        exchangeShortName: exchange.shortName,
+      })
     )
     const assetsFound = await repository.findAsset('AAPL', {
       offset: 0,
@@ -110,10 +138,15 @@ describe('findAsset', () => {
   })
 
   it('should find asset by provided full symbol in lower case', async () => {
+    const [exchange] = await insertAll(db, 'exchange', fakeExchange({}))
     const [asset] = await insertAll(
       db,
       'asset',
-      fakeAsset({ name: 'Apple', symbol: 'AAPL' })
+      fakeAsset({
+        name: 'Apple',
+        symbol: 'AAPL',
+        exchangeShortName: exchange.shortName,
+      })
     )
     const assetsFound = await repository.findAsset('aapl', {
       offset: 0,
@@ -123,10 +156,15 @@ describe('findAsset', () => {
   })
 
   it('should find asset by provided partial symbol in lower case', async () => {
+    const [exchange] = await insertAll(db, 'exchange', fakeExchange({}))
     const [asset] = await insertAll(
       db,
       'asset',
-      fakeAsset({ name: 'Apple', symbol: 'AAPL' })
+      fakeAsset({
+        name: 'Apple',
+        symbol: 'AAPL',
+        exchangeShortName: exchange.shortName,
+      })
     )
     const assetsFound = await repository.findAsset('apl', {
       offset: 0,
@@ -144,11 +182,12 @@ describe('findAsset', () => {
   })
 })
 
-describe('findAll', () => {
+describe('findAll', async () => {
+  const [exchange] = await insertAll(db, 'exchange', fakeExchange({}))
   it('should return all assets', async () => {
     const [assetOne, assetTwo] = await insertAll(db, 'asset', [
-      fakeAsset({}),
-      fakeAsset({}),
+      fakeAsset({ exchangeShortName: exchange.shortName }),
+      fakeAsset({ exchangeShortName: exchange.shortName }),
     ])
     const assetsFound = await repository.findAll()
     expect(assetsFound).toEqual([assetOne, assetTwo])
@@ -159,9 +198,14 @@ describe('findAll', () => {
     expect(assetFound).toEqual([])
   })
 })
-describe('isAssetsEmpty', () => {
+describe('isAssetsEmpty', async () => {
+  const [exchange] = await insertAll(db, 'exchange', fakeExchange({}))
   it('should return false if database is not empty', async () => {
-    await insertAll(db, 'asset', fakeAsset({}))
+    await insertAll(
+      db,
+      'asset',
+      fakeAsset({ exchangeShortName: exchange.shortName })
+    )
     const isEmpty = await repository.isAssetsEmpty()
     expect(isEmpty).toBeFalsy()
   })
@@ -174,9 +218,10 @@ describe('isAssetsEmpty', () => {
 
 describe('updatePrice', () => {
   it('should update assets prices', async () => {
+    const [exchange] = await insertAll(db, 'exchange', fakeExchange({}))
     const [asset1, asset2] = await insertAll(db, 'asset', [
-      fakeAsset({ symbol: 'AAPL' }),
-      fakeAsset({ symbol: 'GOOG' }),
+      fakeAsset({ symbol: 'AAPL', exchangeShortName: exchange.shortName }),
+      fakeAsset({ symbol: 'GOOG', exchangeShortName: exchange.shortName }),
     ])
     const updateAsset = await repository.updatePrices([
       {

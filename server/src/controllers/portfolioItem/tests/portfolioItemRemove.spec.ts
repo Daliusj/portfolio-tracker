@@ -1,6 +1,7 @@
 import { authContext, requestContext } from '@tests/utils/context'
 import {
   fakeAsset,
+  fakeExchange,
   fakePortfolio,
   fakePortfolioItem,
   fakeUser,
@@ -30,7 +31,12 @@ it('should delete portfolio item', async () => {
     'portfolio',
     fakePortfolio({ userId: user.id })
   )
-  const [asset] = await insertAll(db, 'asset', fakeAsset({}))
+  const [exchange] = await insertAll(db, 'exchange', fakeExchange({}))
+  const [asset] = await insertAll(
+    db,
+    'asset',
+    fakeAsset({ exchangeShortName: exchange.shortName })
+  )
   const [portfolioItem] = await insertAll(
     db,
     'portfolioItem',
