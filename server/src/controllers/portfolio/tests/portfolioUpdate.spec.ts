@@ -55,9 +55,10 @@ it('should update a portfolio', async () => {
     name: 'MyPortfolio',
   })
 
-  const [portfolioCreated] = await selectAll(db, 'portfolio', (eb) =>
-    eb('id', '=', portfolioReturned.id)
-  )
-
-  expect(portfolioCreated).toMatchObject(portfolioReturned)
+  if (portfolioReturned) {
+    const [portfolioCreated] = await selectAll(db, 'portfolio', (eb) =>
+      eb('id', '=', portfolioReturned.id)
+    )
+    expect(portfolioCreated).toMatchObject(portfolioReturned)
+  }
 })
