@@ -17,19 +17,15 @@ export default authenticatedProcedure
   )
   .query(async ({ input: data, ctx: { authUser, services, repos } }) => {
     if (
-      !isUserPortfolioOwner(data.id, authUser.id, repos.portfolioRepository)
+      !(await isUserPortfolioOwner(
+        data.id,
+        authUser.id,
+        repos.portfolioRepository
+      ))
     ) {
       throw new TRPCError({
         code: 'FORBIDDEN',
         message: 'User do not have access to this portfolio.',
-      })
-    }
-
-    const portfolio = await repos.portfolioRepository.findById(data.id)
-    if (!portfolio) {
-      throw new TRPCError({
-        code: 'NOT_FOUND',
-        message: 'Portfolio not found with this id',
       })
     }
 

@@ -14,11 +14,11 @@ export default authenticatedProcedure
   )
   .mutation(async ({ input: portfolioData, ctx: { authUser, repos } }) => {
     if (
-      !isUserPortfolioOwner(
+      !(await isUserPortfolioOwner(
         portfolioData.id,
         authUser.id,
         repos.portfolioRepository
-      )
+      ))
     ) {
       throw new TRPCError({
         code: 'FORBIDDEN',
@@ -30,13 +30,6 @@ export default authenticatedProcedure
       portfolioData.id,
       authUser.id
     )
-
-    if (!portfolioDeleted) {
-      throw new TRPCError({
-        code: 'NOT_FOUND',
-        message: 'Portfolio not found with this id.',
-      })
-    }
 
     return portfolioDeleted
   })

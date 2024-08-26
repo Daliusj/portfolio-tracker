@@ -37,20 +37,13 @@ export default authenticatedProcedure
       portfolioItemData.id
     )
 
-    if (!portfolio) {
-      throw new TRPCError({
-        code: 'NOT_FOUND',
-        message: 'Portfolio not found with this id',
-      })
-    }
-
     if (
       portfolio &&
-      !isUserPortfolioOwner(
+      !(await isUserPortfolioOwner(
         portfolio?.id,
         authUser.id,
         repos.portfolioRepository
-      )
+      ))
     ) {
       throw new TRPCError({
         code: 'FORBIDDEN',

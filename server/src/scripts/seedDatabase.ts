@@ -65,26 +65,20 @@ export function seedDatabase(db: Database, fmpApi: Fmp) {
         }`
       )
     }
-    return undefined
+    return { success: false, message: 'Database is already seeded' }
   }
   return { seed }
 }
 
 export type SeedDatabase = ReturnType<typeof seedDatabase>
 
-const pathToThisFile = path.resolve(fileURLToPath(import.meta.url))
-const pathPassedToNode = path.resolve(process.argv[1])
-const isFileRunDirectly = pathToThisFile.includes(pathPassedToNode)
-
-if (isFileRunDirectly) {
+export async function runSeedScript() {
   const db = createDatabase(config.database)
   const fmp = buildFmp()
   const dbSeed = seedDatabase(db, fmp)
   try {
-    // eslint-disable-next-line no-console
     console.log('Start seeding the database with assets listings')
     await dbSeed.seed()
-    // eslint-disable-next-line no-console
     console.log('Seeding completed')
   } catch (err) {
     throw new Error(
@@ -93,4 +87,12 @@ if (isFileRunDirectly) {
       }`
     )
   }
+}
+
+const pathToThisFile = path.resolve(fileURLToPath(import.meta.url))
+const pathPassedToNode = path.resolve(process.argv[1])
+const isFileRunDirectly = pathToThisFile.includes(pathPassedToNode)
+
+if (isFileRunDirectly) {
+  runSeedScript()
 }

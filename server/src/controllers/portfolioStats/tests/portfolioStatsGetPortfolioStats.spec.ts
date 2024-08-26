@@ -1,4 +1,4 @@
-import { authContext } from '@tests/utils/context'
+import { authContext, requestContext } from '@tests/utils/context'
 import { createCallerFactory } from '@server/trpc'
 import { createTestDatabase } from '@tests/utils/database'
 import { wrapInRollbacks } from '@tests/utils/transactions'
@@ -13,6 +13,34 @@ import portfolioValueRouter from '..'
 
 const createCaller = createCallerFactory(portfolioValueRouter)
 const db = await wrapInRollbacks(createTestDatabase())
+
+it('should throw an error if user is not authenticated', async () => {
+  const { getPortfolioStats } = createCaller(requestContext({ db }))
+  await expect(
+    getPortfolioStats({
+      id: 12,
+    })
+  ).rejects.toThrow(/unauthenticated/i)
+})
+
+it('should throw an error if user is not the portfolio owner', async () => {
+  const [userOne, userTwo] = await insertAll(db, 'user', [
+    fakeUser(),
+    fakeUser(),
+  ])
+
+  const { getPortfolioStats } = createCaller(authContext({ db }, userTwo))
+
+  const [portfolio] = await insertAll(db, 'portfolio', [
+    fakePortfolio({ userId: userOne.id }),
+  ])
+
+  expect(
+    getPortfolioStats({
+      id: portfolio.id,
+    })
+  ).rejects.toThrow(/access/i)
+})
 
 it('should get portfolio stats', async () => {
   const [rateOne, rateTwo] = await insertAll(db, 'currencyExchangeRate', [

@@ -15,7 +15,7 @@ export default (db: Database) => {
       portfolioId: number
     ): Promise<AssetStatsPublic[]> => {
       const portfolioAssets = await portfolioRepo.findFull(portfolioId)
-      if (portfolioAssets) {
+      if (portfolioAssets.length) {
         const groupedAssets = groupAssets(portfolioAssets)
         const totalPortfolioValue =
           await valueServices.getTotalValue(portfolioId)
@@ -26,10 +26,10 @@ export default (db: Database) => {
               (acc, purchase) => acc + Number(purchase.quantity),
               0
             )
-            const valueInBaseCurrencie = await valueServices.getAssetValue(
+            const valueInBaseCurrencie = (await valueServices.getAssetValue(
               portfolioId,
               asset.assetId
-            )
+            )) as string
             const totalPurchaseValue = asset.purchases.reduce(
               (acc, purchase) => acc + Number(purchase.purchasePrice),
               0
@@ -75,7 +75,7 @@ export default (db: Database) => {
       const portfolioAssets = await portfolioRepo.findFull(portfolioId)
       const portfolio = await portfolioRepo.findById(portfolioId)
 
-      if (portfolioAssets && portfolio) {
+      if (portfolioAssets.length && portfolio) {
         const totalPortfolioValue =
           await valueServices.getTotalValue(portfolioId)
 
@@ -117,7 +117,7 @@ export default (db: Database) => {
         portfolioId,
         totalPortfolioValue: '0.00',
         valueChange: '0.00',
-        percentageChange: '00.0',
+        percentageChange: '0.00',
       }
     },
   }

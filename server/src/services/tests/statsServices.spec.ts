@@ -151,6 +151,14 @@ describe('getAssetsStats', () => {
     const resolvedResult = await Promise.all(result)
     expect(resolvedResult).toEqual(expectedStats)
   })
+  it('should return an empty array if portfolio has no assets', async () => {
+    const [user] = await insertAll(db, 'user', fakeUser())
+    const [portfolio] = await insertAll(db, 'portfolio', [
+      fakePortfolio({ userId: user.id }),
+    ])
+    const result = await services.getAssetsStats(portfolio.id)
+    expect(result).toEqual([])
+  })
 })
 
 describe('getPortfolioStats', () => {
@@ -238,5 +246,18 @@ describe('getPortfolioStats', () => {
 
     const result = await services.getPortfolioStats(portfolio.id)
     expect(result).toEqual(expectedStats)
+  })
+  it('should return "0" stats if portfolio has no assets', async () => {
+    const [user] = await insertAll(db, 'user', fakeUser())
+    const [portfolio] = await insertAll(db, 'portfolio', [
+      fakePortfolio({ userId: user.id }),
+    ])
+    const result = await services.getPortfolioStats(portfolio.id)
+    expect(result).toEqual({
+      portfolioId: portfolio.id,
+      totalPortfolioValue: '0.00',
+      valueChange: '0.00',
+      percentageChange: '0.00',
+    })
   })
 })

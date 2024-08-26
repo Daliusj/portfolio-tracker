@@ -18,11 +18,11 @@ export default authenticatedProcedure
   )
   .query(async ({ input: inputData, ctx: { authUser, repos } }) => {
     if (
-      !isUserPortfolioOwner(
+      !(await isUserPortfolioOwner(
         inputData.id,
         authUser.id,
         repos.portfolioRepository
-      )
+      ))
     ) {
       throw new TRPCError({
         code: 'FORBIDDEN',
@@ -31,13 +31,6 @@ export default authenticatedProcedure
     }
 
     const dataReturned = await repos.portfolioRepository.findFull(inputData.id)
-
-    if (!dataReturned) {
-      throw new TRPCError({
-        code: 'NOT_FOUND',
-        message: 'Portfolio not found with this id.',
-      })
-    }
 
     if (inputData.group) {
       return groupAssets(dataReturned)

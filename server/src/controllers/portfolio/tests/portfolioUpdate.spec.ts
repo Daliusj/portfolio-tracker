@@ -20,6 +20,20 @@ it('should throw an error if user is not authenticated', async () => {
   ).rejects.toThrow(/unauthenticated/i)
 })
 
+it('should throw an error if user is not the portfolio owner', async () => {
+  const [userOne, userTwo] = await insertAll(db, 'user', [
+    fakeUser(),
+    fakeUser(),
+  ])
+  const [portfolio] = await insertAll(db, 'portfolio', [
+    fakePortfolio({ userId: userOne.id }),
+  ])
+  const { update } = createCaller(authContext({ db }, userTwo))
+  expect(
+    update({ id: portfolio.id, currencySymbol: 'EUR', name: 'Portfolio' })
+  ).rejects.toThrow(/access/i)
+})
+
 it('should update a portfolio', async () => {
   const [user] = await insertAll(db, 'user', fakeUser())
   const [portfolio] = await insertAll(

@@ -18,11 +18,11 @@ export default authenticatedProcedure
   )
   .query(async ({ input: data, ctx: { authUser, services, repos } }) => {
     if (
-      !isUserPortfolioOwner(
+      !(await isUserPortfolioOwner(
         data.portfolioId,
         authUser.id,
         repos.portfolioRepository
-      )
+      ))
     ) {
       throw new TRPCError({
         code: 'FORBIDDEN',

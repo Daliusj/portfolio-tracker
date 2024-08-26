@@ -21,7 +21,6 @@ export default (db: Database, fmpApi: Fmp) => {
         currencyFrom: portfolio.currencySymbol.toUpperCase(),
         currencyTo: asset.currencyCode,
       })
-
       const value =
         (Number(asset.assetPrice) * Number(asset.quantity)) /
         Number(exchangeData?.exchangeRate)
@@ -35,20 +34,11 @@ export default (db: Database, fmpApi: Fmp) => {
     getTotalValue: async (portfolioId: number) => {
       const portfolio = await portfolioRepo.findById(portfolioId)
       const portfolioAssets = await portfolioRepo.findFull(portfolioId)
-
-      try {
-        if (portfolio?.currencySymbol && portfolioAssets.length) {
-          const value = await calculateValue(portfolio, portfolioAssets)
-          return value
-        }
-        return '0'
-      } catch (err) {
-        throw new Error(
-          `Error calculating portfolio value: ${
-            err instanceof Error ? err.message : 'An unknown error occurred'
-          }`
-        )
+      if (portfolio?.currencySymbol && portfolioAssets.length) {
+        const value = await calculateValue(portfolio, portfolioAssets)
+        return value
       }
+      return '0.00'
     },
 
     getAssetsTypeValue: async (portfolioId: number, type: InvestmentType) => {
@@ -57,41 +47,24 @@ export default (db: Database, fmpApi: Fmp) => {
         portfolioId,
         type
       )
-
-      try {
-        if (portfolio?.currencySymbol && portfolioAssets.length) {
-          const value = await calculateValue(portfolio, portfolioAssets)
-          return value
-        }
-        return '0'
-      } catch (err) {
-        throw new Error(
-          `Error calculating portfolio value: ${
-            err instanceof Error ? err.message : 'An unknown error occurred'
-          }`
-        )
+      if (portfolio?.currencySymbol && portfolioAssets.length) {
+        const value = await calculateValue(portfolio, portfolioAssets)
+        return value
       }
+      return '0.00'
     },
 
     getAssetValue: async (portfolioId: number, assetId: number) => {
       const portfolio = await portfolioRepo.findById(portfolioId)
-      const portfolioAsset = await portfolioRepo.findFullByAssetId(
+      const portfolioAssets = await portfolioRepo.findFullByAssetId(
         portfolioId,
         assetId
       )
-      try {
-        if (portfolio?.currencySymbol && portfolioAsset.length) {
-          const value = await calculateValue(portfolio, portfolioAsset)
-          return value
-        }
-        return '0'
-      } catch (err) {
-        throw new Error(
-          `Error calculating portfolio value: ${
-            err instanceof Error ? err.message : 'An unknown error occurred'
-          }`
-        )
+      if (portfolio && portfolioAssets.length) {
+        const value = await calculateValue(portfolio, portfolioAssets)
+        return value
       }
+      return undefined
     },
   }
 }

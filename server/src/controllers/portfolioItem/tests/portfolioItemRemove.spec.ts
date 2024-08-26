@@ -24,6 +24,47 @@ it('should throw an error if user is not authenticated', async () => {
   ).rejects.toThrow(/unauthenticated/i)
 })
 
+it('should throw an error if portfolio item not found', async () => {
+  const [user] = await insertAll(db, 'user', [fakeUser(), fakeUser()])
+  const { remove } = createCaller(authContext({ db }, user))
+  expect(
+    remove({
+      id: 99,
+    })
+  ).rejects.toThrow(/item not found/i)
+})
+
+it('should throw an error if user is not the portfolio owner', async () => {
+  const [userOne, userTwo] = await insertAll(db, 'user', [
+    fakeUser(),
+    fakeUser(),
+  ])
+  const [portfolio] = await insertAll(db, 'portfolio', [
+    fakePortfolio({ userId: userOne.id }),
+  ])
+  const [exchange] = await insertAll(db, 'exchange', fakeExchange({}))
+  const [asset] = await insertAll(
+    db,
+    'asset',
+    fakeAsset({ exchangeShortName: exchange.shortName })
+  )
+  const [portfolioItem] = await insertAll(
+    db,
+    'portfolioItem',
+    fakePortfolioItem({
+      quantity: 1,
+      assetId: asset.id,
+      portfolioId: portfolio.id,
+      purchaseDate: '2022-05-14',
+      purchasePrice: 123.0,
+    })
+  )
+
+  const { remove } = createCaller(authContext({ db }, userTwo))
+
+  expect(remove({ id: portfolioItem.id })).rejects.toThrow(/access/i)
+})
+
 it('should delete portfolio item', async () => {
   const [user] = await insertAll(db, 'user', fakeUser())
   const [portfolio] = await insertAll(

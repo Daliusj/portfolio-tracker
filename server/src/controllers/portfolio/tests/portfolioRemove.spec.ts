@@ -14,6 +14,18 @@ it('should throw an error if user is not authenticated', async () => {
   await expect(remove({ id: 5 })).rejects.toThrow(/unauthenticated/i)
 })
 
+it('should throw an error if user is not the portfolio owner', async () => {
+  const [userOne, userTwo] = await insertAll(db, 'user', [
+    fakeUser(),
+    fakeUser(),
+  ])
+  const [portfolio] = await insertAll(db, 'portfolio', [
+    fakePortfolio({ userId: userOne.id }),
+  ])
+  const { remove } = createCaller(authContext({ db }, userTwo))
+  expect(remove({ id: portfolio.id })).rejects.toThrow(/access/i)
+})
+
 it('should delete a portfolio', async () => {
   const [user] = await insertAll(db, 'user', fakeUser())
   const [portfolio] = await insertAll(

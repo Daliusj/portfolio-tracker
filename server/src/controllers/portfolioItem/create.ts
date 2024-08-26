@@ -26,30 +26,20 @@ export default authenticatedProcedure
   )
   .mutation(async ({ input: portfolioItemData, ctx: { authUser, repos } }) => {
     if (
-      !isUserPortfolioOwner(
+      !(await isUserPortfolioOwner(
         portfolioItemData.portfolioId,
         authUser.id,
         repos.portfolioRepository
-      )
+      ))
     ) {
       throw new TRPCError({
         code: 'FORBIDDEN',
         message: 'User do not have access to this portfolio.',
       })
     }
-    const portfolio = await repos.portfolioRepository.findById(
-      portfolioItemData.portfolioId
-    )
     const asset = await repos.assetRepository.findById(
       portfolioItemData.assetId
     )
-
-    if (!portfolio) {
-      throw new TRPCError({
-        code: 'NOT_FOUND',
-        message: 'Portfolio not found with this id',
-      })
-    }
 
     if (!asset.length) {
       throw new TRPCError({

@@ -70,6 +70,17 @@ describe('getTotalValue', () => {
       ).toFixed(2)
     )
   })
+
+  it('should return "0" if portfolio has no items ', async () => {
+    const [user] = await insertAll(db, 'user', fakeUser())
+    const [portfolio] = await insertAll(db, 'portfolio', [
+      fakePortfolio({ userId: user.id }),
+    ])
+
+    const value = await services.getTotalValue(portfolio.id)
+
+    expect(value).toEqual('0.00')
+  })
 })
 
 describe('getAssetsTypeValue', () => {
@@ -130,6 +141,14 @@ describe('getAssetsTypeValue', () => {
       ).toFixed(2)
     )
   })
+  it('should return "0" if portfolio has no assets by specified type ', async () => {
+    const [user] = await insertAll(db, 'user', fakeUser())
+    const [portfolio] = await insertAll(db, 'portfolio', [
+      fakePortfolio({ userId: user.id }),
+    ])
+    const value = await services.getAssetsTypeValue(portfolio.id, 'stock')
+    expect(value).toEqual('0.00')
+  })
 })
 
 describe('getAssetValue', () => {
@@ -179,5 +198,13 @@ describe('getAssetValue', () => {
         Number(rateOne.exchangeRate)
       ).toFixed(2)
     )
+  })
+  it('should return undifined if portfolio has no specified assets', async () => {
+    const [user] = await insertAll(db, 'user', fakeUser())
+    const [portfolio] = await insertAll(db, 'portfolio', [
+      fakePortfolio({ userId: user.id }),
+    ])
+    const value = await services.getAssetValue(portfolio.id, 99)
+    expect(value).toBeUndefined()
   })
 })

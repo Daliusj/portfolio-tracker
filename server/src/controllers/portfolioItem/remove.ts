@@ -20,11 +20,11 @@ export default authenticatedProcedure
 
     if (
       portfolioItem &&
-      !isUserPortfolioOwner(
+      !(await isUserPortfolioOwner(
         portfolioItem?.portfolioId,
         authUser.id,
         repos.portfolioRepository
-      )
+      ))
     ) {
       throw new TRPCError({
         code: 'FORBIDDEN',
